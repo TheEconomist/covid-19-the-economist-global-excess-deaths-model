@@ -10,4 +10,4 @@ To read about what the model shows, see: TK
 To read how we made it, see: TK   
 
   
-A special thanks to all our sources and to those who have made the data to create these estimates available. Within script 1, the source for each variable is given as the data is loaded, with the exception of our sources for excess deaths data, which can be found on our [free-to-read excess deaths tracker](https://www.economist.com/graphic-detail/coronavirus-excess-deaths-tracker).
+A special thanks to all our sources and to those who have made the data to create these estimates available. Within script 1, the source for each variable is given as the data is loaded, with the exception of our sources for excess deaths data, which can be found on our free-to-read [excess deaths tracker](https://www.economist.com/graphic-detail/coronavirus-excess-deaths-tracker).
