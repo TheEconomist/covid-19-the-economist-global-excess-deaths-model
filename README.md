@@ -1,7 +1,7 @@
 # The Economist's excess deaths model 
 This repository contains the replication code and data for The Economist's excess deaths model, used to estimate the true death toll of the covid-19 pandemic.  
 
-  
+![alt text](global_mortality.png)  
   
 To replicate the model and export estimated excess deaths for a locality, please run the scripts 1, 2, and 3, in the scripts folder. As the model draws most of its data dynamically, you can use these scripts to generate updated estimates as time passes.
   
