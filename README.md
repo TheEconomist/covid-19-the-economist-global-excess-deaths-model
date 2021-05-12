@@ -1,5 +1,5 @@
 # The Economist's excess deaths model 
-This repository contains the replication code and data for The Economist's model to estimate excess deaths to the covid-19 pandemic.  
+This repository contains the replication code and data for The Economist's excess deaths model, used to estimate the true death toll of covid-19 pandemic.  
 
   
   
