@@ -12,4 +12,4 @@ To read how we made it, see: TK
   
 A special thanks to all our sources and to those who have made the data to create these estimates available. Within script 1, the source for each variable is given as the data is loaded. 
 
-(global_excess_deaths.png "Estimated cumulative excess deaths, Jan 1st 2020-May 10th, 2021")
+![](global_excess_deaths.png "Estimated cumulative excess deaths, Jan 1st 2020-May 10th, 2021")
