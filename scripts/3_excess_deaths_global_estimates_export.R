@@ -12,7 +12,7 @@ options(scipen=999)
 # Step 2: Load predictions and covariates ------------------------------------------------------------------------------
 
 # Load all model prediction + 101 bootstrap
-pred_matrix <- readRDS("pred_matrix.RDS")
+pred_matrix <- readRDS("output-data/pred_matrix.RDS")
 
 # Load covariates (iso3c, country name, population ++)
 export_covariates <- readRDS("output-data/export_covariates.RDS")
@@ -664,7 +664,7 @@ ggplot(world_export,
   geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_90_bot))+
   geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_95_bot))+#  geom_line(aes(y=cumulative_daily_covid_deaths), col = "red")+
   geom_line(col="black", linetype = "dashed")+theme_minimal()+
-  theme(legend.position = "none")
+  theme(legend.position = "none")+xlab("")+ylab("Total excess deaths, World")
 
 # Write to file:
 write_csv(world_export, "output-data/export_world_cumulative.csv")
