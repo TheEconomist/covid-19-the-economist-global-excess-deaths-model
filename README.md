@@ -8,7 +8,7 @@ To replicate the model and export estimated excess deaths for a locality, please
 
 To read about what the model shows, see our [Briefing: Counting the dead.](https://www.economist.com/briefing/2021/05/15/there-have-been-7m-13m-excess-deaths-worldwide-during-the-pandemic)     
 
-To read how we made it, see our [methodology.](https://www.economist.com/ExcessDeathsModel)   
+To understand how we constructed it, see our [methodology.](https://www.economist.com/ExcessDeathsModel)   
 
   
-A special thanks to all our sources and to those who have made the data to create these estimates available. Within script 1, the source for each variable is given as the data is loaded, with the exception of our sources for excess deaths data, which can be found on our free-to-read [excess deaths tracker](https://www.economist.com/graphic-detail/coronavirus-excess-deaths-tracker).
+A special thanks to all our sources and to those who have made the data to create these estimates available. Within script 1, the source for each variable is given as the data is loaded, with the exception of our sources for excess deaths data, which can be found on our free-to-read [excess deaths tracker](https://www.economist.com/graphic-detail/coronavirus-excess-deaths-tracker). 
