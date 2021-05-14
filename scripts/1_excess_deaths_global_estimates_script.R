@@ -1179,6 +1179,4 @@ for(p in region_average_vars){
 # Export dataframe
 fwrite(country_daily_excess_deaths, "output-data/country_daily_excess_deaths_with_covariates.csv")
 
-dimna(country_daily_excess_deaths)
-
 
