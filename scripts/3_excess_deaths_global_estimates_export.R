@@ -1,5 +1,7 @@
 # Step 1: import libraries ------------------------------------------------------------------------------
 
+# Note: This script was made so that users easily can get exactly the data they need. It by default gives data at the country level, region level, and world level. To supply custom groupings, see "Step 5" below.
+
 # Import libraries
 library(tidyverse)
 library(data.table)
@@ -758,29 +760,35 @@ write_csv(world_export, "output-data/export_world_cumulative_with_alternative_ex
 
 
 
+# Step 5: Construct custom data frames based on alternative groupings or subsets of the data ------------------------------------------------------------------------------
+# This script supports export of any grouping. 
 
+# To get statistics for a given group, do the following
 
-## Alternative regions summary:
-
-# Define regions:
+# Define your own groups:
+# Here, we use the "countrycode" package to place countries (defined by iso3c) into groups based on the continents they below to. 
 export_covariates$continent_alt <- countrycode(export_covariates$iso3c, "iso3c",
                                                "continent")
-# export_covariates$continent_alt[export_covariates$continent_alt == "Europe"] <- "Europe, United States, Canada, and Oceania"
+
+# Then manually specify the United States and Canada as a separate group
 export_covariates$continent_alt[export_covariates$iso3c %in% c("USA", "CAN")] <- "US and Canada"
+
+# And rename the rest of the Americas to "Latin America and Caribbean"
 export_covariates$continent_alt[export_covariates$continent_alt == "Americas"] <- "Latin America and Caribbean"
 
+# We then use our export function to export summary statistics for these groups:
 region_export <- confidence_intervals(new_col_names = "estimated_daily_excess_deaths",
                                       group = "continent_alt", 
                                       time = "date",
                                       covars = export_covariates,
-                                      return_cumulative = T,
+                                      return_cumulative = F,
                                       drop_ci_if_known_data = T,
                                       bootstrap_predictions = pred_matrix,
                                       known_data_column = "daily_excess_deaths",
                                       model_prediction = estimate,
                                       include_model_prediction_in_ci = F)
 
-# Inspect:
+# Inspect the results:
 ggplot(region_export, 
        aes(x=date, 
            y=estimated_daily_excess_deaths,
@@ -793,12 +801,11 @@ ggplot(region_export,
   facet_wrap(.~continent_alt)+theme_minimal()+
   theme(legend.position = "none")
 
-# Write to file:
+# And write them to a file:
 write_csv(region_export, "output-data/export_regions_EU_NA_Oceania_cumulative.csv")
 
 
-### Egypt spotlight chart for methodology:
-
+### Replication: Egypt spotlight chart for methodology:
 # Export 1: Country-week level, absolute units
 country_export <- confidence_intervals(new_col_names = "estimated_daily_excess_deaths",
                                        group = "iso3c", 
@@ -827,10 +834,7 @@ ggplot(country_export[country_export$iso3c %in% c("EGY"), ],
   theme(legend.position = "none")
 
 
-
-
-### OECD statistic:
-
+### OECD statistic (central estimate excess deaths vs official covid deaths):
 # Export 1: Country-week level, absolute units
 country_export <- confidence_intervals(new_col_names = "estimated_daily_excess_deaths",
                                        group = "iso3c", 
@@ -844,14 +848,12 @@ country_export <- confidence_intervals(new_col_names = "estimated_daily_excess_d
                                        include_model_prediction_in_ci = T)
 
 oecd <- country_export[country_export$iso3c %in% c("AUT","AUS","BEL","CAN","CHL","COL","CZE","DNK","EST","FIN","FRA","DEU","GRC","HUN","ISL","IRL","ISR","ITA","JPN","KOR","LVA","LTU","LUX","MEX", "NLD", "NZL","NOR","POL","PRT","SVK","SVN","ESP","SWE","CHE","TUR","GBR","USA") & country_export$date == max(country_export$date), ]
-
 sum(oecd$cumulative_estimated_daily_excess_deaths)/sum(oecd$cumulative_daily_covid_deaths)
 
 
-### Sub-Saharan Africa statistic:
-
-country_export$region <- countrycode(country_export$iso3c, "iso3c", "region")
-country_export$region[is.na(country_export$region)] <- "SHN"
+### Sub-Saharan Africa statistic (central estimate excess deaths vs official covid deaths):
+export_covariates$region <- countrycode(export_covariates$iso3c, "iso3c", "region")
+export_covariates$region[is.na(export_covariates$region)] <- "SHN"
 ssa_region_export <- confidence_intervals(new_col_names = "estimated_daily_excess_deaths",
                                       group = "region",
                                       time = "date",
@@ -862,8 +864,124 @@ ssa_region_export <- confidence_intervals(new_col_names = "estimated_daily_exces
                                       known_data_column = "daily_excess_deaths",
                                       model_prediction = estimate,
                                       include_model_prediction_in_ci = F)
-ssa_region_export <- ssa_region_export[ssa_region_export$region == "Sub-Saharan Africa", ]
+ssa_region_export <- ssa_region_export[ssa_region_export$region == "Sub-Saharan Africa"
+                                       & ssa_region_export$date == max(ssa_region_export$date), ]
+sum(ssa_region_export$cumulative_estimated_daily_excess_deaths)/sum(ssa_region_export$cumulative_daily_covid_deaths)
 
 
+### Results by income groups (added at the request of the World Bank):
 
+income_groups <- read_csv("source-data/world_bank_income_groups.csv")
+income_groups <- income_groups[income_groups$GroupCode%in% c("LIC", "LMC", "UMC", "HIC"), c("CountryCode", "GroupName")]
+colnames(income_groups) <- c("iso3c", "World_Bank_income_group")
+
+export_covariates$`Income group WB` <- NULL # To minimize confusion, and ensure we are using latest data
+export_covariates$row_order <- 1:nrow(export_covariates)
+wb_export_covariates <- merge(export_covariates, income_groups, by = "iso3c", all.x = T)
+wb_export_covariates$World_Bank_income_group[is.na(wb_export_covariates$World_Bank_income_group)] <- "Unknown income group"
+wb_export_covariates <- wb_export_covariates[order(wb_export_covariates$row_order), ]
+
+# Absolute, per day
+wb_export <- confidence_intervals(new_col_names = "estimated_daily_excess_deaths",
+                                      group = "World_Bank_income_group", 
+                                      time = "date",
+                                      covars = wb_export_covariates,
+                                      return_cumulative = F,
+                                      drop_ci_if_known_data = T,
+                                      bootstrap_predictions = pred_matrix,
+                                      known_data_column = "daily_excess_deaths",
+                                      model_prediction = estimate,
+                                      include_model_prediction_in_ci = F)
+
+# Inspect:
+ggplot(wb_export[wb_export$World_Bank_income_group != "Unknown income group", ], 
+       aes(x=date, 
+           y=estimated_daily_excess_deaths,
+           col = World_Bank_income_group))+
+  geom_line(aes(y=estimated_daily_excess_deaths_ci_95_top))+
+  geom_line(aes(y=estimated_daily_excess_deaths_ci_90_top))+
+  geom_line(aes(y=estimated_daily_excess_deaths_ci_90_bot))+
+  geom_line(aes(y=estimated_daily_excess_deaths_ci_95_bot))+
+  geom_line(col="black", linetype = "dashed")+
+  facet_wrap(.~World_Bank_income_group)+theme_minimal()+
+  theme(legend.position = "none")
+
+# write to file:
+write_csv(wb_export, "output-data/wb_income_groups.csv")
+
+
+per_capita_columns <- grep("deaths", colnames(wb_export))
+
+for(i in per_capita_columns){
+  wb_export[, i] <- 100000*wb_export[, i]/wb_export[, "population"]
+}
+colnames(wb_export)[per_capita_columns] <- paste0(colnames(wb_export)[per_capita_columns], "_per_100k")
+
+
+ggplot(wb_export[wb_export$World_Bank_income_group != "Unknown income group", ], 
+       aes(x=date, 
+           y=estimated_daily_excess_deaths_per_100k,
+           col = World_Bank_income_group))+
+  geom_line(aes(y=estimated_daily_excess_deaths_ci_95_top_per_100k))+
+  geom_line(aes(y=estimated_daily_excess_deaths_ci_90_top_per_100k))+
+  geom_line(aes(y=estimated_daily_excess_deaths_ci_90_bot_per_100k))+
+  geom_line(aes(y=estimated_daily_excess_deaths_ci_95_bot_per_100k))+
+  geom_line(col="black", linetype = "dashed")+
+  facet_wrap(.~World_Bank_income_group)+theme_minimal()+
+  theme(legend.position = "none")
+
+# write to file:
+write_csv(wb_export, "output-data/wb_income_groups_per_100k.csv")
+
+
+# Absolute, cumulative
+wb_export <- confidence_intervals(new_col_names = "estimated_daily_excess_deaths",
+                                  group = "World_Bank_income_group", 
+                                  time = "date",
+                                  covars = wb_export_covariates,
+                                  return_cumulative = T,
+                                  drop_ci_if_known_data = T,
+                                  bootstrap_predictions = pred_matrix,
+                                  known_data_column = "daily_excess_deaths",
+                                  model_prediction = estimate,
+                                  include_model_prediction_in_ci = F)
+
+# Inspect:
+ggplot(wb_export[wb_export$World_Bank_income_group != "Unknown income group", ], 
+       aes(x=date, 
+           y=cumulative_estimated_daily_excess_deaths,
+           col = World_Bank_income_group))+
+  geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_95_top))+
+  geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_90_top))+
+  geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_90_bot))+
+  geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_95_bot))+
+  geom_line(col="black", linetype = "dashed")+
+  facet_wrap(.~World_Bank_income_group)+theme_minimal()+
+  theme(legend.position = "none")
+
+# write to file:
+write_csv(wb_export, "output-data/wb_income_groups_cumulative.csv")
+
+per_capita_columns <- grep("deaths", colnames(wb_export))
+
+for(i in per_capita_columns){
+  wb_export[, i] <- 100000*wb_export[, i]/wb_export[, "population"]
+}
+colnames(wb_export)[per_capita_columns] <- paste0(colnames(wb_export)[per_capita_columns], "_per_100k")
+
+
+ggplot(wb_export[wb_export$World_Bank_income_group != "Unknown income group", ], 
+       aes(x=date, 
+           y=cumulative_estimated_daily_excess_deaths_per_100k,
+           col = World_Bank_income_group))+
+  geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_95_top_per_100k))+
+  geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_90_top_per_100k))+
+  geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_90_bot_per_100k))+
+  geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_95_bot_per_100k))+
+  geom_line(col="black", linetype = "dashed")+
+  facet_wrap(.~World_Bank_income_group)+theme_minimal()+
+  theme(legend.position = "none")
+
+# write to file:
+write_csv(wb_export, "output-data/wb_income_groups_per_100k_cumulative.csv")
 
