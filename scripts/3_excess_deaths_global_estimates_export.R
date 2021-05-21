@@ -802,7 +802,84 @@ ggplot(region_export,
   theme(legend.position = "none")
 
 # And write them to a file:
-write_csv(region_export, "output-data/export_regions_EU_NA_Oceania_cumulative.csv")
+write_csv(region_export, "output-data/export_alternative_regions.csv")
+
+
+# At the request of CNN, added the corresponding per 100k population, and cumulative numbers in absolute and per 100k population
+
+# Same for per 100k
+per_capita_columns <- grep("deaths", colnames(region_export))
+
+for(i in per_capita_columns){
+  region_export[, i] <- 100000*region_export[, i]/region_export[, "population"]
+}
+colnames(region_export)[per_capita_columns] <- paste0(colnames(region_export)[per_capita_columns], "_per_100k")
+
+ggplot(region_export, 
+       aes(x=date, 
+           y=estimated_daily_excess_deaths_per_100k,
+           col = continent_alt))+
+  geom_line(aes(y=estimated_daily_excess_deaths_ci_95_top_per_100k))+
+  geom_line(aes(y=estimated_daily_excess_deaths_ci_90_top_per_100k))+
+  geom_line(aes(y=estimated_daily_excess_deaths_ci_90_bot_per_100k))+
+  geom_line(aes(y=estimated_daily_excess_deaths_ci_95_bot_per_100k))+
+  geom_line(col="black", linetype = "dashed")+
+  facet_wrap(.~continent_alt)+theme_minimal()+
+  theme(legend.position = "none")
+
+write_csv(region_export, "output-data/export_alternative_regions_per_100k.csv")
+
+region_export <- confidence_intervals(new_col_names = "estimated_daily_excess_deaths",
+                                      group = "continent_alt", 
+                                      time = "date",
+                                      covars = export_covariates,
+                                      return_cumulative = T,
+                                      drop_ci_if_known_data = T,
+                                      bootstrap_predictions = pred_matrix,
+                                      known_data_column = "daily_excess_deaths",
+                                      model_prediction = estimate,
+                                      include_model_prediction_in_ci = F)
+
+# Inspect the results:
+ggplot(region_export, 
+       aes(x=date, 
+           y=cumulative_estimated_daily_excess_deaths,
+           col = continent_alt))+
+  geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_95_top))+
+  geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_90_top))+
+  geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_90_bot))+
+  geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_95_bot))+
+  geom_line(col="black", linetype = "dashed")+
+  facet_wrap(.~continent_alt)+theme_minimal()+
+  theme(legend.position = "none")
+
+# And write them to a file:
+write_csv(region_export, "output-data/export_alternative_regions_cumulative.csv")
+
+# Same for per 100k
+per_capita_columns <- grep("deaths", colnames(region_export))
+
+for(i in per_capita_columns){
+  region_export[, i] <- 100000*region_export[, i]/region_export[, "population"]
+}
+colnames(region_export)[per_capita_columns] <- paste0(colnames(region_export)[per_capita_columns], "_per_100k")
+
+ggplot(region_export, 
+       aes(x=date, 
+           y=cumulative_estimated_daily_excess_deaths_per_100k,
+           col = continent_alt))+
+  geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_95_top_per_100k))+
+  geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_90_top_per_100k))+
+  geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_90_bot_per_100k))+
+  geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_95_bot_per_100k))+
+  geom_line(col="black", linetype = "dashed")+
+  facet_wrap(.~continent_alt)+theme_minimal()+
+  theme(legend.position = "none")
+
+write_csv(region_export, "output-data/export_alternative_regions_per_100k_cumulative.csv")
+
+
+
 
 
 ### Replication: Egypt spotlight chart for methodology:
