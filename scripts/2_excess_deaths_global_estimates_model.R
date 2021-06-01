@@ -318,7 +318,7 @@ for(i in 1:nrow(pred_matrix)){
   pred_matrix_sorted[i, ] <- sort(pred_matrix[i, ])
 }
 
-saveRDS(pred_matrix, "pred_matrix.RDS")
+saveRDS(pred_matrix, "output-data/pred_matrix.RDS")
 saveRDS(pred_matrix_sorted, "pred_matrix_sorted.RDS")
 
 # See next script for continuation (including extracting daily and cumulative data with confidence intervals)
