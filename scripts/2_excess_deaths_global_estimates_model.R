@@ -184,16 +184,16 @@ for(i in 1:length(folds)){
   # Fit agtboost - this function fits a gradient booster
   library(agtboost)
   gbt_fit <- gbt.train(train_y,
-    as.matrix(train_x[, setdiff(colnames(X_cv), c("iso3c", "region"))]), 
+                       as.matrix(train_x[, setdiff(colnames(X_cv), c("iso3c", "region"))]), 
                        learning_rate = 0.01,
                        nrounds = 1500,
                        verbose = 10,
-    algorithm = "vanilla",
+                       algorithm = "vanilla",
                        weights = train_w/mean(train_w))
   
   print(i)
   print("cross-validation round completed.")
-
+  
   # Predict on fold:
   results$preds[results$iso3c %in% folds[[i]]] <- predict(gbt_fit, 
                                                           newdata = as.matrix(test_x[, setdiff(colnames(X_cv), c("iso3c", "region"))]))
