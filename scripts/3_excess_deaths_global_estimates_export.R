@@ -37,7 +37,7 @@ estimate <- as.numeric(pred_matrix[, 1])
 # Harmonize export dates (first of every week)
 export_covariates$week <- round(as.numeric(export_covariates$date)/7, 0)+1-min(round(as.numeric(export_covariates$date)/7, 0))
 export_covariates$date <- ave(export_covariates$date, export_covariates$week,
-                                   FUN = function(x) min(x, na.rm = T))
+                              FUN = function(x) min(x, na.rm = T))
 
 # Check that this worked correctly:
 min(table(export_covariates$date)) == max(table(export_covariates$date))
@@ -45,15 +45,15 @@ min(table(export_covariates$date)) == max(table(export_covariates$date))
 # Harmonize country names with The Economist standard, maintaining row order
 export_covariates$row_order <- 1:nrow(export_covariates)
 export_covariates <- merge(export_covariates,
-                             read_csv("source-data/economist_country_names.csv")[, c("Name", "ISOA3", "Regions", "Income group WB", "Economy IMF")],
-                             by.x = "iso3c",
-                             by.y = "ISOA3", all.x = T)
+                           read_csv("source-data/economist_country_names.csv")[, c("Name", "ISOA3", "Regions", "Income group WB", "Economy IMF")],
+                           by.x = "iso3c",
+                           by.y = "ISOA3", all.x = T)
 export_covariates <- export_covariates[order(export_covariates$row_order), ]
 export_covariates$row_order <- NULL
 
 export_covariates$country <- export_covariates$Name
 export_covariates$country[is.na(export_covariates$country)] <- countrycode(
-export_covariates$iso3c[is.na(export_covariates$country)], "iso3c", "country.name")
+  export_covariates$iso3c[is.na(export_covariates$country)], "iso3c", "country.name")
 export_covariates$Name <- NULL
 
 # Define regions for main chart:
@@ -108,7 +108,7 @@ confidence_intervals <- function(new_col_names = "estimated_daily_excess_deaths"
   } else {
     known_data <- rep(NA, nrow(covars))
   }
-
+  
   # If requested, do not return/use model confidence interval where data is known:
   if(drop_ci_if_known_data){
     for(i in 1:ncol(bootstrap_predictions)){
@@ -120,7 +120,7 @@ confidence_intervals <- function(new_col_names = "estimated_daily_excess_deaths"
   covars$id <- paste0(covars[, group], "_", covars[, time])
   
   if(max(table(covars$id)) > 1){
-
+    
     estimate <- ave(estimate, covars$id, FUN = function(x) sum(x))
     known_data <- ave(known_data, covars$id, FUN = function(x) sum(x, na.rm = T))
     raw_estimate <- ave(known_data, covars$id, FUN = function(x) sum(x, na.rm = T))
@@ -145,7 +145,7 @@ confidence_intervals <- function(new_col_names = "estimated_daily_excess_deaths"
     bootstrap_predictions$row_order <- 1:nrow(bootstrap_predictions)
     bootstrap_predictions[, unit] <- covars[, unit]
     bootstrap_predictions[, time] <- covars[, time]
-
+    
     # Add in raw estimate, known data, and recorded data
     bootstrap_predictions$raw_estimate <- raw_estimate
     bootstrap_predictions$known_data <- ifelse(is.na(known_data), 0, known_data)
@@ -163,11 +163,11 @@ confidence_intervals <- function(new_col_names = "estimated_daily_excess_deaths"
     # Return to original order, remove temporary columns, and extract raw and central estimate + known data as cumulative
     bootstrap_predictions <- bootstrap_predictions[
       order(bootstrap_predictions$row_order), ]
-
+    
     bootstrap_predictions$iso3c <- NULL
     bootstrap_predictions$date <- NULL
     bootstrap_predictions$row_order <- NULL
-
+    
     raw_estimate <- bootstrap_predictions$raw_estimate
     bootstrap_predictions$raw_estimate <- NULL
     
@@ -180,10 +180,10 @@ confidence_intervals <- function(new_col_names = "estimated_daily_excess_deaths"
     # If one wants cumulative data to be missing when a week is, uncomment below line 
     # known_data <- ifelse(is.na(known_data), NA, bootstrap_predictions$known_data)
     bootstrap_predictions$known_data <- NULL
-
+    
     bootstrap_predictions <- as.matrix(bootstrap_predictions)
   }
-
+  
   # Collapse groups:
   estimate <- estimate[!duplicated(covars$id)]
   raw_estimate <- raw_estimate[!duplicated(covars$id)] 
@@ -199,10 +199,10 @@ confidence_intervals <- function(new_col_names = "estimated_daily_excess_deaths"
   
   # Extract 90 and 95% confidence intervals
   ci_95_top <- bootstrap_predictions[, round(ncol(bootstrap_predictions)*0.975, 0)]
-   ci_90_top <- bootstrap_predictions[, round(ncol(bootstrap_predictions)*0.95, 0)]
-   ci_50_top <- bootstrap_predictions[, round(ncol(bootstrap_predictions)*0.75, 0)]
-   ci_50_bot <- bootstrap_predictions[, round(ncol(bootstrap_predictions)*0.25, 0)]
-   ci_90_bot <- bootstrap_predictions[, round(ncol(bootstrap_predictions)*0.05, 0)]
+  ci_90_top <- bootstrap_predictions[, round(ncol(bootstrap_predictions)*0.95, 0)]
+  ci_50_top <- bootstrap_predictions[, round(ncol(bootstrap_predictions)*0.75, 0)]
+  ci_50_bot <- bootstrap_predictions[, round(ncol(bootstrap_predictions)*0.25, 0)]
+  ci_90_bot <- bootstrap_predictions[, round(ncol(bootstrap_predictions)*0.05, 0)]
   ci_95_bot <- bootstrap_predictions[, round(ncol(bootstrap_predictions)*0.025, 0)]
   
   # Ensure model prediction (i.e. raw estimate) within confidence interval if requested
@@ -304,7 +304,7 @@ country_export <- confidence_intervals(new_col_names = "estimated_daily_excess_d
                                        include_model_prediction_in_ci = T)
 
 per_capita_columns <- grep("deaths", colnames(country_export))
-                           
+
 for(i in per_capita_columns){
   country_export[, i] <- 100000*country_export[, i]/country_export[, "population"]
 }
@@ -332,15 +332,15 @@ write_csv(country_export, "output-data/export_country_per_100k.csv")
 
 # Export 3: Region-week level, absolute units
 region_export <- confidence_intervals(new_col_names = "estimated_daily_excess_deaths",
-                                       group = "continent", 
-                                       time = "date",
-                                       covars = export_covariates,
-                                       return_cumulative = F,
-                                       drop_ci_if_known_data = T,
-                                       bootstrap_predictions = pred_matrix,
-                                       known_data_column = "daily_excess_deaths",
-                                       model_prediction = estimate,
-                                       include_model_prediction_in_ci = F)
+                                      group = "continent", 
+                                      time = "date",
+                                      covars = export_covariates,
+                                      return_cumulative = F,
+                                      drop_ci_if_known_data = T,
+                                      bootstrap_predictions = pred_matrix,
+                                      known_data_column = "daily_excess_deaths",
+                                      model_prediction = estimate,
+                                      include_model_prediction_in_ci = F)
 
 # Inspect:
 ggplot(region_export, 
@@ -409,7 +409,7 @@ region_export <- confidence_intervals(new_col_names = "estimated_daily_excess_de
                                       include_model_prediction_in_ci = F)
 
 per_capita_columns <- grep("deaths", colnames(region_export))
-                           
+
 for(i in per_capita_columns){
   region_export[, i] <- 100000*region_export[, i]/region_export[, "population"]
 }
@@ -435,15 +435,15 @@ write_csv(region_export, "output-data/export_regions_per_100k.csv")
 # Export 5: World level, absolute units
 export_covariates$world <- "World"
 world_export <- confidence_intervals(new_col_names = "estimated_daily_excess_deaths",
-                                      group = "world", 
-                                      time = "date",
-                                      covars = export_covariates,
-                                      return_cumulative = F,
-                                      drop_ci_if_known_data = T,
-                                      bootstrap_predictions = pred_matrix,
-                                      known_data_column = "daily_excess_deaths",
-                                      model_prediction = estimate,
-                                      include_model_prediction_in_ci = F)
+                                     group = "world", 
+                                     time = "date",
+                                     covars = export_covariates,
+                                     return_cumulative = F,
+                                     drop_ci_if_known_data = T,
+                                     bootstrap_predictions = pred_matrix,
+                                     known_data_column = "daily_excess_deaths",
+                                     model_prediction = estimate,
+                                     include_model_prediction_in_ci = F)
 
 # Inspect:
 ggplot(world_export, 
@@ -465,15 +465,15 @@ write_csv(world_export, "output-data/export_world.csv")
 
 # Export 6: World level, per 100k
 world_export <- confidence_intervals(new_col_names = "estimated_daily_excess_deaths",
-                                      group = "world", 
-                                      time = "date",
-                                      covars = export_covariates,
-                                      return_cumulative = F,
-                                      drop_ci_if_known_data = T,
-                                      bootstrap_predictions = pred_matrix,
-                                      known_data_column = "daily_excess_deaths",
-                                      model_prediction = estimate,
-                                      include_model_prediction_in_ci = F)
+                                     group = "world", 
+                                     time = "date",
+                                     covars = export_covariates,
+                                     return_cumulative = F,
+                                     drop_ci_if_known_data = T,
+                                     bootstrap_predictions = pred_matrix,
+                                     known_data_column = "daily_excess_deaths",
+                                     model_prediction = estimate,
+                                     include_model_prediction_in_ci = F)
 
 per_capita_columns <- grep("deaths", colnames(world_export))
 
@@ -728,16 +728,16 @@ export_covariates_alt$daily_excess_deaths_alt <- export_covariates$daily_excess_
 export_covariates_alt$daily_excess_deaths_alt[is.na(export_covariates_alt$daily_excess_deaths_alt)] <- export_covariates_alt$daily_covid_deaths[is.na(export_covariates_alt$daily_excess_deaths_alt)]
 
 world_export_alt <- confidence_intervals(new_col_names = "estimated_daily_excess_deaths",
-                                     group = "world", 
-                                     time = "date",
-                                     covars = export_covariates_alt,
-                                     return_cumulative = T,
-                                     drop_ci_if_known_data = T,
-                                     bootstrap_predictions = pred_matrix,
-                                     known_data_column = "daily_excess_deaths",
-                                     recorded_data_column = "daily_excess_deaths_alt",
-                                     model_prediction = estimate,
-                                     include_model_prediction_in_ci = F)
+                                         group = "world", 
+                                         time = "date",
+                                         covars = export_covariates_alt,
+                                         return_cumulative = T,
+                                         drop_ci_if_known_data = T,
+                                         bootstrap_predictions = pred_matrix,
+                                         known_data_column = "daily_excess_deaths",
+                                         recorded_data_column = "daily_excess_deaths_alt",
+                                         model_prediction = estimate,
+                                         include_model_prediction_in_ci = F)
 
 world_export$cumulative_daily_excess_deaths_alternative <- world_export_alt$cumulative_daily_covid_deaths
 
@@ -932,15 +932,15 @@ sum(oecd$cumulative_estimated_daily_excess_deaths)/sum(oecd$cumulative_daily_cov
 export_covariates$region <- countrycode(export_covariates$iso3c, "iso3c", "region")
 export_covariates$region[is.na(export_covariates$region)] <- "SHN"
 ssa_region_export <- confidence_intervals(new_col_names = "estimated_daily_excess_deaths",
-                                      group = "region",
-                                      time = "date",
-                                      covars = export_covariates,
-                                      return_cumulative = T,
-                                      drop_ci_if_known_data = T,
-                                      bootstrap_predictions = pred_matrix,
-                                      known_data_column = "daily_excess_deaths",
-                                      model_prediction = estimate,
-                                      include_model_prediction_in_ci = F)
+                                          group = "region",
+                                          time = "date",
+                                          covars = export_covariates,
+                                          return_cumulative = T,
+                                          drop_ci_if_known_data = T,
+                                          bootstrap_predictions = pred_matrix,
+                                          known_data_column = "daily_excess_deaths",
+                                          model_prediction = estimate,
+                                          include_model_prediction_in_ci = F)
 ssa_region_export <- ssa_region_export[ssa_region_export$region == "Sub-Saharan Africa"
                                        & ssa_region_export$date == max(ssa_region_export$date), ]
 sum(ssa_region_export$cumulative_estimated_daily_excess_deaths)/sum(ssa_region_export$cumulative_daily_covid_deaths)
@@ -960,15 +960,15 @@ wb_export_covariates <- wb_export_covariates[order(wb_export_covariates$row_orde
 
 # Absolute, per day
 wb_export <- confidence_intervals(new_col_names = "estimated_daily_excess_deaths",
-                                      group = "World_Bank_income_group", 
-                                      time = "date",
-                                      covars = wb_export_covariates,
-                                      return_cumulative = F,
-                                      drop_ci_if_known_data = T,
-                                      bootstrap_predictions = pred_matrix,
-                                      known_data_column = "daily_excess_deaths",
-                                      model_prediction = estimate,
-                                      include_model_prediction_in_ci = F)
+                                  group = "World_Bank_income_group", 
+                                  time = "date",
+                                  covars = wb_export_covariates,
+                                  return_cumulative = F,
+                                  drop_ci_if_known_data = T,
+                                  bootstrap_predictions = pred_matrix,
+                                  known_data_column = "daily_excess_deaths",
+                                  model_prediction = estimate,
+                                  include_model_prediction_in_ci = F)
 
 # Inspect:
 ggplot(wb_export[wb_export$World_Bank_income_group != "Unknown income group", ], 
