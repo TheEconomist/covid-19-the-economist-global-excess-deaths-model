@@ -9,6 +9,7 @@ options(scipen=999)
 
 # Step 2: import excess deaths data frame with covariates ---------------------------------------
 df <- pred_frame <- data.frame(fread("output-data/country_daily_excess_deaths_with_covariates.csv"))
+#df <- pred_frame <- data.frame(readRDS("output-data/country_daily_excess_deaths_with_covariates.RDS")) # <- to use pre-generated RDS
 
 # Select DV
 dv <- "daily_excess_deaths_per_100k"
