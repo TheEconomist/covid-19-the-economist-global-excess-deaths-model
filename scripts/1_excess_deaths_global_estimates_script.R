@@ -262,9 +262,6 @@ country_daily_excess_deaths$weekday <- as.POSIXlt(country_daily_excess_deaths$da
 
 # Step 4: import other data sources (country-level, static) ---------------------------------------
 
-# Import V-DEM data (source: https://www.v-dem.net/en/)
-vdem <- fread("source-data/vdem.csv")
-
 # Make descriptive column names and select relevant columns
 vdem <- vdemdata::vdem %>%
   rename(
@@ -275,7 +272,7 @@ vdem <- vdemdata::vdem %>%
   filter(!(is.na(vdem_liberal_democracy_score)) & !(is.na(vdem_freedom_of_expression_score))) %>%
   group_by(iso3c) %>%
   filter(year == max(year) & year >= 2015) %>%
-  select( year, iso3c,
+  select(iso3c,
          vdem_freedom_of_expression_score,
          vdem_liberal_democracy_score)
 
