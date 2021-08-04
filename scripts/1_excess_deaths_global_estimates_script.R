@@ -271,7 +271,8 @@ vdem <- vdemdata::vdem %>%
   ) %>% 
   filter(!(is.na(vdem_liberal_democracy_score)) & !(is.na(vdem_freedom_of_expression_score))) %>%
   group_by(iso3c) %>%
-  filter(year == max(year) & year >= 2015) %>%
+  filter(year >= 2015 & year <= 2020) %>%
+  filter(year == max(year)) %>%
   select(iso3c,
          vdem_freedom_of_expression_score,
          vdem_liberal_democracy_score)
@@ -287,6 +288,10 @@ democracy_binary <- democracy_binary[democracy_binary$year == 2015, ]
 
 # Generate iso3c:
 democracy_binary$iso3c <- countrycode(democracy_binary$ccode, "cown", "iso3c")
+#for countries that could not be assigned
+democracy_binary$iso3c[is.na(democracy_binary$iso3c)] <-
+  countrycode(democracy_binary$country[is.na(democracy_binary$iso3c)],
+               "country.name", "iso3c")
 
 # Make descriptive column names and select relevant columns
 democracy_binary <- democracy_binary %>% 
