@@ -150,11 +150,12 @@ daily_excess_deaths$country_code <- NULL
 
 # Import daily data for countries from Our World In Data
 country_daily_data <- fread("https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/owid-covid-data.csv") %>%
+  filter(nchar(iso_code) == 3) %>% #remove non countries
   mutate(date = as.Date(date),
          country = location,
-         iso3c = iso_code,
-         region = countrycode(iso3c, origin="iso3c",destination="un.region.name"),
-         subregion = countrycode(iso3c, origin="iso3c",destination="un.regionsub.name"),
+         iso3c = iso_code, #must set Taiwans regions as not officially assigned
+         region = if_else(iso3c == "TWN",  "Asia", countrycode(iso3c, origin="iso3c",destination="un.region.name")),
+         subregion = if_else(iso3c == "TWN",  "Eastern Asia", countrycode(iso3c, origin="iso3c",destination="un.regionsub.name")),
          daily_covid_deaths = new_deaths_smoothed,
          daily_covid_deaths_per_100k = (daily_covid_deaths / population) * 100000,
          daily_covid_cases = new_cases_smoothed,
