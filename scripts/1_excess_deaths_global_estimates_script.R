@@ -292,6 +292,8 @@ democracy_binary$iso3c <- countrycode(democracy_binary$ccode, "cown", "iso3c")
 democracy_binary$iso3c[is.na(democracy_binary$iso3c)] <-
   countrycode(democracy_binary$country[is.na(democracy_binary$iso3c)],
                "country.name", "iso3c")
+#assign kosovo its own code
+democracy_binary$iso3c[democracy_binary$country == "KOSOVO"] <- "XKX"
 
 # Make descriptive column names and select relevant columns
 democracy_binary <- democracy_binary %>% 
