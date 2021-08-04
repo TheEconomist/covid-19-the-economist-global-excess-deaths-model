@@ -6,6 +6,7 @@ library(data.table)
 library(lubridate)
 library(countrycode)
 library(readr)
+library(vdemdata)
 options(scipen=999)
 
 # Step 2: import excess deaths data and convert into a daily time series ---------------------------------------
@@ -265,14 +266,18 @@ country_daily_excess_deaths$weekday <- as.POSIXlt(country_daily_excess_deaths$da
 vdem <- fread("source-data/vdem.csv")
 
 # Make descriptive column names and select relevant columns
-vdem <- vdem %>% 
-        rename(
-          iso3c = country_code,
-          vdem_liberal_democracy_score = v2x_libdem,
-          vdem_freedom_of_expression_score = v2x_freexp_altinf) %>% 
-        select(iso3c,
-               vdem_freedom_of_expression_score,
-               vdem_liberal_democracy_score)
+vdem <- vdemdata::vdem %>%
+  rename(
+    iso3c = country_text_id,
+    vdem_liberal_democracy_score = v2x_libdem,
+    vdem_freedom_of_expression_score = v2x_freexp_altinf
+  ) %>% 
+  filter(!(is.na(vdem_liberal_democracy_score)) & !(is.na(vdem_freedom_of_expression_score))) %>%
+  group_by(iso3c) %>%
+  filter(year == max(year)) %>%
+  select(iso3c,
+         vdem_freedom_of_expression_score,
+         vdem_liberal_democracy_score)
 
 # Add to list of static datasets:
 static_data <- list(vdem)
