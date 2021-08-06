@@ -202,7 +202,9 @@ write_csv(china,
             file_path, "china.csv"
           ))
 ##India
-#source: Don't know where this is from, leave as csv file 
+#source: from https://portal.mcgm.gov.in/irj/portal/anonymous/qlvitalstatsreport
+# and https://health.kerala.gov.in/pdf/Technical-paper-All-Cause-Mortality-Kerala.pdf
+#which won't be updated til mid year no just leave as csv as originally
 
 ##Distance dyads
 #source:http://www.cepii.fr/cepii/en/bdd_modele/presentation.asp?id=6
