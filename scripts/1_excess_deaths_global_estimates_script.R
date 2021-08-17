@@ -1432,6 +1432,5 @@ saveRDS(
   country_daily_excess_deaths,
   "output-data/country_daily_excess_deaths_with_covariates.Rds"
 )
-fwrite(country_daily_excess_deaths, "output-data/country_daily_excess_deaths_with_covariates.csv")
 
 
