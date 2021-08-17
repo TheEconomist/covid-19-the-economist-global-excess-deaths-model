@@ -5,10 +5,12 @@ library(tidyverse)
 library(data.table)
 library(lubridate)
 library(countrycode)
+library(agtboost)
 options(scipen=999)
 
 # Step 2: import excess deaths data frame with covariates ---------------------------------------
-df <- pred_frame <- data.frame(fread("output-data/country_daily_excess_deaths_with_covariates.csv"))
+df <- pred_frame <- readRDS("output-data/country_daily_excess_deaths_with_covariates.Rds") %>%
+  data.frame()
 #df <- pred_frame <- data.frame(readRDS("output-data/country_daily_excess_deaths_with_covariates.RDS")) # <- to use pre-generated RDS
 
 # Select DV
@@ -29,26 +31,36 @@ exclude <- c("daily_total_deaths",
 # Define predictors
 predictors <- setdiff(colnames(df), c(dv, exclude))
 
-# Expand categorical variables
-categorical <- c()
-df <- data.frame(df)
 for(i in predictors){
-  if(class(df[, i]) == "character"){
-    categorical <- c(categorical, i)
+  if(class(df[[i]])[1] == "character"){ #won't work if a vector is logical
+    df <- df %>%
+      mutate(value = 1, !! i := if_else(
+        !! rlang::sym(i) %in% c("", NA),
+        "Unknown",
+        !! rlang::sym(i)
+      )) %>%
+      pivot_wider(names_from = .data[[i]], values_from = value, values_fill = 0,
+                  names_prefix = i)
+  } else if(class(df[[i]])[1] == "logical"){
+    df <- df %>%
+      mutate(
+        !! i := if_else(
+          !! rlang::sym(i),
+          1,
+          0
+        )
+      )
   }
 }
-for(i in categorical){
-  df[is.na(df[, i]), i] <- paste0("Unknown ", i)
-  temp <- model.matrix(~ . - 1, data = df[, i, drop = F])
-  predictors <- setdiff(c(predictors, colnames(temp)), i)
-  df <- cbind(df, temp)
-  df[, i] <- NULL
-}
+predictors <- setdiff(colnames(df), c(dv, exclude))
 
 # Convert all columns to numeric
-for(i in predictors){
-  df[, i] <- as.numeric(df[, i])
-}
+df <- mutate(df,
+             across(
+               any_of(predictors),
+               as.numeric
+             )
+             )
 
 # Step 4: impute missing data (using min-impute coupled with one-hot encoding of NA locations) ---------------------------------------
 
@@ -57,11 +69,23 @@ impute_missing <- function(X = df_wide,
                            method = "min-impute",
                            replace.inf = T){
   X <- data.table(X)
-  invisible(lapply(names(X),function(.name) set(X, which(is.infinite(X[[.name]])), j = .name,value =NA)))
+  invisible(
+    lapply(
+      names(X),
+      function(.name){set(X, which(is.infinite(X[[.name]])), j = .name,value =NA)}
+      )
+    )
   X <- data.frame(X)
   
   # Find columns with missing values
-  na_cols <- unlist(lapply(1:ncol(X), FUN = function(i){any(is.na(X[, i]))}))
+  na_cols <- X %>%
+    summarise(
+      across(
+        everything(),
+        ~any(is.na(.x))
+      )
+    ) %>%
+    unlist()
   n <- nrow(X)
   
   # Generate matrix of zeroes
@@ -71,21 +95,23 @@ impute_missing <- function(X = df_wide,
   cat("\nImputing min values and adding missing data matrix:\n\n")
   pb <- txtProgressBar(min=0, max=sum(na_cols), style=3)
   
-  for(j in which(na_cols)){
+  for(j in names(which(na_cols))){
     #print(colnames(X)[j])
     if(method == "min-impute"){
-      min_val <- min(X[,j], na.rm = T)
+      min_val <- min(X[[j]], na.rm = T)
     }
     if(method == "mean-impute"){
-      min_val <- mean(X[,j], na.rm = T) 
+      min_val <- mean(X[[j]], na.rm = T) 
     }
-    na_ind <- is.na(X[,j])
+    na_ind <- is.na(X[[j]])
     XNA[na_ind, counter] <- 1
-    X[na_ind,j] <- min_val - 1
+    X[na_ind,j] <- min_val# - 1 removed this because it doesn't make any sense and gives non-sense values
     counter = counter + 1
     setTxtProgressBar(pb, value=counter)
   }
+  
   cat("\n")
+  
   
   XNA <- t(unique(t(XNA)))
   
@@ -115,35 +141,60 @@ impute_missing <- function(X = df_wide,
 
 X <- impute_missing(df[, c(predictors, "iso3c")])
 X$region <- pred_frame$region # we use this for plotting later
-Y <- df[, dv]
 
 # Step 5: collapse to weekly data to reduce noise and speed up calculations, save export covariates for future merge with model predictions  ---------------------------------------
-ids <- paste0(X$iso3c, "_", round(X$date/7, 0))
+X <- X %>%
+  mutate(
+    `week` = round(date/7, 0)
+  ) %>%
+  group_by(week, iso3c, region) %>%
+  summarise(
+    across(
+      everything(),
+      ~mean(.x, na.rm = T)
+    )
+  ) %>%
+  ungroup() %>%
+  arrange(iso3c, week) %>%
+  select(!week)
 
-# Loop through country-weeks, calculate mean of predictors:
-for(i in setdiff(colnames(X), c("iso3c", "region"))){
-  X[, i] <- ave(X[, i], ids, FUN = function(x){mean(x, na.rm = T)})
-}
-
-# Reduce dimensionality by only using one observation for each week
-X <- X[!duplicated(ids), ]
-Y <- Y[!duplicated(ids)]
+#Get weekly average for outcome since not every weekly correctly aligns with the week calculated
+Y <- df %>%
+  mutate(
+    `week` = round(date/7, 0)
+  ) %>%
+  group_by(week, iso3c) %>%
+  summarise(
+    across(
+      all_of(dv),
+      ~mean(.x, na.rm = T)
+    )
+  ) %>%
+  ungroup() %>%
+  arrange(iso3c, week) %>%
+  pull(dv)
 
 # Save covariates:
-export <- pred_frame[!duplicated(ids), c("iso3c", "country", "date", "region", "subregion", "population", "median_age", "aged_65_older", "life_expectancy", "daily_covid_deaths_per_100k", "daily_covid_cases_per_100k", "daily_tests_per_100k", "cumulative_daily_covid_cases_per_100k", 
-                                         "cumulative_daily_covid_deaths_per_100k",
-                                         "cumulative_daily_tests_per_100k", "demography_adjusted_ifr",
-                                         "daily_covid_cases",
-                                         "daily_tests",
-                                         "daily_covid_deaths",
-                                         "daily_excess_deaths",
-                                         dv)]
+export <- pred_frame %>%
+  filter(date %in% X$date) %>%
+  select(
+    any_of(
+      c("iso3c", "country", "date", "region", "subregion", "population", "median_age", "aged_65_older", "life_expectancy", "daily_covid_deaths_per_100k", "daily_covid_cases_per_100k", "daily_tests_per_100k", "cumulative_daily_covid_cases_per_100k", 
+        "cumulative_daily_covid_deaths_per_100k",
+        "cumulative_daily_tests_per_100k", "demography_adjusted_ifr",
+        "daily_covid_cases",
+        "daily_tests",
+        "daily_covid_deaths",
+        "daily_excess_deaths",
+        dv)
+    )
+  )#these aren't even the real covariates??
 saveRDS(export, "output-data/export_covariates.RDS")
 
 # Step 6: construct calibration plot ---------------------------------------
 
 # Select data
-X_cv <- X[!is.na(Y), ]
+X_cv <- X[!is.na(Y),]
 Y_cv <- Y[!is.na(Y)]
 
 # Specifiy basis for folds and weights
@@ -158,8 +209,8 @@ cv_folds <- function(x, n = 10){
   # Divide into equalish groups:
   split(x, cut(seq_along(x), n, labels = FALSE))} 
 
-#folds <- cv_folds(unique(iso3c), n = 10) # We load a common set of folds here, to keep results comparable with other algorithms we test. Folds are stratified by country, i.e. no country is in the training and test set simultaneously
-folds <- readRDS("output-data/folds.RDS")
+folds <- cv_folds(unique(iso3c), n = 10) # We load a common set of folds here, to keep results comparable with other algorithms we test. Folds are stratified by country, i.e. no country is in the training and test set simultaneously
+#folds <- readRDS("output-data/folds.RDS")
 
 
 # Make container for results
@@ -183,7 +234,6 @@ for(i in 1:length(folds)){
   test_w <- weights[iso3c %in% folds[[i]]]
   
   # Fit agtboost - this function fits a gradient booster
-  library(agtboost)
   gbt_fit <- gbt.train(train_y,
                        as.matrix(train_x[, setdiff(colnames(X_cv), c("iso3c", "region"))]), 
                        learning_rate = 0.01,
@@ -249,10 +299,9 @@ pred_matrix <- data.frame()
 m_predictors <- setdiff(colnames(X_full), c("iso3c", "region"))
 
 # Generate model (= estimate) and bootstrap predictions 
-library(agtboost)
 
 # Define number of bootstrap iterations. We use 100.
-B = 100
+B = 10 #100
 counter = -1
 
 # Loop over bootstrap iterations
