@@ -1153,6 +1153,8 @@ date_range <- unique(country_daily_excess_deaths$date)
 mumbai <- merge(mumbai, data.frame("date" = date_range), by = "date", all = T) %>%
   fill(c(country, region, subregion, population, median_age, aged_70_older, life_expectancy),
        .direction = "up") %>%
+  fill(c(country, region, subregion, population, median_age, aged_70_older, life_expectancy),
+       .direction = "down") %>%
   mutate(
     iso3c = "IND"
   )
