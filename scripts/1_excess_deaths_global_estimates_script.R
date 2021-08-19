@@ -412,8 +412,10 @@ static_data[[length(static_data) + 1]] <- polity
   
 
 ##A dataset of islands
-islands <- c("Anguilla",
+islands <- c("Aruba",
+              "Anguilla",
              "Antigua and Barbuda",
+             "Australia",
              "Bahamas",
              "Bahrain",
              "Barbados",
