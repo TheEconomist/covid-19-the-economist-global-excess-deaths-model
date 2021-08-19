@@ -1284,7 +1284,7 @@ dist_dy <- dist_dy %>%
       ~case_when(
         .x == "ROM" ~ "ROU",
         .x == "ZAR" ~ "COD",
-        .x == "SCG" ~ "SRB",
+        .x == "YUG" ~ "SRB",
         .x == "TMP" ~ "TLS",
         TRUE ~ .x
       )
@@ -1335,8 +1335,18 @@ dist_dy <- dist_dy %>%
         iso_d = if_else(iso_d == "SRB", "XKX", iso_d),
         iso_o =if_else(iso_o == "SRB", "XKX", iso_o)
       )
+  ) %>%
+  rbind(
+    # Palestine (use Israel values)
+    dist_dy %>% 
+      filter(
+        iso_d == "ISR" | iso_o == "ISR"
+      ) %>%
+      mutate(
+        iso_d = if_else(iso_d == "ISR", "PSE", iso_d),
+        iso_o =if_else(iso_o == "ISR", "PSE", iso_o)
+      )
   )
-
 region_average_vars <- c("sero_nat_or_reg_delta",
                          "sero_nat_delta",
                          "daily_excess_deaths_per_100k",
