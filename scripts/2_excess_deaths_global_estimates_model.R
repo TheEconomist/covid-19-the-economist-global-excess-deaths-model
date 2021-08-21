@@ -9,9 +9,32 @@ library(agtboost)
 options(scipen=999)
 
 # Step 2: import excess deaths data frame with covariates ---------------------------------------
-df <- pred_frame <- readRDS("output-data/country_daily_excess_deaths_with_covariates.Rds") %>%
+df <-  readRDS("output-data/country_daily_excess_deaths_with_covariates.Rds") %>%
   data.frame()
 #df <- pred_frame <- data.frame(readRDS("output-data/country_daily_excess_deaths_with_covariates.RDS")) # <- to use pre-generated RDS
+
+#remove countries with almost no information (more than 50% missing)
+countries_to_remove <- df %>%
+  group_by(iso3c) %>%
+  summarise(
+    across(
+      !c(date, population, country),
+      ~ sum(is.na(.x)) > 0
+    )
+  ) %>%
+  mutate(
+    missing_cols = rowMeans(across(where(is.logical)))
+  ) %>% ungroup() %>%
+  select(iso3c, missing_cols) %>%
+  filter(missing_cols >= 0.55) %>%
+  pull(iso3c)
+countrycode::countrycode(countries_to_remove,
+                         origin = "iso3c", destination = "country.name")
+#All micro states, disputed territories or overseas territories +  Puerto Rico which
+#is missing covid data other than vaccinations
+pred_frame <- df <- df %>%
+  filter(!(iso3c %in% countries_to_remove))
+
 
 # Select DV
 dv <- "daily_excess_deaths_per_100k"
@@ -509,19 +532,7 @@ X <- X %>%
   select(!week)
 
 #Get weekly average for outcome since not every weekly correctly aligns with the week calculated
-Y <- df %>%
-  mutate(
-    `week` = round(date/7, 0)
-  ) %>%
-  group_by(week, iso3c) %>%
-  summarise(
-    across(
-      all_of(dv),
-      ~mean(.x, na.rm = T)
-    )
-  ) %>%
-  ungroup() %>%
-  arrange(iso3c, week) %>%
+Y <- X %>%
   pull(dv)
 
 # Save covariates:
@@ -538,7 +549,7 @@ export <- pred_frame %>%
         "daily_excess_deaths",
         dv)
     )
-  )#these aren't even the real covariates??
+  )#these aren't even the real covariates?? We'll keep this as it is for now
 saveRDS(export, "output-data/export_covariates.RDS")
 
 # Step 6: construct calibration plot ---------------------------------------
@@ -559,9 +570,13 @@ cv_folds <- function(x, n = 10){
   # Divide into equalish groups:
   split(x, cut(seq_along(x), n, labels = FALSE))} 
 
-folds <- cv_folds(unique(iso3c), n = 10) # We load a common set of folds here, to keep results comparable with other algorithms we test. Folds are stratified by country, i.e. no country is in the training and test set simultaneously
-#folds <- readRDS("output-data/folds.RDS")
 
+# We load a common set of folds here, to keep results comparable with other algorithms we test. Folds are stratified by country, i.e. no country is in the training and test set simultaneously
+folds <- readRDS("output-data/folds.RDS")
+
+#generate folds
+#folds <- cv_folds(unique(iso3c), n = 10) 
+#saveRDS(folds, "output-data/folds.RDS")
 
 # Make container for results
 results <- data.frame(target = Y_cv, 
