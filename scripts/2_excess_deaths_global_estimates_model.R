@@ -64,83 +64,433 @@ df <- mutate(df,
 
 # Step 4: impute missing data (using min-impute coupled with one-hot encoding of NA locations) ---------------------------------------
 
-# Do one-hot-encoding to deal with missing data
-impute_missing <- function(X = df_wide,
-                           method = "min-impute",
-                           replace.inf = T){
-  X <- data.table(X)
-  invisible(
-    lapply(
-      names(X),
-      function(.name){set(X, which(is.infinite(X[[.name]])), j = .name,value =NA)}
-      )
+#group variables
+#should have no missing data
+noMissingDesign <- c("iso3c", "date", "weekday",  "country", "is_subregion")
+
+timeInvariant <- c(
+  "population",
+  "median_age_region_average",
+  "median_age_sub_region_average", "median_age_econ_region_average",
+  "wdi_life_expectancy_at_birth_region_average", "wdi_life_expectancy_at_birth_sub_region_average",
+  "wdi_life_expectancy_at_birth_econ_region_average",
+  "median_age_dist_average", "median_age_contiguous_country_average",
+  "wdi_life_expectancy_at_birth_dist_average", "wdi_life_expectancy_at_birth_contiguous_country_average",
+  "demography_adjusted_ifr_dist_average", "demography_adjusted_ifr_contiguous_country_average",
+  "regionLatin America & Caribbean", "regionSouth Asia",
+  "regionSub-Saharan Africa", "regionEurope & Central Asia",
+  "regionMiddle East & North Africa", "regionEast Asia & Pacific",
+  "regionNorth America", "subregionLatin America and the Caribbean",
+  "subregionSouthern Asia", "subregionSub-Saharan Africa",
+  "subregionSouthern Europe", "subregionWestern Asia",
+  "subregionAustralia and New Zealand", "subregionWestern Europe",
+  "subregionEastern Europe", "subregionNorthern America",
+  "subregionSouth-eastern Asia", "subregionEastern Asia",
+  "subregionPolynesia", "subregionNorthern Europe",
+  "subregionNorthern Africa", "subregionMelanesia",
+  "subregionMicronesia", "subregionCentral Asia", 
+  "wb_income_groupHigh income",
+  "wb_income_groupLow income", "wb_income_groupLower middle income",
+  "wb_income_groupUpper middle income",
+  "imf_economyUnknown", "imf_economyEmerging",
+  "imf_economyAdvanced", "continentAmericas",
+  "continentAsia", "continentAfrica",
+  "continentEurope", "continentOceania",
+  "island", "lat_largest_city", "lng_largest_city", "lat_capital", 
+  "lng_capital", "largest_city_pop_pct",
+  "vdem_freedom_of_expression_score", "vdem_liberal_democracy_score",
+  "boix_democracy_yes_no", "boix_democracy_duration_years", 
+  "freedom_house_civil_liberties", "freedom_house_political_rights",
+  "freedom_house_freedom_score", "polity_democracy_score",
+  "wdi_prop_less_2_usd_day", "wdi_gdppc_nominal", "wdi_gdppc_ppp",
+  "wdi_urban_population_pct", "wdi_urban_pop_1m_cities_pct", "wdi_gini_index",
+  "wdi_life_expectancy_at_birth", "wdi_pop_over_65", "wdi_pop_under_15",
+  "demography_adjusted_ifr", "tourist_arrivals_in_thousands_2019","population_density", "median_age",
+  "aged_65_older", "aged_70_older", "life_expectancy", "hospital_beds_per_thousand",
+  "demography_adjusted_ifr_region_average",
+  "demography_adjusted_ifr_sub_region_average", "demography_adjusted_ifr_econ_region_average"
+)
+
+timeVariant <- c(
+  "sero_nat_or_reg_delta_region_average", "sero_nat_or_reg_delta_sub_region_average", 
+  "sero_nat_or_reg_delta_econ_region_average", "sero_nat_delta_region_average",
+  "sero_nat_delta_sub_region_average", "sero_nat_delta_econ_region_average",
+  "daily_excess_deaths_per_100k_region_average", 
+  "daily_excess_deaths_per_100k_sub_region_average", 
+  "daily_excess_deaths_per_100k_econ_region_average", 
+  "daily_tests_per_100k_region_average",
+  "daily_tests_per_100k_sub_region_average", 
+  "daily_tests_per_100k_econ_region_average",
+  "daily_covid_cases_per_100k_region_average", 
+  "daily_covid_cases_per_100k_sub_region_average",
+  "daily_covid_cases_per_100k_econ_region_average", 
+  "daily_covid_deaths_per_100k_region_average",
+  "daily_covid_deaths_per_100k_sub_region_average",
+  "daily_covid_deaths_per_100k_econ_region_average",
+  "daily_positive_rate_region_average", "daily_positive_rate_sub_region_average",
+  "daily_positive_rate_econ_region_average",
+  "sero_nat_or_reg_delta_dist_average", "sero_nat_or_reg_delta_contiguous_country_average",
+  "sero_nat_delta_dist_average", "sero_nat_delta_contiguous_country_average",
+  "daily_excess_deaths_per_100k_dist_average", "daily_excess_deaths_per_100k_contiguous_country_average",
+  "daily_tests_per_100k_dist_average", "daily_tests_per_100k_contiguous_country_average",
+  "daily_covid_cases_per_100k_dist_average", "daily_covid_cases_per_100k_contiguous_country_average",
+  "daily_covid_deaths_per_100k_dist_average", "daily_covid_deaths_per_100k_contiguous_country_average",
+  "daily_positive_rate_dist_average", "daily_positive_rate_contiguous_country_average",
+  "daily_covid_deaths_per_100k", "daily_covid_deaths", "daily_covid_cases_per_100k",
+  "daily_covid_cases", "daily_tests_per_100k", "daily_positive_rate",
+  "daily_vaccinations", "daily_vaccinations_per_100k", "vaccinated_pct", 
+  "fully_vaccinated_pct", "cumulative_daily_tests_per_100k", 
+  "daily_tests",
+  "cumulative_daily_covid_cases_per_100k", 
+  "cumulative_daily_covid_deaths_per_100k", 
+  "cumulative_daily_vaccinations_per_100k",
+  "mobility_retail_rec_pct_of_baseline", 
+  "mobility_grocery_and_pharma_pct_of_baseline",
+  "mobility_parks_pct_of_baseline", "mobility_transit_rec_pct_of_baseline",
+  "mobility_workplaces_rec_pct_of_baseline",
+  "oxcgrt_schools_closed", "oxcgrt_workplaces_closed", 
+  "oxcgrt_cancel_public_events", "oxcgrt_gathering_restrictions", 
+  "oxcgrt_public_transport_closed", "oxcgrt_stay_at_home_required", 
+  "oxcgrt_internal_movement_restrictions", 
+  "oxcgrt_international_movement_restrictions", "oxcgrt_face_masks_required",
+  "sero_nat_or_reg_delta", "sero_nat_delta"
+)
+
+
+#should match the predictors
+setdiff(c(noMissingDesign, timeInvariant, timeVariant), c(predictors, exclude))
+setdiff(predictors, c(noMissingDesign, timeInvariant, timeVariant))
+#should have no overlaps
+all(c(
+  identical(setdiff(noMissingDesign, c(timeInvariant, timeVariant)), noMissingDesign),
+  identical(setdiff(timeInvariant, c(noMissingDesign, timeVariant)), timeInvariant),
+  identical(setdiff(timeVariant, c(timeInvariant, noMissingDesign)), timeVariant)
+  ))
+#correct
+
+#first check what is actually missing
+missingCounts <- df %>% 
+  summarise(
+    across(
+      everything(),
+      ~ sum(is.na(.x))
     )
-  X <- data.frame(X)
+  )%>% 
+  select(
+    where(function(x){x>0})
+  )
+
+#check that none that shouldn't be missing are not missing
+missingCounts %>% 
+  select(
+    any_of(noMissingDesign)
+  ) %>% 
+  names(
+  )
+#correct
+
+##check the time invariant variables:
+missingCounts %>% 
+  select(
+    any_of(timeInvariant)
+  ) %>% 
+  names(
+  )
+#We don't expected averages to be missing, though continuous averages for island we would expect to be missing
+df %>% 
+  select(
+    iso3c,
+    island,
+    any_of(timeInvariant)
+  ) %>%
+  select(
+    iso3c,
+    island,
+    ends_with("contiguous_country_average")
+  ) %>%
+  filter(
+    if_any(
+      ends_with("contiguous_country_average"),
+      is.na
+    )
+  ) %>%
+  select(
+    iso3c, island
+  ) %>%
+  unique() %>%
+  table()
+#This just leaves south Korea whose only neighbour (north Korea) has missing info, though since border crossings
+#are rare we'll treat it as an island
+#we will leave missing continuous_averages as NA
+#updating the variables to impute to just those with missing data
+timeInvariant_missing <- missingCounts %>% 
+  select(
+    any_of(timeInvariant)
+  ) %>% #remove contiguous averages
+  select(!ends_with("contiguous_country_average")) %>%
+  pivot_longer(everything()) %>%  #sort into order of how many values are missing
+  arrange(-value) %>%
+  pull(name)
+
+##Checking time variant variables:
+missingCounts %>% 
+  select(
+    any_of(timeVariant)
+  ) %>% 
+  names(
+  )
+#averages being NA is to be expected if all countries included are NA on that day
+#updating the variables to impute to just those with missing data
+timeVariant_missing <- missingCounts %>% 
+  select(
+    any_of(timeVariant)
+  ) %>% 
+  names()
+
+##Missing imputation:
+
+#1: Create variables to signify that observation is missing
+XNA <- df %>%
+  select(
+    iso3c, date, #keep these so its easy to remerge
+    all_of(timeInvariant_missing),
+    all_of(timeVariant_missing)
+  ) %>%
+  transmute(
+    iso3c = iso3c,
+    date = date,
+    across(
+      all_of(
+        c(timeVariant_missing, timeInvariant_missing)
+      ),
+      list(is_NA=~if_else(is.na(.x),1,0))
+    )
+  )
+
+#2: Perform single imputation with weighted means, weights will be calculated
+#based upon the other time invariant variables
+#function to perfom it
+impute_missing_mean <- function(data, missing_vars, skip = c("iso3c")){
   
-  # Find columns with missing values
-  na_cols <- X %>%
-    summarise(
-      across(
-        everything(),
-        ~any(is.na(.x))
-      )
-    ) %>%
-    unlist()
-  n <- nrow(X)
-  
-  # Generate matrix of zeroes
-  XNA <- matrix(0, nrow=n, ncol=sum(na_cols))
-  
+  #progress bar
   counter <- 1
-  cat("\nImputing min values and adding missing data matrix:\n\n")
-  pb <- txtProgressBar(min=0, max=sum(na_cols), style=3)
+  cat("\nImputing weighted mean values:\n\n")
+  pb <- txtProgressBar(min=0, max=nrow(data) * length(missing_vars), style=3)
   
-  for(j in names(which(na_cols))){
-    #print(colnames(X)[j])
-    if(method == "min-impute"){
-      min_val <- min(X[[j]], na.rm = T)
+  rows <- 1:nrow(data)
+  for(var in missing_vars){
+    aux_vars <- setdiff(names(data), c(var, skip))
+    for(row in rows){
+      if(is.na(data[[var]][row])){
+        centralRow <- data[row,] %>% select(!all_of(skip)) 
+        #calculate weights
+        weights <- 1/( #inverse of the distances
+          sweep( #subtract this countries data from every country
+          as.matrix(data %>% select(!all_of(skip))),
+          2,
+          as.matrix(centralRow)
+          )^2 %>% #square then sum then square root to get euclidean distance
+          rowSums(na.rm = T) %>%
+          sqrt()
+        )
+        #replace with weighted mean
+        data[[var]][row] <- weighted.mean(data[[var]][-row], weights[-row],
+                                          na.rm = T)
+      }
+      counter = counter + 1
+      setTxtProgressBar(pb, value=counter)
     }
-    if(method == "mean-impute"){
-      min_val <- mean(X[[j]], na.rm = T) 
+  }
+  cat("\n")
+  return(data)
+}
+X <- df %>%
+  select(!all_of(timeInvariant_missing)) %>%
+  left_join(
+    df %>% #reduce to one entry per country
+      select(iso3c, all_of(timeInvariant)) %>%
+      unique() %>% #impute
+      impute_missing_mean(timeInvariant_missing) %>%
+      select(iso3c, all_of(timeInvariant_missing))
+  )
+
+#3:Linearly interpolate the time-varying variables for the countries that have
+#some data
+better_approx <- function(x, y, xout, rule){
+  #a wrapper for approx to catch when there are no values at all
+  if(sum(!is.na(y)) < 2){
+    #if no values (or only one) just return them to be imputed else where
+    return(
+      y
+    )
+  } else{
+    #before interpolating if a leading value is NA we set it to 0
+    if(is.na(y[1])){
+      y[1] <- 0
+      #this means that our leading values are linear interpolated from 0 to whatever the first non NA value is
     }
-    na_ind <- is.na(X[[j]])
-    XNA[na_ind, counter] <- 1
-    X[na_ind,j] <- min_val# - 1 removed this because it doesn't make any sense and gives non-sense values
+    approx(x, y, xout, rule = rule)$y
+    #by having rule = 2 any trailing NA get set to the last value
+  }
+}
+X <- X %>%
+  group_by(iso3c) %>%
+  arrange(iso3c, date) %>% #interpolate
+  mutate(
+    across(
+      all_of(timeVariant_missing),
+      ~better_approx(date,.x, date, rule = 2)
+    )
+  ) %>%
+  ungroup()
+
+#4:Impute remaining time variant variables
+remainingVars <- 
+  X %>% summarise(
+    across(
+      everything(),
+      ~ sum(is.na(.x))
+    )
+  )%>%
+  select(all_of(timeVariant)) %>%
+  select(!ends_with("contiguous_country_average")) %>%
+  select(
+    where(function(x){x>0})
+  ) %>% names()
+#deal with contiguous averages later
+impute_missing_mean_timeVariant <- function(data, missing_vars, timeInvariant_vars, skip = c("iso3c")){
+  #differs from the other function in that calculate the weights for the other countries then
+  #give the country the weighted average of all existing values for the variables
+  aux_df <- data %>% select(iso3c, all_of(timeInvariant_vars)) %>%
+    unique()
+  countrys <- aux_df %>% pull(iso3c)
+  
+  #progress bar
+  counter <- 1
+  cat("\nImputing weighted mean values:\n\n")
+  pb <- txtProgressBar(min=0, max=length(countrys), style=3)
+  
+  for(country in countrys){
+    #determine which variables are missing
+    missing_vars_spec <- data %>% 
+      filter(iso3c == country) %>% 
+      select(all_of(missing_vars)) %>%
+      summarise(
+        across(
+          everything(),
+          ~any(is.na(.x))
+        )
+      ) %>%
+      select(
+        where(function(x){x})
+      ) %>% names()
+    if(length(missing_vars_spec) > 0){
+      country_df <- data %>%
+        filter(iso3c == country)
+      #calculate weight for country
+      weights <- 1/( #inverse of the distances
+        sweep( #subtract this countries data from every country
+          as.matrix(aux_df %>% select(!iso3c)),
+          2,
+          as.matrix(aux_df %>% filter(iso3c == country) %>% select(!iso3c))
+        )^2 %>% #square then sum then square root to get euclidean distance
+          rowSums(na.rm = T) %>%
+          sqrt()
+      )
+      weights[is.infinite(weights)] <- 0
+      for(var in missing_vars_spec){
+        #calculate weighted mean for the variables
+        country_df <- country_df %>%
+          select(!var) %>%
+          left_join(
+            data %>% select(iso3c, date, var) %>% pivot_wider(names_from = iso3c,
+                                                    values_from = var) %>%
+              rowwise() %>%
+              transmute(
+                date = date,
+                !! var := weighted.mean(c_across(!date), weights, na.rm = TRUE)
+              ),
+            by = "date"
+          )
+      }
+      #merge back into data
+      data <- data %>%
+        filter(iso3c != country) %>%
+        rbind(
+          country_df
+        )
+    }
     counter = counter + 1
     setTxtProgressBar(pb, value=counter)
   }
-  
   cat("\n")
-  
-  
-  XNA <- t(unique(t(XNA)))
-  
-  # reduce XNA
-  ind <- 1
-  while(ind < ncol(XNA))
-  {
-    equal <- rep(FALSE, ncol(XNA)-ind)
-    for(j in (ind+1):ncol(XNA))
-    {
-      equal[j-ind] <- all(XNA[,ind] == XNA[,j])
-    }
-    sum(equal)
-    
-    XNA <- XNA[,!c( rep(F, ind), equal), drop=F]
-    ind = ind + 1
-  }
-  
-  colnames(XNA) <- paste0("NA_matrix_col", 1:ncol(XNA))
-  
-  class(XNA) <- "numeric"
-  
-  # Bind X and 1-hot of XNA
-  dX <- cbind(X, XNA)
-  
-  return(dX)}
+  return(data)
+}
+X <- X %>%
+  select(!all_of(remainingVars)) %>%
+  left_join(
+    X %>%
+      select(iso3c, date, all_of(unique(
+        c(remainingVars, timeInvariant, timeVariant)
+        ))) %>% #impute
+      impute_missing_mean_timeVariant(remainingVars, timeInvariant) %>%
+      select(iso3c, date, all_of(remainingVars))
+  )
 
-X <- impute_missing(df[, c(predictors, "iso3c")])
-X$region <- pred_frame$region # we use this for plotting later
+#5. same again for the contiguous averages but we leave out the islands and south Korea
+remainingVars <- 
+  X %>% summarise(
+    across(
+      everything(),
+      ~ sum(is.na(.x))
+    )
+  )%>%
+  select(all_of(timeVariant)) %>%
+  select(
+    where(function(x){x>0})
+  ) %>% names()
+X <- X %>% filter(island == 1 | iso3c == "KOR") %>%
+  rbind(
+    X %>% filter(island ==  0, iso3c != "KOR") %>%
+      select(!all_of(remainingVars)) %>%
+      left_join(
+        X %>% filter(island ==  0, iso3c != "KOR") %>%
+          select(iso3c, date, all_of(unique(
+            c(remainingVars, timeInvariant, timeVariant)
+          ))) %>% #impute
+          impute_missing_mean_timeVariant(remainingVars, timeInvariant) %>%
+          select(iso3c, date, all_of(remainingVars))
+      )
+  )
+
+#6 Deal with continguous averages, set to 0 
+X <- X %>%
+  mutate(across(
+    ends_with("contiguous_country_average"),
+    ~if_else(is.na(.x), 0,
+             .x)
+  )
+  )
+
+#add in indicators
+X <- left_join(
+  X,
+  XNA
+)
+
+predictors <- setdiff(names(X), c(exclude,dv))
+
+#remove uneeded data etc
+remove(missingCounts, XNA, countries_to_remove, i, noMissingDesign, remainingVars,
+       timeInvariant, timeInvariant_missing, timeVariant, timeVariant_missing,
+       better_approx, impute_missing_mean, impute_missing_mean_timeVariant)
+
+#add regions back in (we use this for plotting later) and remove uneeded variables
+X <- X %>%
+  left_join(
+    pred_frame %>% select(iso3c, region) %>%
+      unique()
+  )
 
 # Step 5: collapse to weekly data to reduce noise and speed up calculations, save export covariates for future merge with model predictions  ---------------------------------------
 X <- X %>%
@@ -252,7 +602,7 @@ for(i in 1:length(folds)){
 
 # Weighted mean-squared error:
 mean((abs(results$target - results$preds)^2)*results$weights/mean(results$weights))
-
+#0.001325083
 # Save fold results (so we can compare with other folds)
 write_csv(results, "output-data/results_gradient_booster.csv")
 
