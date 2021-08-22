@@ -424,9 +424,9 @@ impute_missing_mean_timeVariant <- function(data, missing_vars, timeInvariant_va
       for(var in missing_vars_spec){
         #calculate weighted mean for the variables
         country_df <- country_df %>%
-          select(!var) %>%
+          select(!all_of(var)) %>%
           left_join(
-            data %>% select(iso3c, date, var) %>% pivot_wider(names_from = iso3c,
+            data %>% select(iso3c, date, all_of(var)) %>% pivot_wider(names_from = iso3c,
                                                     values_from = var) %>%
               rowwise() %>%
               transmute(
