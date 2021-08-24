@@ -508,6 +508,11 @@ X <- left_join(
 
 predictors <- setdiff(names(X), c(exclude,dv))
 
+#remove uneeded data etc
+remove(missingCounts, XNA, countries_to_remove, i, noMissingDesign, remainingVars,
+       timeInvariant, timeInvariant_missing, timeVariant, timeVariant_missing,
+       better_approx, impute_missing_mean, impute_missing_mean_timeVariant)
+
 #add regions back in (we use this for plotting later) and remove uneeded variables
 X <- X %>%
   left_join(
@@ -531,55 +536,9 @@ X <- X %>%
   arrange(iso3c, week) %>%
   select(!week)
 
-# Step 6: PCA to reduce number of variables
-
-#PCA for time-invariant factors
-pca <- prcomp(X %>% select(all_of(timeInvariant)), scale. = TRUE)
-#convert deviations into percentage of whole
-pca$sdev <- pca$sdev/sum(pca$sdev)
-#only keep variables with >10% deviation
-cols <- sum(pca$sdev > 0.01)
-#remove time Invariant and replace with PCA variables
-X <- select(X, !all_of(timeInvariant), population) %>%
-  cbind(
-    pca$x[,1:cols]
-  )
-#PCA for time-variant factors
-pca <- prcomp(X %>% select(all_of(timeVariant)), scale. = TRUE)
-#convert deviations into percentage of whole
-pca$sdev <- pca$sdev/sum(pca$sdev)
-#only keep variables with >10% deviation
-cols <- sum(pca$sdev > 0.01)
-#change names so as not to overwrite
-colnames(pca$x) <- paste0(colnames(pca$x), "_1")
-#remove time Invariant and replace with PCA variables
-X <- select(X, !all_of(timeVariant)) %>%
-  cbind(
-    pca$x[,1:cols]
-  )
-#PCA for NA factors
-pca <- prcomp(X %>% select(ends_with("is_NA")), scale. = TRUE)
-#convert deviations into percentage of whole
-pca$sdev <- pca$sdev/sum(pca$sdev)
-#only keep variables with >10% deviation
-cols <- sum(pca$sdev > 0.01)
-#change names so as not to overwrite
-colnames(pca$x) <- paste0(colnames(pca$x), "_2")
-#remove time Invariant and replace with PCA variables
-X <- select(X, !ends_with("is_NA")) %>%
-  cbind(
-    pca$x[,1:cols]
-  )
-
 #Get weekly average for outcome since not every weekly correctly aligns with the week calculated
 Y <- X %>%
   pull(dv)
-
-#remove uneeded data etc
-remove(missingCounts, XNA, countries_to_remove, i, noMissingDesign, remainingVars,
-       timeInvariant, timeInvariant_missing, timeVariant, timeVariant_missing,
-       better_approx, impute_missing_mean, impute_missing_mean_timeVariant,
-       pca, cols)
 
 # Save covariates:
 export <- pred_frame %>%
@@ -607,9 +566,6 @@ Y_cv <- Y[!is.na(Y)]
 # Specifiy basis for folds and weights
 weights <- log(X_cv$population)
 iso3c <- X_cv$iso3c
-
-X_cv <- X_cv %>%
-  select(!population)
 
 # Define folds
 cv_folds <- function(x, n = 10){
@@ -710,12 +666,12 @@ Y_full <- Y[!is.na(Y)]
 pred_matrix <- data.frame()
 
 # Define predictors
-m_predictors <- setdiff(colnames(X_full), c("iso3c", "region", "population"))
+m_predictors <- setdiff(colnames(X_full), c("iso3c", "region"))
 
 # Generate model (= estimate) and bootstrap predictions 
 
 # Define number of bootstrap iterations. We use 100.
-B = 0 #100
+B = 10 #100
 counter = -1
 
 # Loop over bootstrap iterations
