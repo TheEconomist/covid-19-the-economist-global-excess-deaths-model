@@ -38,9 +38,12 @@ pred_matrix <- pred_matrix*export_covariates$population / 100000
 estimate <- as.numeric(pred_matrix[, 1])
 
 # Harmonize export dates (first of every week)
-export_covariates$week <- round(as.numeric(export_covariates$date)/7, 0)+1-min(round(as.numeric(export_covariates$date)/7, 0))
-export_covariates$date <- ave(export_covariates$date, export_covariates$week,
-                              FUN = function(x) min(x, na.rm = T))
+export_covariates <- export_covariates %>%
+  mutate(
+    week = round(as.numeric(date)/7, 0)+1-min(round(as.numeric(date)/7, 0)),
+    date = ave(date, week,
+               FUN = function(x) min(x, na.rm = T))
+  )
 
 # Check that this worked correctly:
 min(table(export_covariates$date)) == max(table(export_covariates$date))
@@ -48,24 +51,36 @@ min(table(export_covariates$date)) == max(table(export_covariates$date))
 # Harmonize country names with The Economist standard, maintaining row order
 export_covariates$row_order <- 1:nrow(export_covariates)
 export_covariates <- merge(export_covariates,
-                           read_csv("source-data/economist_country_names.csv")[, c("Name", "ISOA3", "Regions", "Income group WB", "Economy IMF")],
+                           read_csv("source-data/raw/econ_df.csv")[, c("Name", "ISOA3", "Regions", "Income group WB", "Economy IMF")],
                            by.x = "iso3c",
                            by.y = "ISOA3", all.x = T)
-export_covariates <- export_covariates[order(export_covariates$row_order), ]
-export_covariates$row_order <- NULL
+export_covariates <- arrange(export_covariates,row_order) %>%
+  select(!row_order)
 
-export_covariates$country <- export_covariates$Name
-export_covariates$country[is.na(export_covariates$country)] <- countrycode(
-  export_covariates$iso3c[is.na(export_covariates$country)], "iso3c", "country.name")
-export_covariates$Name <- NULL
+#set up names
+export_covariates <- export_covariates %>%
+  mutate(country = Name,
+         country = if_else(is.na(country),
+                           countrycode(
+                             iso3c, "iso3c", "country.name"
+                           ),
+                           country)) %>%
+  select(!Name)
 
 # Define regions for main chart:
-export_covariates$continent <- countrycode(export_covariates$iso3c, "iso3c", "continent")
-export_covariates$continent[export_covariates$iso3c == "USA"] <- "United States"
-export_covariates$continent[export_covariates$iso3c == "IND"] <- "India"
-export_covariates$continent[export_covariates$iso3c == "CHN"] <- "China"
-export_covariates$continent[export_covariates$iso3c == "RUS"] <- "Russia"
-export_covariates$continent[export_covariates$continent %in% c("Asia", "Oceania")] <- "Asia & Oceania"
+export_covariates <- mutate(export_covariates,
+                            continent = case_when(
+                              iso3c == "USA" ~ "United States",
+                              iso3c == "IND" ~ "India",
+                              iso3c == "CHN" ~ "China",
+                              iso3c == "RUS" ~ "Russia",
+                              TRUE ~ countrycode(iso3c, "iso3c", "continent")
+                            ),
+                            continent = if_else(
+                              continent %in% c("Asia", "Oceania"),
+                              "Asia & Oceania",
+                              continent
+                            ))
 
 
 # Step 3: Define function to construct confidence interval given grouping ------------------------------------------------------------------------------
@@ -227,7 +242,7 @@ confidence_intervals <- function(new_col_names = "estimated_daily_excess_deaths"
   }
   
   # Return result neatly formatted
-  result <- cbind.data.frame(covars[, c(group, time, population)], 
+  result <- cbind.data.frame(covars %>% select(all_of(c(group, time, population))), 
                              estimate, 
                              ci_95_top,
                              ci_90_top,
@@ -238,7 +253,7 @@ confidence_intervals <- function(new_col_names = "estimated_daily_excess_deaths"
                              raw_estimate,
                              known_data,
                              recorded_data)
-  colnames(result) <- c(colnames(covars[, c(group, time, population)]),
+  colnames(result) <- c(c(group, time, population),
                         paste0(new_col_names),
                         paste0(new_col_names, "_ci_95_top"),
                         paste0(new_col_names, "_ci_90_top"),
