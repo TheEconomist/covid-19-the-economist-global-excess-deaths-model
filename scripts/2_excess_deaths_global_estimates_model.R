@@ -671,7 +671,7 @@ m_predictors <- setdiff(colnames(X_full), c("iso3c", "region"))
 # Generate model (= estimate) and bootstrap predictions 
 
 # Define number of bootstrap iterations. We use 100.
-B = 10 #100
+B = 0 #100
 counter = -1
 
 # Loop over bootstrap iterations
