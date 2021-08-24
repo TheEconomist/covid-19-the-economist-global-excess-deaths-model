@@ -305,11 +305,13 @@ impute_missing_mean <- function(data, missing_vars, skip = c("iso3c")){
     aux_vars <- setdiff(names(data), c(var, skip))
     for(row in rows){
       if(is.na(data[[var]][row])){
-        centralRow <- data[row,] %>% select(!all_of(skip)) 
+        aux_df <- data %>% select(all_of(aux_vars)) %>%
+          scale() %>% as.data.frame()
+        centralRow <- aux_df[row,]
         #calculate weights
         weights <- 1/( #inverse of the distances
           sweep( #subtract this countries data from every country
-          as.matrix(data %>% select(!all_of(skip))),
+          as.matrix(aux_df),
           2,
           as.matrix(centralRow)
           )^2 %>% #square then sum then square root to get euclidean distance
@@ -387,6 +389,9 @@ impute_missing_mean_timeVariant <- function(data, missing_vars, timeInvariant_va
   aux_df <- data %>% select(iso3c, all_of(timeInvariant_vars)) %>%
     unique()
   countrys <- aux_df %>% pull(iso3c)
+  #scale df
+  aux_df <- scale(aux_df %>% select(!iso3c)) %>% as.data.frame()
+  aux_df$iso3c <- countrys
   
   #progress bar
   counter <- 1
