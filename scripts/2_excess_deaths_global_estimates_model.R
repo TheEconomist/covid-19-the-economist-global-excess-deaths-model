@@ -8,6 +8,8 @@ library(countrycode)
 library(agtboost)
 options(scipen=999)
 
+set.seed(99010)
+
 # Step 2: import excess deaths data frame with covariates ---------------------------------------
 df <-  readRDS("output-data/country_daily_excess_deaths_with_covariates.Rds") %>%
   data.frame()
