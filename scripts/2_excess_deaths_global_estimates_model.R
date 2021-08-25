@@ -274,24 +274,6 @@ timeVariant_missing <- missingCounts %>%
 
 ##Missing imputation:
 
-#1: Create variables to signify that observation is missing
-XNA <- df %>%
-  select(
-    iso3c, date, #keep these so its easy to remerge
-    all_of(timeInvariant_missing),
-    all_of(timeVariant_missing)
-  ) %>%
-  transmute(
-    iso3c = iso3c,
-    date = date,
-    across(
-      all_of(
-        c(timeVariant_missing, timeInvariant_missing)
-      ),
-      list(is_NA=~if_else(is.na(.x),1,0))
-    )
-  )
-
 #2: Perform single imputation with weighted means, weights will be calculated
 #based upon the other time invariant variables
 #function to perfom it
@@ -501,12 +483,6 @@ X <- X %>%
              .x)
   )
   )
-
-#add in indicators
-X <- left_join(
-  X,
-  XNA
-)
 
 predictors <- setdiff(names(X), c(exclude,dv))
 
