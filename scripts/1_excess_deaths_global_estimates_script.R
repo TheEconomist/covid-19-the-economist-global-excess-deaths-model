@@ -27,7 +27,7 @@ load_csv <- function(name, guess_max = NULL){
   }
 }
 
-latestDate <- "2021-06-18"
+latestDate <- "2021-08-19"
 
 ## Excess deaths from economist:
 all_weekly_excess_deaths <- load_csv("all_weekly_excess_deaths", guess_max = 10000)
@@ -412,8 +412,10 @@ static_data[[length(static_data) + 1]] <- polity
   
 
 ##A dataset of islands
-islands <- c("Anguilla",
+islands <- c("Aruba",
+              "Anguilla",
              "Antigua and Barbuda",
+             "Australia",
              "Bahamas",
              "Bahrain",
              "Barbados",
@@ -1153,6 +1155,8 @@ date_range <- unique(country_daily_excess_deaths$date)
 mumbai <- merge(mumbai, data.frame("date" = date_range), by = "date", all = T) %>%
   fill(c(country, region, subregion, population, median_age, aged_70_older, life_expectancy),
        .direction = "up") %>%
+  fill(c(country, region, subregion, population, median_age, aged_70_older, life_expectancy),
+       .direction = "down") %>%
   mutate(
     iso3c = "IND"
   )
@@ -1282,7 +1286,7 @@ dist_dy <- dist_dy %>%
       ~case_when(
         .x == "ROM" ~ "ROU",
         .x == "ZAR" ~ "COD",
-        .x == "SCG" ~ "SRB",
+        .x == "YUG" ~ "SRB",
         .x == "TMP" ~ "TLS",
         TRUE ~ .x
       )
@@ -1333,8 +1337,18 @@ dist_dy <- dist_dy %>%
         iso_d = if_else(iso_d == "SRB", "XKX", iso_d),
         iso_o =if_else(iso_o == "SRB", "XKX", iso_o)
       )
+  ) %>%
+  rbind(
+    # Palestine (use Israel values)
+    dist_dy %>% 
+      filter(
+        iso_d == "ISR" | iso_o == "ISR"
+      ) %>%
+      mutate(
+        iso_d = if_else(iso_d == "ISR", "PSE", iso_d),
+        iso_o =if_else(iso_o == "ISR", "PSE", iso_o)
+      )
   )
-
 region_average_vars <- c("sero_nat_or_reg_delta",
                          "sero_nat_delta",
                          "daily_excess_deaths_per_100k",
