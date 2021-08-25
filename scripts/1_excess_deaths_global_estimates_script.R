@@ -27,7 +27,7 @@ load_csv <- function(name, guess_max = NULL){
   }
 }
 
-latestDate <- "2021-06-18"
+latestDate <- "2021-08-19"
 
 ## Excess deaths from economist:
 all_weekly_excess_deaths <- load_csv("all_weekly_excess_deaths", guess_max = 10000)

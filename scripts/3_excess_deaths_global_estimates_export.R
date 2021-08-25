@@ -21,6 +21,9 @@ export_covariates <- readRDS("output-data/export_covariates.RDS")
 
 # Drop our subnational region(s) (we include the countries in which they are part):
 pred_matrix <- pred_matrix[export_covariates$iso3c != "IND_Mumbai", ]
+if(is.null(ncol(pred_matrix))){
+  pred_matrix <- matrix(pred_matrix, ncol = 1)
+}
 export_covariates <- export_covariates[export_covariates$iso3c != "IND_Mumbai", ]
 
 # Fix a spike in some bootstrap iterations predictions due to an overfit on sparse Chinese data (does not affect central estimate):
@@ -35,9 +38,12 @@ pred_matrix <- pred_matrix*export_covariates$population / 100000
 estimate <- as.numeric(pred_matrix[, 1])
 
 # Harmonize export dates (first of every week)
-export_covariates$week <- round(as.numeric(export_covariates$date)/7, 0)+1-min(round(as.numeric(export_covariates$date)/7, 0))
-export_covariates$date <- ave(export_covariates$date, export_covariates$week,
-                              FUN = function(x) min(x, na.rm = T))
+export_covariates <- export_covariates %>%
+  mutate(
+    week = round(as.numeric(date)/7, 0)+1-min(round(as.numeric(date)/7, 0)),
+    date = ave(date, week,
+               FUN = function(x) min(x, na.rm = T))
+  )
 
 # Check that this worked correctly:
 min(table(export_covariates$date)) == max(table(export_covariates$date))
@@ -45,24 +51,36 @@ min(table(export_covariates$date)) == max(table(export_covariates$date))
 # Harmonize country names with The Economist standard, maintaining row order
 export_covariates$row_order <- 1:nrow(export_covariates)
 export_covariates <- merge(export_covariates,
-                           read_csv("source-data/economist_country_names.csv")[, c("Name", "ISOA3", "Regions", "Income group WB", "Economy IMF")],
+                           read_csv("source-data/raw/econ_df.csv")[, c("Name", "ISOA3", "Regions", "Income group WB", "Economy IMF")],
                            by.x = "iso3c",
                            by.y = "ISOA3", all.x = T)
-export_covariates <- export_covariates[order(export_covariates$row_order), ]
-export_covariates$row_order <- NULL
+export_covariates <- arrange(export_covariates,row_order) %>%
+  select(!row_order)
 
-export_covariates$country <- export_covariates$Name
-export_covariates$country[is.na(export_covariates$country)] <- countrycode(
-  export_covariates$iso3c[is.na(export_covariates$country)], "iso3c", "country.name")
-export_covariates$Name <- NULL
+#set up names
+export_covariates <- export_covariates %>%
+  mutate(country = Name,
+         country = if_else(is.na(country),
+                           countrycode(
+                             iso3c, "iso3c", "country.name"
+                           ),
+                           country)) %>%
+  select(!Name)
 
 # Define regions for main chart:
-export_covariates$continent <- countrycode(export_covariates$iso3c, "iso3c", "continent")
-export_covariates$continent[export_covariates$iso3c == "USA"] <- "United States"
-export_covariates$continent[export_covariates$iso3c == "IND"] <- "India"
-export_covariates$continent[export_covariates$iso3c == "CHN"] <- "China"
-export_covariates$continent[export_covariates$iso3c == "RUS"] <- "Russia"
-export_covariates$continent[export_covariates$continent %in% c("Asia", "Oceania")] <- "Asia & Oceania"
+export_covariates <- mutate(export_covariates,
+                            continent = case_when(
+                              iso3c == "USA" ~ "United States",
+                              iso3c == "IND" ~ "India",
+                              iso3c == "CHN" ~ "China",
+                              iso3c == "RUS" ~ "Russia",
+                              TRUE ~ countrycode(iso3c, "iso3c", "continent")
+                            ),
+                            continent = if_else(
+                              continent %in% c("Asia", "Oceania"),
+                              "Asia & Oceania",
+                              continent
+                            ))
 
 
 # Step 3: Define function to construct confidence interval given grouping ------------------------------------------------------------------------------
@@ -198,12 +216,12 @@ confidence_intervals <- function(new_col_names = "estimated_daily_excess_deaths"
   } 
   
   # Extract 90 and 95% confidence intervals
-  ci_95_top <- bootstrap_predictions[, round(ncol(bootstrap_predictions)*0.975, 0)]
-  ci_90_top <- bootstrap_predictions[, round(ncol(bootstrap_predictions)*0.95, 0)]
-  ci_50_top <- bootstrap_predictions[, round(ncol(bootstrap_predictions)*0.75, 0)]
-  ci_50_bot <- bootstrap_predictions[, round(ncol(bootstrap_predictions)*0.25, 0)]
-  ci_90_bot <- bootstrap_predictions[, round(ncol(bootstrap_predictions)*0.05, 0)]
-  ci_95_bot <- bootstrap_predictions[, round(ncol(bootstrap_predictions)*0.025, 0)]
+  ci_95_top <- bootstrap_predictions[, round((ncol(bootstrap_predictions)-1)*0.975, 0) + 1]
+  ci_90_top <- bootstrap_predictions[, round((ncol(bootstrap_predictions)-1)*0.95, 0) + 1]
+  ci_50_top <- bootstrap_predictions[, round((ncol(bootstrap_predictions)-1)*0.75, 0) + 1]
+  ci_50_bot <- bootstrap_predictions[, round((ncol(bootstrap_predictions)-1)*0.25, 0) + 1]
+  ci_90_bot <- bootstrap_predictions[, round((ncol(bootstrap_predictions)-1)*0.05, 0) + 1]
+  ci_95_bot <- bootstrap_predictions[, round((ncol(bootstrap_predictions)-1)*0.025, 0) + 1]
   
   # Ensure model prediction (i.e. raw estimate) within confidence interval if requested
   if(include_model_prediction_in_ci){
@@ -224,7 +242,7 @@ confidence_intervals <- function(new_col_names = "estimated_daily_excess_deaths"
   }
   
   # Return result neatly formatted
-  result <- cbind.data.frame(covars[, c(group, time, population)], 
+  result <- cbind.data.frame(covars %>% select(all_of(c(group, time, population))), 
                              estimate, 
                              ci_95_top,
                              ci_90_top,
@@ -235,7 +253,7 @@ confidence_intervals <- function(new_col_names = "estimated_daily_excess_deaths"
                              raw_estimate,
                              known_data,
                              recorded_data)
-  colnames(result) <- c(colnames(covars[, c(group, time, population)]),
+  colnames(result) <- c(c(group, time, population),
                         paste0(new_col_names),
                         paste0(new_col_names, "_ci_95_top"),
                         paste0(new_col_names, "_ci_90_top"),
@@ -257,6 +275,11 @@ confidence_intervals <- function(new_col_names = "estimated_daily_excess_deaths"
 
 
 # Step 4: Construct data frames used for graphics (both per 100k and absolute terms), per day ------------------------------------------------------------------------------
+
+#to make a run with no bootstraps compatible we can dubplicate the estimates
+if(ncol(pred_matrix) == 1){
+  pred_matrix <- cbind(pred_matrix, pred_matrix)
+}
 
 # Export 1: Country-week level, absolute units
 country_export <- confidence_intervals(new_col_names = "estimated_daily_excess_deaths",
@@ -461,7 +484,6 @@ ggplot(world_export,
 
 # Write to file:
 write_csv(world_export, "output-data/export_world.csv")
-
 
 # Export 6: World level, per 100k
 world_export <- confidence_intervals(new_col_names = "estimated_daily_excess_deaths",

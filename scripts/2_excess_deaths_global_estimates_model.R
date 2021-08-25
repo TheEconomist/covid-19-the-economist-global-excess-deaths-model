@@ -8,6 +8,8 @@ library(countrycode)
 library(agtboost)
 options(scipen=999)
 
+set.seed(99010)
+
 # Step 2: import excess deaths data frame with covariates ---------------------------------------
 df <-  readRDS("output-data/country_daily_excess_deaths_with_covariates.Rds") %>%
   data.frame()
@@ -272,24 +274,6 @@ timeVariant_missing <- missingCounts %>%
 
 ##Missing imputation:
 
-#1: Create variables to signify that observation is missing
-XNA <- df %>%
-  select(
-    iso3c, date, #keep these so its easy to remerge
-    all_of(timeInvariant_missing),
-    all_of(timeVariant_missing)
-  ) %>%
-  transmute(
-    iso3c = iso3c,
-    date = date,
-    across(
-      all_of(
-        c(timeVariant_missing, timeInvariant_missing)
-      ),
-      list(is_NA=~if_else(is.na(.x),1,0))
-    )
-  )
-
 #2: Perform single imputation with weighted means, weights will be calculated
 #based upon the other time invariant variables
 #function to perfom it
@@ -305,11 +289,13 @@ impute_missing_mean <- function(data, missing_vars, skip = c("iso3c")){
     aux_vars <- setdiff(names(data), c(var, skip))
     for(row in rows){
       if(is.na(data[[var]][row])){
-        centralRow <- data[row,] %>% select(!all_of(skip)) 
+        aux_df <- data %>% select(all_of(aux_vars)) %>%
+          scale() %>% as.data.frame()
+        centralRow <- aux_df[row,]
         #calculate weights
         weights <- 1/( #inverse of the distances
           sweep( #subtract this countries data from every country
-          as.matrix(data %>% select(!all_of(skip))),
+          as.matrix(aux_df),
           2,
           as.matrix(centralRow)
           )^2 %>% #square then sum then square root to get euclidean distance
@@ -387,6 +373,9 @@ impute_missing_mean_timeVariant <- function(data, missing_vars, timeInvariant_va
   aux_df <- data %>% select(iso3c, all_of(timeInvariant_vars)) %>%
     unique()
   countrys <- aux_df %>% pull(iso3c)
+  #scale df
+  aux_df <- scale(aux_df %>% select(!iso3c)) %>% as.data.frame()
+  aux_df$iso3c <- countrys
   
   #progress bar
   counter <- 1
@@ -424,9 +413,9 @@ impute_missing_mean_timeVariant <- function(data, missing_vars, timeInvariant_va
       for(var in missing_vars_spec){
         #calculate weighted mean for the variables
         country_df <- country_df %>%
-          select(!var) %>%
+          select(!all_of(var)) %>%
           left_join(
-            data %>% select(iso3c, date, var) %>% pivot_wider(names_from = iso3c,
+            data %>% select(iso3c, date, all_of(var)) %>% pivot_wider(names_from = iso3c,
                                                     values_from = var) %>%
               rowwise() %>%
               transmute(
@@ -495,18 +484,7 @@ X <- X %>%
   )
   )
 
-#add in indicators
-X <- left_join(
-  X,
-  XNA
-)
-
 predictors <- setdiff(names(X), c(exclude,dv))
-
-#remove uneeded data etc
-remove(missingCounts, XNA, countries_to_remove, i, noMissingDesign, remainingVars,
-       timeInvariant, timeInvariant_missing, timeVariant, timeVariant_missing,
-       better_approx, impute_missing_mean, impute_missing_mean_timeVariant)
 
 #add regions back in (we use this for plotting later) and remove uneeded variables
 X <- X %>%
@@ -530,10 +508,27 @@ X <- X %>%
   ungroup() %>%
   arrange(iso3c, week) %>%
   select(!week)
+#drop week day since that is meaningless now
+X <- select(X, !weekday)
+
+#get predictors
+predictors <- setdiff(colnames(X), c(dv, exclude,
+                                     "region" #this is only here for plotting
+))
 
 #Get weekly average for outcome since not every weekly correctly aligns with the week calculated
 Y <- X %>%
   pull(dv)
+
+#remove Y from X
+X <- X %>%
+  select(!all_of(dv))
+
+#remove uneeded data etc
+remove(missingCounts, XNA, countries_to_remove, i, noMissingDesign, remainingVars,
+       timeInvariant, timeInvariant_missing, timeVariant, timeVariant_missing,
+       better_approx, impute_missing_mean, impute_missing_mean_timeVariant,
+       pca, cols)
 
 # Save covariates:
 export <- pred_frame %>%
@@ -600,7 +595,7 @@ for(i in 1:length(folds)){
   
   # Fit agtboost - this function fits a gradient booster
   gbt_fit <- gbt.train(train_y,
-                       as.matrix(train_x[, setdiff(colnames(X_cv), c("iso3c", "region"))]), 
+                       as.matrix(train_x[, predictors]), 
                        learning_rate = 0.01,
                        nrounds = 1500,
                        verbose = 10,
@@ -612,12 +607,12 @@ for(i in 1:length(folds)){
   
   # Predict on fold:
   results$preds[results$iso3c %in% folds[[i]]] <- predict(gbt_fit, 
-                                                          newdata = as.matrix(test_x[, setdiff(colnames(X_cv), c("iso3c", "region"))]))
+                                                          newdata = as.matrix(test_x[, predictors]))
 }
 
 # Weighted mean-squared error:
 mean((abs(results$target - results$preds)^2)*results$weights/mean(results$weights))
-#0.001325083
+
 # Save fold results (so we can compare with other folds)
 write_csv(results, "output-data/results_gradient_booster.csv")
 
@@ -660,13 +655,10 @@ Y_full <- Y[!is.na(Y)]
 # Create container matrix for predictions
 pred_matrix <- data.frame()
 
-# Define predictors
-m_predictors <- setdiff(colnames(X_full), c("iso3c", "region"))
-
 # Generate model (= estimate) and bootstrap predictions 
 
 # Define number of bootstrap iterations. We use 100.
-B = 10 #100
+B = 0 #100
 counter = -1
 
 # Loop over bootstrap iterations
@@ -675,7 +667,7 @@ for(i in 1:(B+1)){
   cat(paste("\n\nStarting B:", counter, "at : ", Sys.time(), "\n\n"))
   
   # Select observations for bootstrap (stratified)
-  if(B == 1){
+  if(i == 1){
     # First fit is estimation (i.e. no random sampling of data)
     obs <- 1:nrow(X_full)
   } else {
@@ -702,9 +694,8 @@ for(i in 1:(B+1)){
   
   # Fit model:
   gbt_model <- gbt.train(Y_full[obs], 
-                         as.matrix(X_full[obs, m_predictors]), 
+                         as.matrix(X_full[obs, predictors]), 
                          learning_rate = ifelse(i == 1, 0.001, 0.01),
-                         nrounds = 10000,
                          verbose = 10,
                          algorithm = "vanilla",
                          weights = temp_weights)
@@ -712,10 +703,15 @@ for(i in 1:(B+1)){
   # Save model objects
   gbt.save(gbt_model, paste0("output-data/gbt_model_B_", i, ".agtb"))
   
+  #print feature importance
+  if(i == 1){
+    gbt.importance(feature_names=colnames(X_full), object=gbt_model)
+  }
+  
   cat(paste("\nCompleted B:", counter, "at : ", Sys.time(), "\n\n"))
   
   # Save model predictions
-  preds <- predict(gbt_model, as.matrix(X[, m_predictors]))
+  preds <- predict(gbt_model, as.matrix(X[, predictors]))
   pred_matrix <- rbind(pred_matrix, preds)
   saveRDS(pred_matrix, "temp.RDS")
 }
