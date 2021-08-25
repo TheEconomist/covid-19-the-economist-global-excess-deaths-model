@@ -508,50 +508,21 @@ X <- X %>%
   ungroup() %>%
   arrange(iso3c, week) %>%
   select(!week)
+#drop week day since that is meaningless now
+X <- select(X, !weekday)
 
-# Step 6: PCA to reduce number of variables
-
-#PCA for time-invariant factors
-pca <- prcomp(X %>% select(all_of(timeInvariant)), scale. = TRUE)
-#convert deviations into percentage of whole
-pca$sdev <- pca$sdev/sum(pca$sdev)
-#only keep variables with >10% deviation
-cols <- sum(pca$sdev > 0.01)
-#remove time Invariant and replace with PCA variables
-X <- select(X, !all_of(timeInvariant), population) %>%
-  cbind(
-    pca$x[,1:cols]
-  )
-#PCA for time-variant factors
-pca <- prcomp(X %>% select(all_of(timeVariant)), scale. = TRUE)
-#convert deviations into percentage of whole
-pca$sdev <- pca$sdev/sum(pca$sdev)
-#only keep variables with >10% deviation
-cols <- sum(pca$sdev > 0.01)
-#change names so as not to overwrite
-colnames(pca$x) <- paste0(colnames(pca$x), "_1")
-#remove time Invariant and replace with PCA variables
-X <- select(X, !all_of(timeVariant)) %>%
-  cbind(
-    pca$x[,1:cols]
-  )
-#PCA for NA factors
-pca <- prcomp(X %>% select(ends_with("is_NA")), scale. = TRUE)
-#convert deviations into percentage of whole
-pca$sdev <- pca$sdev/sum(pca$sdev)
-#only keep variables with >10% deviation
-cols <- sum(pca$sdev > 0.01)
-#change names so as not to overwrite
-colnames(pca$x) <- paste0(colnames(pca$x), "_2")
-#remove time Invariant and replace with PCA variables
-X <- select(X, !ends_with("is_NA")) %>%
-  cbind(
-    pca$x[,1:cols]
-  )
+#get predictors
+predictors <- setdiff(colnames(X), c(dv, exclude,
+                                     "region" #this is only here for plotting
+))
 
 #Get weekly average for outcome since not every weekly correctly aligns with the week calculated
 Y <- X %>%
   pull(dv)
+
+#remove Y from X
+X <- X %>%
+  select(!all_of(dv))
 
 #remove uneeded data etc
 remove(missingCounts, XNA, countries_to_remove, i, noMissingDesign, remainingVars,
@@ -585,9 +556,6 @@ Y_cv <- Y[!is.na(Y)]
 # Specifiy basis for folds and weights
 weights <- log(X_cv$population)
 iso3c <- X_cv$iso3c
-
-X_cv <- X_cv %>%
-  select(!population)
 
 # Define folds
 cv_folds <- function(x, n = 10){
@@ -627,7 +595,7 @@ for(i in 1:length(folds)){
   
   # Fit agtboost - this function fits a gradient booster
   gbt_fit <- gbt.train(train_y,
-                       as.matrix(train_x[, setdiff(colnames(X_cv), c("iso3c", "region"))]), 
+                       as.matrix(train_x[, predictors]), 
                        learning_rate = 0.01,
                        nrounds = 1500,
                        verbose = 10,
@@ -639,12 +607,12 @@ for(i in 1:length(folds)){
   
   # Predict on fold:
   results$preds[results$iso3c %in% folds[[i]]] <- predict(gbt_fit, 
-                                                          newdata = as.matrix(test_x[, setdiff(colnames(X_cv), c("iso3c", "region"))]))
+                                                          newdata = as.matrix(test_x[, predictors]))
 }
 
 # Weighted mean-squared error:
 mean((abs(results$target - results$preds)^2)*results$weights/mean(results$weights))
-#0.001325083
+
 # Save fold results (so we can compare with other folds)
 write_csv(results, "output-data/results_gradient_booster.csv")
 
@@ -687,9 +655,6 @@ Y_full <- Y[!is.na(Y)]
 # Create container matrix for predictions
 pred_matrix <- data.frame()
 
-# Define predictors
-m_predictors <- setdiff(colnames(X_full), c("iso3c", "region", "population"))
-
 # Generate model (= estimate) and bootstrap predictions 
 
 # Define number of bootstrap iterations. We use 100.
@@ -702,7 +667,7 @@ for(i in 1:(B+1)){
   cat(paste("\n\nStarting B:", counter, "at : ", Sys.time(), "\n\n"))
   
   # Select observations for bootstrap (stratified)
-  if(B == 1){
+  if(i == 1){
     # First fit is estimation (i.e. no random sampling of data)
     obs <- 1:nrow(X_full)
   } else {
@@ -729,9 +694,8 @@ for(i in 1:(B+1)){
   
   # Fit model:
   gbt_model <- gbt.train(Y_full[obs], 
-                         as.matrix(X_full[obs, m_predictors]), 
+                         as.matrix(X_full[obs, predictors]), 
                          learning_rate = ifelse(i == 1, 0.001, 0.01),
-                         nrounds = 10000,
                          verbose = 10,
                          algorithm = "vanilla",
                          weights = temp_weights)
@@ -739,10 +703,15 @@ for(i in 1:(B+1)){
   # Save model objects
   gbt.save(gbt_model, paste0("output-data/gbt_model_B_", i, ".agtb"))
   
+  #print feature importance
+  if(i == 1){
+    gbt.importance(feature_names=colnames(X_full), object=gbt_model)
+  }
+  
   cat(paste("\nCompleted B:", counter, "at : ", Sys.time(), "\n\n"))
   
   # Save model predictions
-  preds <- predict(gbt_model, as.matrix(X[, m_predictors]))
+  preds <- predict(gbt_model, as.matrix(X[, predictors]))
   pred_matrix <- rbind(pred_matrix, preds)
   saveRDS(pred_matrix, "temp.RDS")
 }
