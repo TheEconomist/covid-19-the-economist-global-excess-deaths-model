@@ -51,7 +51,7 @@ min(table(export_covariates$date)) == max(table(export_covariates$date))
 # Harmonize country names with The Economist standard, maintaining row order
 export_covariates$row_order <- 1:nrow(export_covariates)
 export_covariates <- merge(export_covariates,
-                           read_csv("source-data/raw/econ_df.csv")[, c("Name", "ISOA3", "Regions", "Income group WB", "Economy IMF")],
+                           read_csv("source-data/econ_df.csv")[, c("Name", "ISOA3", "Regions", "Income group WB", "Economy IMF")],
                            by.x = "iso3c",
                            by.y = "ISOA3", all.x = T)
 export_covariates <- arrange(export_covariates,row_order) %>%
@@ -416,7 +416,6 @@ ggplot(region_export,
 
 # Write to file:
 #write_csv(region_export, "output-data/export_regions_EU_NA_Oceania_collapsed.csv")
-
 
 
 # Export 4: Region-week level, per 100k
@@ -970,116 +969,116 @@ sum(ssa_region_export$cumulative_estimated_daily_excess_deaths)/sum(ssa_region_e
 
 ### Results by income groups (added at the request of the World Bank):
 
-income_groups <- read_csv("source-data/world_bank_income_groups.csv")
-income_groups <- income_groups[income_groups$GroupCode%in% c("LIC", "LMC", "UMC", "HIC"), c("CountryCode", "GroupName")]
-colnames(income_groups) <- c("iso3c", "World_Bank_income_group")
+#income_groups <- read_csv("source-data/world_bank_income_groups.csv")
+#income_groups <- income_groups[income_groups$GroupCode%in% c("LIC", "LMC", "UMC", "HIC"), c("CountryCode", "GroupName")]
+#colnames(income_groups) <- c("iso3c", "World_Bank_income_group")
 
-export_covariates$`Income group WB` <- NULL # To minimize confusion, and ensure we are using latest data
-export_covariates$row_order <- 1:nrow(export_covariates)
-wb_export_covariates <- merge(export_covariates, income_groups, by = "iso3c", all.x = T)
-wb_export_covariates$World_Bank_income_group[is.na(wb_export_covariates$World_Bank_income_group)] <- "Unknown income group"
-wb_export_covariates <- wb_export_covariates[order(wb_export_covariates$row_order), ]
+#export_covariates$`Income group WB` <- NULL # To minimize confusion, and ensure we are using latest data
+#export_covariates$row_order <- 1:nrow(export_covariates)
+#wb_export_covariates <- merge(export_covariates, income_groups, by = "iso3c", all.x = T)
+#wb_export_covariates$World_Bank_income_group[is.na(wb_export_covariates$World_Bank_income_group)] <- "Unknown income group"
+#wb_export_covariates <- wb_export_covariates[order(wb_export_covariates$row_order), ]
 
 # Absolute, per day
-wb_export <- confidence_intervals(new_col_names = "estimated_daily_excess_deaths",
-                                  group = "World_Bank_income_group", 
-                                  time = "date",
-                                  covars = wb_export_covariates,
-                                  return_cumulative = F,
-                                  drop_ci_if_known_data = T,
-                                  bootstrap_predictions = pred_matrix,
-                                  known_data_column = "daily_excess_deaths",
-                                  model_prediction = estimate,
-                                  include_model_prediction_in_ci = F)
+#wb_export <- confidence_intervals(new_col_names = "estimated_daily_excess_deaths",
+#                                  group = "World_Bank_income_group", 
+#                                  time = "date",
+#                                  covars = wb_export_covariates,
+#                                  return_cumulative = F,
+#                                  drop_ci_if_known_data = T,
+#                                  bootstrap_predictions = pred_matrix,
+#                                  known_data_column = "daily_excess_deaths",
+#                                  model_prediction = estimate,
+#                                  include_model_prediction_in_ci = F)
 
 # Inspect:
-ggplot(wb_export[wb_export$World_Bank_income_group != "Unknown income group", ], 
-       aes(x=date, 
-           y=estimated_daily_excess_deaths,
-           col = World_Bank_income_group))+
-  geom_line(aes(y=estimated_daily_excess_deaths_ci_95_top))+
-  geom_line(aes(y=estimated_daily_excess_deaths_ci_90_top))+
-  geom_line(aes(y=estimated_daily_excess_deaths_ci_90_bot))+
-  geom_line(aes(y=estimated_daily_excess_deaths_ci_95_bot))+
-  geom_line(col="black", linetype = "dashed")+
-  facet_wrap(.~World_Bank_income_group)+theme_minimal()+
-  theme(legend.position = "none")
+#ggplot(wb_export[wb_export$World_Bank_income_group != "Unknown income group", ], 
+#       aes(x=date, 
+#           y=estimated_daily_excess_deaths,
+#           col = World_Bank_income_group))+
+#  geom_line(aes(y=estimated_daily_excess_deaths_ci_95_top))+
+#  geom_line(aes(y=estimated_daily_excess_deaths_ci_90_top))+
+#  geom_line(aes(y=estimated_daily_excess_deaths_ci_90_bot))+
+#  geom_line(aes(y=estimated_daily_excess_deaths_ci_95_bot))+
+#  geom_line(col="black", linetype = "dashed")+
+#  facet_wrap(.~World_Bank_income_group)+theme_minimal()+
+#  theme(legend.position = "none")
 
 # write to file:
 #write_csv(wb_export, "output-data/wb_income_groups.csv")
 
 
-per_capita_columns <- grep("deaths", colnames(wb_export))
+#per_capita_columns <- grep("deaths", colnames(wb_export))
 
-for(i in per_capita_columns){
-  wb_export[, i] <- 100000*wb_export[, i]/wb_export[, "population"]
-}
-colnames(wb_export)[per_capita_columns] <- paste0(colnames(wb_export)[per_capita_columns], "_per_100k")
+#for(i in per_capita_columns){
+#  wb_export[, i] <- 100000*wb_export[, i]/wb_export[, "population"]
+#}
+#colnames(wb_export)[per_capita_columns] <- paste0(colnames(wb_export)[per_capita_columns], "_per_100k")
+#
 
-
-ggplot(wb_export[wb_export$World_Bank_income_group != "Unknown income group", ], 
-       aes(x=date, 
-           y=estimated_daily_excess_deaths_per_100k,
-           col = World_Bank_income_group))+
-  geom_line(aes(y=estimated_daily_excess_deaths_ci_95_top_per_100k))+
-  geom_line(aes(y=estimated_daily_excess_deaths_ci_90_top_per_100k))+
-  geom_line(aes(y=estimated_daily_excess_deaths_ci_90_bot_per_100k))+
-  geom_line(aes(y=estimated_daily_excess_deaths_ci_95_bot_per_100k))+
-  geom_line(col="black", linetype = "dashed")+
-  facet_wrap(.~World_Bank_income_group)+theme_minimal()+
-  theme(legend.position = "none")
+#ggplot(wb_export[wb_export$World_Bank_income_group != "Unknown income group", ], 
+#       aes(x=date, 
+#           y=estimated_daily_excess_deaths_per_100k,
+#           col = World_Bank_income_group))+
+#  geom_line(aes(y=estimated_daily_excess_deaths_ci_95_top_per_100k))+
+#  geom_line(aes(y=estimated_daily_excess_deaths_ci_90_top_per_100k))+
+#  geom_line(aes(y=estimated_daily_excess_deaths_ci_90_bot_per_100k))+
+#  geom_line(aes(y=estimated_daily_excess_deaths_ci_95_bot_per_100k))+
+#  geom_line(col="black", linetype = "dashed")+
+#  facet_wrap(.~World_Bank_income_group)+theme_minimal()+
+#  theme(legend.position = "none")
 
 # write to file:
 #write_csv(wb_export, "output-data/wb_income_groups_per_100k.csv")
 
 
 # Absolute, cumulative
-wb_export <- confidence_intervals(new_col_names = "estimated_daily_excess_deaths",
-                                  group = "World_Bank_income_group", 
-                                  time = "date",
-                                  covars = wb_export_covariates,
-                                  return_cumulative = T,
-                                  drop_ci_if_known_data = T,
-                                  bootstrap_predictions = pred_matrix,
-                                  known_data_column = "daily_excess_deaths",
-                                  model_prediction = estimate,
-                                  include_model_prediction_in_ci = F)
+#wb_export <- confidence_intervals(new_col_names = "estimated_daily_excess_deaths",
+#                                  group = "World_Bank_income_group", 
+#                                  time = "date",
+#                                  covars = wb_export_covariates,
+#                                  return_cumulative = T,
+#                                  drop_ci_if_known_data = T,
+#                                  bootstrap_predictions = pred_matrix,
+#                                  known_data_column = "daily_excess_deaths",
+#                                  model_prediction = estimate,
+#                                  include_model_prediction_in_ci = F)
 
 # Inspect:
-ggplot(wb_export[wb_export$World_Bank_income_group != "Unknown income group", ], 
-       aes(x=date, 
-           y=cumulative_estimated_daily_excess_deaths,
-           col = World_Bank_income_group))+
-  geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_95_top))+
-  geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_90_top))+
-  geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_90_bot))+
-  geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_95_bot))+
-  geom_line(col="black", linetype = "dashed")+
-  facet_wrap(.~World_Bank_income_group)+theme_minimal()+
-  theme(legend.position = "none")
+#ggplot(wb_export[wb_export$World_Bank_income_group != "Unknown income group", ], 
+#       aes(x=date, 
+#           y=cumulative_estimated_daily_excess_deaths,
+#           col = World_Bank_income_group))+
+#  geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_95_top))+
+#  geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_90_top))+
+#  geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_90_bot))+
+#  geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_95_bot))+
+#  geom_line(col="black", linetype = "dashed")+
+#  facet_wrap(.~World_Bank_income_group)+theme_minimal()+
+#  theme(legend.position = "none")
 
 # write to file:
 #write_csv(wb_export, "output-data/wb_income_groups_cumulative.csv")
 
-per_capita_columns <- grep("deaths", colnames(wb_export))
+#per_capita_columns <- grep("deaths", colnames(wb_export))
 
-for(i in per_capita_columns){
-  wb_export[, i] <- 100000*wb_export[, i]/wb_export[, "population"]
-}
-colnames(wb_export)[per_capita_columns] <- paste0(colnames(wb_export)[per_capita_columns], "_per_100k")
+#for(i in per_capita_columns){
+#  wb_export[, i] <- 100000*wb_export[, i]/wb_export[, "population"]
+#}
+#colnames(wb_export)[per_capita_columns] <- paste0(colnames(wb_export)[per_capita_columns], "_per_100k")
 
 
-ggplot(wb_export[wb_export$World_Bank_income_group != "Unknown income group", ], 
-       aes(x=date, 
-           y=cumulative_estimated_daily_excess_deaths_per_100k,
-           col = World_Bank_income_group))+
-  geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_95_top_per_100k))+
-  geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_90_top_per_100k))+
-  geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_90_bot_per_100k))+
-  geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_95_bot_per_100k))+
-  geom_line(col="black", linetype = "dashed")+
-  facet_wrap(.~World_Bank_income_group)+theme_minimal()+
-  theme(legend.position = "none")
+#ggplot(wb_export[wb_export$World_Bank_income_group != "Unknown income group", ], 
+#       aes(x=date, 
+#           y=cumulative_estimated_daily_excess_deaths_per_100k,
+#           col = World_Bank_income_group))+
+#  geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_95_top_per_100k))+
+#  geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_90_top_per_100k))+
+#  geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_90_bot_per_100k))+
+#  geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_95_bot_per_100k))+
+#  geom_line(col="black", linetype = "dashed")+
+#  facet_wrap(.~World_Bank_income_group)+theme_minimal()+
+#  theme(legend.position = "none")
 
 # write to file:
 #write_csv(wb_export, "output-data/wb_income_groups_per_100k_cumulative.csv")
