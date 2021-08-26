@@ -620,10 +620,6 @@ for(i in 1:length(folds)){
 # Weighted mean-squared error:
 mean((abs(results$target - results$preds)^2)*results$weights/mean(results$weights))
 
-# Save fold results (so we can compare with other folds)
-write_csv(results, "output-data/results_gradient_booster.csv")
-
-
 # Step 7: inspect predictions ---------------------------------------
 
 # This creates a plotting data frame:
@@ -633,6 +629,7 @@ pdat <- cbind.data.frame(pred = results$preds,
                          region = X_cv$region,
                          w = results$weights)
 
+#save so we can regenerate this plot else where
 write_csv(pdat, "output-data/calibration_plot_gradient_booster.csv")
 
 
@@ -708,11 +705,17 @@ for(i in 1:(B+1)){
                          weights = temp_weights)
   
   # Save model objects
-  gbt.save(gbt_model, paste0("output-data/gbt_model_B_", i, ".agtb"))
+  gbt.save(gbt_model, paste0("output-data/models/gbt_model_B_", i, ".agtb"))
   
   #print feature importance
   if(i == 1){
-    gbt.importance(feature_names=colnames(X_full), object=gbt_model)
+    importance <- gbt.importance(feature_names=predictors, object=gbt_model) %>%
+      as.data.frame() %>%
+      arrange(.)
+    importance$names <- row.names(importance) 
+    ggplot(importance[1:10,], aes(x = fct_reorder(names, .), y = .)) + geom_col() + 
+      coord_flip() + 
+      labs(x = "10 most importance features")
   }
   
   cat(paste("\nCompleted B:", counter, "at : ", Sys.time(), "\n\n"))
@@ -720,23 +723,17 @@ for(i in 1:(B+1)){
   # Save model predictions
   preds <- predict(gbt_model, as.matrix(X[, predictors]))
   pred_matrix <- rbind(pred_matrix, preds)
-  saveRDS(pred_matrix, "temp.RDS")
 }
 
 # Clean up bootstrap prediction matrix:
 pred_matrix <- t(pred_matrix)
-colnames(pred_matrix) <- c("estimate", paste0("B", 1:B))
+if(B == 0){
+  colnames(pred_matrix) <- c("estimate")
+} else{
+  colnames(pred_matrix) <- c("estimate", paste0("B", 1:B)) 
+}
 rownames(pred_matrix) <- 1:nrow(pred_matrix)
 
-estimate <- pred_matrix[, 1]
-
-# Sort in case one wants to quickly extract bootstrap CI:
-pred_matrix_sorted <- pred_matrix
-for(i in 1:nrow(pred_matrix)){
-  pred_matrix_sorted[i, ] <- sort(pred_matrix[i, ])
-}
-
 saveRDS(pred_matrix, "output-data/pred_matrix.RDS")
-saveRDS(pred_matrix_sorted, "pred_matrix_sorted.RDS")
 
 # See next script for continuation (including extracting daily and cumulative data with confidence intervals)
