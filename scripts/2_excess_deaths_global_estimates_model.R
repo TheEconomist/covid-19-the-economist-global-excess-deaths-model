@@ -535,7 +535,7 @@ export <- cbind(X %>% select(iso3c, date), Y) %>%
   left_join(
     pred_frame %>% 
       select(
-        c(iso3c, country, region, subregion)
+        c(iso3c, country, region, subregion, population)
       ) %>%
       unique()
   ) %>% #attach the weekly mean for the number of reported covid deaths
@@ -547,6 +547,8 @@ export <- cbind(X %>% select(iso3c, date), Y) %>%
       group_by(iso3c, week) %>%
       summarise(
         daily_covid_deaths_per_100k = mean(daily_covid_deaths_per_100k, na.rm = T),
+        daily_covid_deaths = mean(daily_covid_deaths, na.rm = T),
+        daily_excess_deaths = mean(daily_excess_deaths, na.rm = T),
         date = mean(as.numeric(date))
       ) %>%
       ungroup() %>%
