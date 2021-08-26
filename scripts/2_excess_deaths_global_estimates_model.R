@@ -525,26 +525,33 @@ X <- X %>%
   select(!all_of(dv))
 
 #remove uneeded data etc
-remove(missingCounts, XNA, countries_to_remove, i, noMissingDesign, remainingVars,
+remove(missingCounts, countries_to_remove, i, noMissingDesign, remainingVars,
        timeInvariant, timeInvariant_missing, timeVariant, timeVariant_missing,
-       better_approx, impute_missing_mean, impute_missing_mean_timeVariant,
-       pca, cols)
+       better_approx, impute_missing_mean, impute_missing_mean_timeVariant)
 
-# Save covariates:
-export <- pred_frame %>%
-  filter(date %in% X$date) %>%
-  select(
-    any_of(
-      c("iso3c", "country", "date", "region", "subregion", "population", "median_age", "aged_65_older", "life_expectancy", "daily_covid_deaths_per_100k", "daily_covid_cases_per_100k", "daily_tests_per_100k", "cumulative_daily_covid_cases_per_100k", 
-        "cumulative_daily_covid_deaths_per_100k",
-        "cumulative_daily_tests_per_100k", "demography_adjusted_ifr",
-        "daily_covid_cases",
-        "daily_tests",
-        "daily_covid_deaths",
-        "daily_excess_deaths",
-        dv)
-    )
-  )#these aren't even the real covariates?? We'll keep this as it is for now
+# Save covariates (We won't actually use the covariates other than regions etc, so we'll attach Y and calculate the weekly average for reported covid deaths):
+export <- cbind(X %>% select(iso3c, date), Y) %>%
+  rename(!! dv := Y) %>% #attach the time invariant region data
+  left_join(
+    pred_frame %>% 
+      select(
+        c(iso3c, country, region, subregion)
+      ) %>%
+      unique()
+  ) %>% #attach the weekly mean for the number of reported covid deaths
+  left_join(
+    pred_frame %>% 
+      mutate(
+        week = round(as.numeric(date)/7, 0)
+      ) %>%
+      group_by(iso3c, week) %>%
+      summarise(
+        daily_covid_deaths_per_100k = mean(daily_covid_deaths_per_100k, na.rm = T),
+        date = mean(as.numeric(date))
+      ) %>%
+      ungroup() %>%
+      select(!week)
+  )
 saveRDS(export, "output-data/export_covariates.RDS")
 
 # Step 6: construct calibration plot ---------------------------------------
