@@ -10,7 +10,7 @@ options(scipen=999)
 
 ##For the sake of repoducibility this file will save copies of the datasets used
 #from the web in the source-data\raw folder. The data will be pre-processed here
-file_path <- file.path(here::here(), "source-data/raw")
+file_path <- file.path(here::here(), "source-data")
 
 
 ## Import excess deaths from economist:
