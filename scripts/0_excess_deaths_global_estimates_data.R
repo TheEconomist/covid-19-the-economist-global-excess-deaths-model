@@ -67,7 +67,7 @@ download.file("https://freedomhouse.org/sites/default/files/2021-02/All_data_FIW
               file.path(file_path, "freedom_house.xlsx"),
               mode="wb")
 #open file
-freedom_house <- read_xlsx("source-data/raw/freedom_house.xlsx", sheet = 2, skip = 1)
+freedom_house <- read_xlsx("source-data/freedom_house.xlsx", sheet = 2, skip = 1)
 #save
 write_csv(freedom_house,
           file.path(
@@ -78,10 +78,10 @@ write_csv(freedom_house,
 #source: https://www.systemicpeace.org/polityproject.html
 #download
 download.file("http://www.systemicpeace.org/inscr/p5v2018.xls",
-              file.path(here::here(), "source-data/raw/polity.xls"),
+              file.path(here::here(), "source-data/polity.xls"),
               mode="wb")
 #read
-polity <- read_xls("source-data/raw/polity.xls")
+polity <- read_xls("source-data/polity.xls")
 #save:
 write_csv(polity,
           file.path(
@@ -109,11 +109,11 @@ write_csv(wdi,
 #Import coordinates of capital cities and largest cities:
 #source:https://simplemaps.com/data/world-cities
 download.file("https://simplemaps.com/static/data/world-cities/basic/simplemaps_worldcities_basicv1.74.zip",
-              file.path(here::here(), "source-data/raw/world.cities.zip"),
+              file.path(here::here(), "source-data/world.cities.zip"),
               mode="wb")
-unzip(file.path(here::here(), "source-data/raw/world.cities.zip"),
+unzip(file.path(here::here(), "source-data/world.cities.zip"),
       files = "worldcities.csv",
-      exdir = file.path(here::here(), "source-data/raw/"))
+      exdir = file.path(here::here(), "source-data/"))
 #already csv so we'll leave 
 
 ##Import Economist IFR data
@@ -128,9 +128,9 @@ write_csv(ifr,
 ##Tourism Arrivals
 #source: https://www.unwto.org/statistic/basic-tourism-statistics
 download.file("https://webunwto.s3.eu-west-1.amazonaws.com/s3fs-public/2020-10/Arrivals-1995-2019.xlsx",
-              file.path(here::here(), "source-data/raw/unwto.xlsx"),
+              file.path(here::here(), "source-data/unwto.xlsx"),
               mode="wb")
-unwto <- read_xlsx(file.path(here::here(), "source-data/raw/unwto.xlsx"), skip =2)
+unwto <- read_xlsx(file.path(here::here(), "source-data/unwto.xlsx"), skip =2)
 #save
 write_csv(unwto,
           file.path(
