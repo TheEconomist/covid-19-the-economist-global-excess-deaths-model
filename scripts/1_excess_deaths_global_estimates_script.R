@@ -791,14 +791,14 @@ sero <- load_csv("sero") %>%
          ) %>%
   mutate(
     # Add dates
-    end_date = mdy(`Sampling End Date`),
+    end_date = dmy(`Sampling End Date`),
     start_date = if_else(is.na(`Sampling Start Date`),
                          end_date,
-                         mdy(`Sampling Start Date`)),
+                         dmy(`Sampling Start Date`)),
     #getting the midpoint
     date = start_date + floor(end_date - start_date)/2,
     #date created
-    date_created = mdy(`Date Created`)
+    date_created = dmy(`Date Created`)
   ) %>% # Generate iso3c, rename and select columns
   mutate(
   iso3c = countrycode(Country, "country.name", "iso3c"),
