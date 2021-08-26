@@ -713,9 +713,11 @@ for(i in 1:(B+1)){
       as.data.frame() %>%
       arrange(.)
     importance$names <- row.names(importance) 
-    ggplot(importance[1:10,], aes(x = fct_reorder(names, .), y = .)) + geom_col() + 
-      coord_flip() + 
-      labs(x = "10 most importance features")
+    print(
+      ggplot(importance[1:10,], aes(x = fct_reorder(names, .), y = .)) + geom_col() + 
+        coord_flip() + 
+        labs(x = "10 most importance features")
+    )
   }
   
   cat(paste("\nCompleted B:", counter, "at : ", Sys.time(), "\n\n"))
