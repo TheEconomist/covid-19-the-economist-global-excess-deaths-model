@@ -15,12 +15,12 @@ options(scipen=999)
 load_csv <- function(name, guess_max = NULL){
   if(is.null(guess_max)){
     read_csv(
-      file.path(here::here(), "source-data/raw",
+      file.path(here::here(), "source-data",
                 paste0(name, ".csv"))
     )
   } else{
     read_csv(
-      file.path(here::here(), "source-data/raw",
+      file.path(here::here(), "source-data",
                 paste0(name, ".csv")),
       guess_max = guess_max
     )
