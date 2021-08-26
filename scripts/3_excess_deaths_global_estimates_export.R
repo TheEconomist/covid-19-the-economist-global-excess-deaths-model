@@ -308,7 +308,7 @@ ggplot(country_export[country_export$iso3c %in% c("IND", "ZAF", "USA", "CHN",
   geom_line(col="black", linetype = "dashed")+
   geom_line(aes(y=daily_excess_deaths), 
             col="black", linetype = "solid")+geom_line(aes(y=daily_covid_deaths), col = "red")+
-  facet_wrap(.~iso3c)+theme_minimal()+
+  facet_wrap(.~iso3c, scales = "free_y")+theme_minimal()+
   theme(legend.position = "none")
 
 # Write to file:
@@ -350,7 +350,7 @@ ggplot(country_export[country_export$iso3c %in% c("IND", "ZAF", "USA", "CHN",
   theme(legend.position = "none")
 
 # Write to file:
-write_csv(country_export, "output-data/export_country_per_100k.csv")
+#write_csv(country_export, "output-data/export_country_per_100k.csv")
 
 
 # Export 3: Region-week level, absolute units
@@ -379,7 +379,7 @@ ggplot(region_export,
   theme(legend.position = "none")
 
 # Write to file:
-write_csv(region_export, "output-data/export_regions.csv")
+#write_csv(region_export, "output-data/export_regions.csv")
 
 
 # Define alternative set of regions:
@@ -415,7 +415,7 @@ ggplot(region_export,
   theme(legend.position = "none")
 
 # Write to file:
-write_csv(region_export, "output-data/export_regions_EU_NA_Oceania_collapsed.csv")
+#write_csv(region_export, "output-data/export_regions_EU_NA_Oceania_collapsed.csv")
 
 
 
@@ -452,7 +452,7 @@ ggplot(region_export,
   theme(legend.position = "none")
 
 # Write to file:
-write_csv(region_export, "output-data/export_regions_per_100k.csv")
+#write_csv(region_export, "output-data/export_regions_per_100k.csv")
 
 
 # Export 5: World level, absolute units
@@ -483,7 +483,7 @@ ggplot(world_export,
   theme(legend.position = "none")
 
 # Write to file:
-write_csv(world_export, "output-data/export_world.csv")
+#write_csv(world_export, "output-data/export_world.csv")
 
 # Export 6: World level, per 100k
 world_export <- confidence_intervals(new_col_names = "estimated_daily_excess_deaths",
@@ -517,7 +517,7 @@ ggplot(world_export,
   theme(legend.position = "none")
 
 # Write to file:
-write_csv(world_export, "output-data/export_world_per_100k.csv")
+#write_csv(world_export, "output-data/export_world_per_100k.csv")
 
 
 # Step 4: Construct data frames used for graphics (both per 100k and absolute terms), cumulative ------------------------------------------------------------------------------
@@ -553,7 +553,7 @@ ggplot(country_export[country_export$iso3c %in% c("IND", "CHN"), ],
   theme(legend.position = "none")
 
 # Write to file:
-write_csv(country_export, "output-data/export_country_cumulative.csv")
+#write_csv(country_export, "output-data/export_country_cumulative.csv")
 
 # Export 2: Country-week level, per 100k
 country_export <- confidence_intervals(new_col_names = "estimated_daily_excess_deaths",
@@ -591,7 +591,7 @@ ggplot(country_export[country_export$iso3c %in% c("IND", "USA", "MEX", "PER",
   theme(legend.position = "none")
 
 # Write to file:
-write_csv(country_export, "output-data/export_country_per_100k_cumulative.csv")
+#write_csv(country_export, "output-data/export_country_per_100k_cumulative.csv")
 
 
 # Export 3: Region-week level, absolute units
@@ -622,7 +622,7 @@ ggplot(region_export,
   theme(legend.position = "none")
 
 # Write to file:
-write_csv(region_export, "output-data/export_regions_cumulative.csv")
+#write_csv(region_export, "output-data/export_regions_cumulative.csv")
 
 
 
@@ -662,7 +662,7 @@ ggplot(region_export,
   theme(legend.position = "none")
 
 # Write to file:
-write_csv(region_export, "output-data/export_regions_per_100k_cumulative.csv")
+#write_csv(region_export, "output-data/export_regions_per_100k_cumulative.csv")
 
 
 # Export 5: World level, absolute units
@@ -691,7 +691,7 @@ ggplot(world_export,
   theme(legend.position = "none")+xlab("")+ylab("Total excess deaths, World")
 
 # Write to file:
-write_csv(world_export, "output-data/export_world_cumulative.csv")
+#write_csv(world_export, "output-data/export_world_cumulative.csv")
 
 
 # Export 6: World level, per 100k
@@ -726,7 +726,7 @@ ggplot(world_export,
   theme(legend.position = "none")
 
 # Write to file:
-write_csv(world_export, "output-data/export_world_per_100k_cumulative.csv")
+#write_csv(world_export, "output-data/export_world_per_100k_cumulative.csv")
 
 
 
@@ -778,7 +778,7 @@ ggplot(world_export,
   theme(legend.position = "none")
 
 # Write to file:
-write_csv(world_export, "output-data/export_world_cumulative_with_alternative_excess_deaths.csv")
+#write_csv(world_export, "output-data/export_world_cumulative_with_alternative_excess_deaths.csv")
 
 
 
@@ -824,7 +824,7 @@ ggplot(region_export,
   theme(legend.position = "none")
 
 # And write them to a file:
-write_csv(region_export, "output-data/export_alternative_regions.csv")
+#write_csv(region_export, "output-data/export_alternative_regions.csv")
 
 
 # At the request of CNN, added the corresponding per 100k population, and cumulative numbers in absolute and per 100k population
@@ -849,7 +849,7 @@ ggplot(region_export,
   facet_wrap(.~continent_alt)+theme_minimal()+
   theme(legend.position = "none")
 
-write_csv(region_export, "output-data/export_alternative_regions_per_100k.csv")
+#write_csv(region_export, "output-data/export_alternative_regions_per_100k.csv")
 
 region_export <- confidence_intervals(new_col_names = "estimated_daily_excess_deaths",
                                       group = "continent_alt", 
@@ -876,7 +876,7 @@ ggplot(region_export,
   theme(legend.position = "none")
 
 # And write them to a file:
-write_csv(region_export, "output-data/export_alternative_regions_cumulative.csv")
+#write_csv(region_export, "output-data/export_alternative_regions_cumulative.csv")
 
 # Same for per 100k
 per_capita_columns <- grep("deaths", colnames(region_export))
@@ -898,7 +898,7 @@ ggplot(region_export,
   facet_wrap(.~continent_alt)+theme_minimal()+
   theme(legend.position = "none")
 
-write_csv(region_export, "output-data/export_alternative_regions_per_100k_cumulative.csv")
+#write_csv(region_export, "output-data/export_alternative_regions_per_100k_cumulative.csv")
 
 
 
@@ -917,7 +917,7 @@ country_export <- confidence_intervals(new_col_names = "estimated_daily_excess_d
                                        model_prediction = estimate,
                                        include_model_prediction_in_ci = T)
 
-write_csv(country_export[country_export$iso3c %in% c("EGY"), ], "output-data/Egypt_Example_plot.csv")
+#write_csv(country_export[country_export$iso3c %in% c("EGY"), ], "output-data/Egypt_Example_plot.csv")
 
 # Inspect:
 ggplot(country_export[country_export$iso3c %in% c("EGY"), ], 
@@ -1006,7 +1006,7 @@ ggplot(wb_export[wb_export$World_Bank_income_group != "Unknown income group", ],
   theme(legend.position = "none")
 
 # write to file:
-write_csv(wb_export, "output-data/wb_income_groups.csv")
+#write_csv(wb_export, "output-data/wb_income_groups.csv")
 
 
 per_capita_columns <- grep("deaths", colnames(wb_export))
@@ -1030,7 +1030,7 @@ ggplot(wb_export[wb_export$World_Bank_income_group != "Unknown income group", ],
   theme(legend.position = "none")
 
 # write to file:
-write_csv(wb_export, "output-data/wb_income_groups_per_100k.csv")
+#write_csv(wb_export, "output-data/wb_income_groups_per_100k.csv")
 
 
 # Absolute, cumulative
@@ -1059,7 +1059,7 @@ ggplot(wb_export[wb_export$World_Bank_income_group != "Unknown income group", ],
   theme(legend.position = "none")
 
 # write to file:
-write_csv(wb_export, "output-data/wb_income_groups_cumulative.csv")
+#write_csv(wb_export, "output-data/wb_income_groups_cumulative.csv")
 
 per_capita_columns <- grep("deaths", colnames(wb_export))
 
@@ -1082,5 +1082,5 @@ ggplot(wb_export[wb_export$World_Bank_income_group != "Unknown income group", ],
   theme(legend.position = "none")
 
 # write to file:
-write_csv(wb_export, "output-data/wb_income_groups_per_100k_cumulative.csv")
+#write_csv(wb_export, "output-data/wb_income_groups_per_100k_cumulative.csv")
 
