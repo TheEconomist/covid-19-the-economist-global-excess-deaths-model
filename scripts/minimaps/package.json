@@ -1,0 +1,23 @@
+{
+  "name": "minimaps",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "build": "node generate-maps.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "canvas": "^2.8.0",
+    "d3-collection": "^1.0.7",
+    "d3-dsv": "^3.0.1",
+    "d3-geo": "^3.0.1",
+    "d3-geo-projection": "^4.0.0",
+    "d3-scale": "^4.0.0",
+    "topojson-client": "^3.1.0"
+  }
+}
