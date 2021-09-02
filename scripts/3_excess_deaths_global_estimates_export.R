@@ -1,6 +1,6 @@
 # Step 1: import libraries ------------------------------------------------------------------------------
 
-# Note: This script was made so that users easily can get exactly the data they need. It by default gives data at the country level, region level, and world level. To supply custom groupings, see "Step 5" below.
+# Note: This script by default gives data at the country level, region level, and world level. To supply custom groupings, see "Step 5" below.
 
 # Import libraries
 library(tidyverse)
@@ -11,36 +11,38 @@ library(countrycode)
 library(ggplot2)
 options(scipen=999)
 
+# Set default for "inspect" option (if TRUE, prints plot to console for every export):
+inspect = FALSE
+
 # Step 2: Load predictions and covariates ------------------------------------------------------------------------------
 
-# Load all model prediction + 101 bootstrap
+# Load all model prediction + 200 bootstrap
 pred_matrix <- readRDS("output-data/pred_matrix.RDS")
 
 # Load covariates (iso3c, country name, population ++)
 export_covariates <- readRDS("output-data/export_covariates.RDS")
 
-# Drop our subnational region(s) (we include the countries in which they are part):
-pred_matrix <- pred_matrix[export_covariates$iso3c != "IND_Mumbai", ]
-export_covariates <- export_covariates[export_covariates$iso3c != "IND_Mumbai", ]
-
-# Fix a spike in some bootstrap iterations predictions due to an overfit on sparse Chinese data (does not affect central estimate):
-for(i in 1:ncol(pred_matrix)){
-  pred_matrix[export_covariates$iso3c == "CHN" & pred_matrix[, i] > 1, i] <- 1
-}
+# Drop our subnational region(s) (we include the countries in which they are part). These are always coded to have the national unit in which they appear as the first three characters ISO3C, then a descriptive, e.g. "IND_Mumbai":
+pred_matrix <- pred_matrix[nchar(export_covariates$iso3c) == 3, ]
+export_covariates <- export_covariates[nchar(export_covariates$iso3c) == 3, ]
 
 # Convert model predictions from per 100k population to absolute numbers
 pred_matrix <- pred_matrix*export_covariates$population / 100000
 
-# Separate out the estimate
-estimate <- as.numeric(pred_matrix[, 1])
-
-# Harmonize export dates (first of every week)
+# Harmonize export dates (first of every week, except final prediction date)
 export_covariates$week <- round(as.numeric(export_covariates$date)/7, 0)+1-min(round(as.numeric(export_covariates$date)/7, 0))
-export_covariates$date <- ave(export_covariates$date, export_covariates$week,
+export_covariates$date[export_covariates$date != max(export_covariates$date)] <- ave(export_covariates$date[export_covariates$date != max(export_covariates$date)], export_covariates$week[export_covariates$date != max(export_covariates$date)],
                               FUN = function(x) min(x, na.rm = T))
+
+# Remove possible duplicate dates:
+pred_matrix <- pred_matrix[!duplicated(paste0(export_covariates$date, "_", export_covariates$iso3c)), ]
+export_covariates <- export_covariates[!duplicated(paste0(export_covariates$date, "_", export_covariates$iso3c)), ]
 
 # Check that this worked correctly:
 min(table(export_covariates$date)) == max(table(export_covariates$date))
+
+# Separate out the estimate
+estimate <- as.numeric(pred_matrix[, 1])
 
 # Harmonize country names with The Economist standard, maintaining row order
 export_covariates$row_order <- 1:nrow(export_covariates)
@@ -58,12 +60,6 @@ export_covariates$Name <- NULL
 
 # Define regions for main chart:
 export_covariates$continent <- countrycode(export_covariates$iso3c, "iso3c", "continent")
-export_covariates$continent[export_covariates$iso3c == "USA"] <- "United States"
-export_covariates$continent[export_covariates$iso3c == "IND"] <- "India"
-export_covariates$continent[export_covariates$iso3c == "CHN"] <- "China"
-export_covariates$continent[export_covariates$iso3c == "RUS"] <- "Russia"
-export_covariates$continent[export_covariates$continent %in% c("Asia", "Oceania")] <- "Asia & Oceania"
-
 
 # Step 3: Define function to construct confidence interval given grouping ------------------------------------------------------------------------------
 confidence_intervals <- function(new_col_names = "estimated_daily_excess_deaths",
@@ -79,7 +75,10 @@ confidence_intervals <- function(new_col_names = "estimated_daily_excess_deaths"
                                  bootstrap_predictions = pred_matrix,
                                  model_prediction = estimate,
                                  include_model_prediction_in_ci = T,
-                                 include_final_prediction_in_ci = T){
+                                 include_final_prediction_in_ci = T,
+                                 recency_buffer = 0,
+                                 return_histogram_data = F # This returns the full sorted bootstrap predictions instead of confidence intervals. 
+                                 ){
   
   # Check that all observations have a group and time variable:
   if(sum(is.na(covars[, group])) > 0){
@@ -95,6 +94,26 @@ confidence_intervals <- function(new_col_names = "estimated_daily_excess_deaths"
   if(nrow(covars) != nrow(bootstrap_predictions) | 
      nrow(covars) != length(model_prediction)){
     stop("Dimensionality mismatch: check that predictions are 1-1 mapped to covars")
+  }
+  
+  # If most recent week has less than 3 days of observations, carry over from last week:
+  if(max(covars[, time]) > Sys.Date()-recency_buffer){
+    
+    # Get most recent week with full data:
+    most_recent <- sort(unique(covars[, time]), decreasing = T)[2]
+    
+    # Extract these observations:
+    temp_boot <- bootstrap_predictions[covars[, time] == most_recent, ]
+    temp_estimate <- estimate[covars[, time] == most_recent]
+    temp_covars <- covars[covars[, time] == most_recent, ]
+    
+    # Replace the latest week with the last week of full data
+    max_time <- max(covars[, time])
+    for(i in unique(covars[, unit])){
+      bootstrap_predictions[covars[, time] == max_time & covars[, unit] == i, ] <- temp_boot[temp_covars[, unit] == i, ]
+      estimate[covars[, time] == max_time & covars[, unit] == i] <- temp_estimate[temp_covars[, unit] == i]
+    }
+    
   }
   
   # Separate out vector of recorded data
@@ -155,9 +174,14 @@ confidence_intervals <- function(new_col_names = "estimated_daily_excess_deaths"
     # Sort by date
     bootstrap_predictions <- bootstrap_predictions[
       order(bootstrap_predictions[, time]), ]
+    
+    # multiplying is necessary here, as I for all but the last week only have one observation per week.
+    week_mult <- rep(7, length(unique(bootstrap_predictions[, time])))
+    week_mult[length(week_mult)] <- as.numeric(rev(sort(unique(bootstrap_predictions[, time])))[1]-rev(sort(unique(bootstrap_predictions[, time])))[2])
+    
     for(i in setdiff(colnames(bootstrap_predictions), c("row_order", unit, time))){
-      # multiplying by 7 is necessary here, as I have 1 data point a week for daily average data:
-      bootstrap_predictions[, i] <- ave(bootstrap_predictions[, i], bootstrap_predictions[, unit], FUN = function(x) cumsum(x*7))
+      bootstrap_predictions[, i] <- ave(bootstrap_predictions[, i], bootstrap_predictions[, unit], FUN = function(x){ 
+        cumsum(x*week_mult)})
     }
     
     # Return to original order, remove temporary columns, and extract raw and central estimate + known data as cumulative
@@ -195,7 +219,14 @@ confidence_intervals <- function(new_col_names = "estimated_daily_excess_deaths"
   # Sort bootstrap prediction matrix:
   for(i in 1:nrow(bootstrap_predictions)){
     bootstrap_predictions[i, ] <- sort(bootstrap_predictions[i, ])
-  } 
+  }
+  
+  # If requested, return histogram data instead of standard export with CIs:
+  if(return_histogram_data){
+    histagram_data <- cbind(covars[, c(group, time, population)], estimate, bootstrap_predictions[, 2:ncol(bootstrap_predictions)])
+    colnames(histagram_data)[1:4] <- c(colnames(covars[, c(group, time, population)]), "estimate")
+    return(histagram_data)
+  }
   
   # Extract 90 and 95% confidence intervals
   ci_95_top <- bootstrap_predictions[, round(ncol(bootstrap_predictions)*0.975, 0)]
@@ -252,6 +283,9 @@ confidence_intervals <- function(new_col_names = "estimated_daily_excess_deaths"
     colnames(result)[4:ncol(result)] <- paste0("cumulative_", colnames(result)[4:ncol(result)])
   }
   
+  # Ensure no duplicates
+  result <- unique(result)
+  
   return(result)
 }
 
@@ -271,22 +305,24 @@ country_export <- confidence_intervals(new_col_names = "estimated_daily_excess_d
                                        include_model_prediction_in_ci = T)
 
 # Inspect:
-ggplot(country_export[country_export$iso3c %in% c("IND", "ZAF", "USA", "CHN", 
-                                                  "IDN", "PAK", "BRA", "NGA"), ], 
-       aes(x=date, 
-           y=estimated_daily_excess_deaths,
-           col = iso3c))+
-  geom_line(aes(y=estimated_daily_excess_deaths_ci_95_top))+
-  geom_line(aes(y=estimated_daily_excess_deaths_ci_90_top))+
-  geom_line(aes(y=estimated_daily_excess_deaths_ci_50_top))+
-  geom_line(aes(y=estimated_daily_excess_deaths_ci_50_bot))+
-  geom_line(aes(y=estimated_daily_excess_deaths_ci_90_bot))+
-  geom_line(aes(y=estimated_daily_excess_deaths_ci_95_bot))+
-  geom_line(col="black", linetype = "dashed")+
-  geom_line(aes(y=daily_excess_deaths), 
-            col="black", linetype = "solid")+geom_line(aes(y=daily_covid_deaths), col = "red")+
-  facet_wrap(.~iso3c)+theme_minimal()+
-  theme(legend.position = "none")
+if(inspect){
+  ggplot(country_export[country_export$iso3c %in% c("IND", "ZAF", "USA", "CHN", 
+                                                    "IDN", "PAK", "BRA", "NGA"), ], 
+         aes(x=date, 
+             y=estimated_daily_excess_deaths,
+             col = iso3c))+
+    geom_line(aes(y=estimated_daily_excess_deaths_ci_95_top))+
+    geom_line(aes(y=estimated_daily_excess_deaths_ci_90_top))+
+    geom_line(aes(y=estimated_daily_excess_deaths_ci_50_top))+
+    geom_line(aes(y=estimated_daily_excess_deaths_ci_50_bot))+
+    geom_line(aes(y=estimated_daily_excess_deaths_ci_90_bot))+
+    geom_line(aes(y=estimated_daily_excess_deaths_ci_95_bot))+
+    geom_line(col="black", linetype = "dashed")+
+    geom_line(aes(y=daily_excess_deaths), 
+              col="black", linetype = "solid")+geom_line(aes(y=daily_covid_deaths), col = "red")+
+    facet_wrap(.~iso3c)+theme_minimal()+
+    theme(legend.position = "none")
+}
 
 # Write to file:
 write_csv(country_export, "output-data/export_country.csv")
@@ -311,20 +347,22 @@ for(i in per_capita_columns){
 colnames(country_export)[per_capita_columns] <- paste0(colnames(country_export)[per_capita_columns], "_per_100k")
 
 # Inspect:
-ggplot(country_export[country_export$iso3c %in% c("IND", "ZAF", "USA", "CHN", 
-                                                  "IDN", "PAK", "BRA", "NGA", "MEX"), ], 
-       aes(x=date, 
-           y=estimated_daily_excess_deaths_per_100k,
-           col = iso3c))+
-  geom_line(aes(y=estimated_daily_excess_deaths_ci_95_top_per_100k))+
-  geom_line(aes(y=estimated_daily_excess_deaths_ci_90_top_per_100k))+
-  geom_line(aes(y=estimated_daily_excess_deaths_ci_90_bot_per_100k))+
-  geom_line(aes(y=estimated_daily_excess_deaths_ci_95_bot_per_100k))+
-  geom_line(col="black", linetype = "dashed")+
-  geom_line(aes(y=daily_excess_deaths_per_100k), 
-            col="black", linetype = "solid")+
-  facet_wrap(.~iso3c)+theme_minimal()+
-  theme(legend.position = "none")
+if(inspect){
+  ggplot(country_export[country_export$iso3c %in% c("IND", "ZAF", "USA", "CHN", 
+                                                    "IDN", "RUS", "BRA", "NGA", "MEX"), ], 
+         aes(x=date, 
+             y=estimated_daily_excess_deaths_per_100k,
+             col = iso3c))+
+    geom_line(aes(y=estimated_daily_excess_deaths_ci_95_top_per_100k))+
+    geom_line(aes(y=estimated_daily_excess_deaths_ci_90_top_per_100k))+
+    geom_line(aes(y=estimated_daily_excess_deaths_ci_90_bot_per_100k))+
+    geom_line(aes(y=estimated_daily_excess_deaths_ci_95_bot_per_100k))+
+    geom_line(col="black", linetype = "dashed")+
+    geom_line(aes(y=daily_excess_deaths_per_100k), 
+              col="black", linetype = "solid")+
+    facet_wrap(.~iso3c)+theme_minimal()+
+    theme(legend.position = "none")
+}
 
 # Write to file:
 write_csv(country_export, "output-data/export_country_per_100k.csv")
@@ -343,17 +381,19 @@ region_export <- confidence_intervals(new_col_names = "estimated_daily_excess_de
                                       include_model_prediction_in_ci = F)
 
 # Inspect:
-ggplot(region_export, 
-       aes(x=date, 
-           y=estimated_daily_excess_deaths,
-           col = continent))+
-  geom_line(aes(y=estimated_daily_excess_deaths_ci_95_top))+
-  geom_line(aes(y=estimated_daily_excess_deaths_ci_90_top))+
-  geom_line(aes(y=estimated_daily_excess_deaths_ci_90_bot))+
-  geom_line(aes(y=estimated_daily_excess_deaths_ci_95_bot))+
-  geom_line(col="black", linetype = "dashed")+
-  facet_wrap(.~continent)+theme_minimal()+
-  theme(legend.position = "none")
+if(inspect){
+  ggplot(region_export, 
+         aes(x=date, 
+             y=estimated_daily_excess_deaths,
+             col = continent))+
+    geom_line(aes(y=estimated_daily_excess_deaths_ci_95_top))+
+    geom_line(aes(y=estimated_daily_excess_deaths_ci_90_top))+
+    geom_line(aes(y=estimated_daily_excess_deaths_ci_90_bot))+
+    geom_line(aes(y=estimated_daily_excess_deaths_ci_95_bot))+
+    geom_line(col="black", linetype = "dashed")+
+    facet_wrap(.~continent)+theme_minimal()+
+    theme(legend.position = "none")
+}
 
 # Write to file:
 write_csv(region_export, "output-data/export_regions.csv")
@@ -379,21 +419,19 @@ region_export <- confidence_intervals(new_col_names = "estimated_daily_excess_de
                                       include_model_prediction_in_ci = F)
 
 # Inspect:
-ggplot(region_export, 
-       aes(x=date, 
-           y=estimated_daily_excess_deaths,
-           col = continent_alt))+
-  geom_line(aes(y=estimated_daily_excess_deaths_ci_95_top))+
-  geom_line(aes(y=estimated_daily_excess_deaths_ci_90_top))+
-  geom_line(aes(y=estimated_daily_excess_deaths_ci_90_bot))+
-  geom_line(aes(y=estimated_daily_excess_deaths_ci_95_bot))+
-  geom_line(col="black", linetype = "dashed")+
-  facet_wrap(.~continent_alt)+theme_minimal()+
-  theme(legend.position = "none")
-
-# Write to file:
-write_csv(region_export, "output-data/export_regions_EU_NA_Oceania_collapsed.csv")
-
+if(inspect){
+  ggplot(region_export, 
+         aes(x=date, 
+             y=estimated_daily_excess_deaths,
+             col = continent_alt))+
+    geom_line(aes(y=estimated_daily_excess_deaths_ci_95_top))+
+    geom_line(aes(y=estimated_daily_excess_deaths_ci_90_top))+
+    geom_line(aes(y=estimated_daily_excess_deaths_ci_90_bot))+
+    geom_line(aes(y=estimated_daily_excess_deaths_ci_95_bot))+
+    geom_line(col="black", linetype = "dashed")+
+    facet_wrap(.~continent_alt)+theme_minimal()+
+    theme(legend.position = "none")
+}
 
 
 # Export 4: Region-week level, per 100k
@@ -416,17 +454,19 @@ for(i in per_capita_columns){
 colnames(region_export)[per_capita_columns] <- paste0(colnames(region_export)[per_capita_columns], "_per_100k")
 
 # Inspect:
-ggplot(region_export, 
-       aes(x=date, 
-           y=estimated_daily_excess_deaths_per_100k,
-           col = continent))+
-  geom_line(aes(y=estimated_daily_excess_deaths_ci_95_top_per_100k))+
-  geom_line(aes(y=estimated_daily_excess_deaths_ci_90_top_per_100k))+
-  geom_line(aes(y=estimated_daily_excess_deaths_ci_90_bot_per_100k))+
-  geom_line(aes(y=estimated_daily_excess_deaths_ci_95_bot_per_100k))+
-  geom_line(col="black", linetype = "dashed")+
-  facet_wrap(.~continent)+theme_minimal()+
-  theme(legend.position = "none")
+if(inspect){
+  ggplot(region_export, 
+         aes(x=date, 
+             y=estimated_daily_excess_deaths_per_100k,
+             col = continent))+
+    geom_line(aes(y=estimated_daily_excess_deaths_ci_95_top_per_100k))+
+    geom_line(aes(y=estimated_daily_excess_deaths_ci_90_top_per_100k))+
+    geom_line(aes(y=estimated_daily_excess_deaths_ci_90_bot_per_100k))+
+    geom_line(aes(y=estimated_daily_excess_deaths_ci_95_bot_per_100k))+
+    geom_line(col="black", linetype = "dashed")+
+    facet_wrap(.~continent)+theme_minimal()+
+    theme(legend.position = "none")
+}
 
 # Write to file:
 write_csv(region_export, "output-data/export_regions_per_100k.csv")
@@ -446,18 +486,20 @@ world_export <- confidence_intervals(new_col_names = "estimated_daily_excess_dea
                                      include_model_prediction_in_ci = F)
 
 # Inspect:
-ggplot(world_export, 
-       aes(x=date, 
-           y=estimated_daily_excess_deaths,
-           col = world))+
-  geom_line(aes(y=estimated_daily_excess_deaths_ci_95_top))+
-  geom_line(aes(y=estimated_daily_excess_deaths_ci_90_top))+
-  geom_line(aes(y=estimated_daily_excess_deaths_ci_50_bot))+
-  geom_line(aes(y=estimated_daily_excess_deaths_ci_50_top))+
-  geom_line(aes(y=estimated_daily_excess_deaths_ci_90_bot))+
-  geom_line(aes(y=estimated_daily_excess_deaths_ci_95_bot))+
-  geom_line(col="black", linetype = "dashed")+theme_minimal()+
-  theme(legend.position = "none")
+if(inspect){
+  ggplot(world_export, 
+         aes(x=date, 
+             y=estimated_daily_excess_deaths,
+             col = world))+
+    geom_line(aes(y=estimated_daily_excess_deaths_ci_95_top))+
+    geom_line(aes(y=estimated_daily_excess_deaths_ci_90_top))+
+    geom_line(aes(y=estimated_daily_excess_deaths_ci_50_bot))+
+    geom_line(aes(y=estimated_daily_excess_deaths_ci_50_top))+
+    geom_line(aes(y=estimated_daily_excess_deaths_ci_90_bot))+
+    geom_line(aes(y=estimated_daily_excess_deaths_ci_95_bot))+
+    geom_line(col="black", linetype = "dashed")+theme_minimal()+
+    theme(legend.position = "none")
+}
 
 # Write to file:
 write_csv(world_export, "output-data/export_world.csv")
@@ -483,16 +525,18 @@ for(i in per_capita_columns){
 colnames(world_export)[per_capita_columns] <- paste0(colnames(world_export)[per_capita_columns], "_per_100k")
 
 # Inspect:
-ggplot(world_export, 
-       aes(x=date, 
-           y=estimated_daily_excess_deaths_per_100k,
-           col = world))+
-  geom_line(aes(y=estimated_daily_excess_deaths_ci_95_top_per_100k))+
-  geom_line(aes(y=estimated_daily_excess_deaths_ci_90_top_per_100k))+
-  geom_line(aes(y=estimated_daily_excess_deaths_ci_90_bot_per_100k))+
-  geom_line(aes(y=estimated_daily_excess_deaths_ci_95_bot_per_100k))+
-  geom_line(col="black", linetype = "dashed")+theme_minimal()+
-  theme(legend.position = "none")
+if(inspect){
+  ggplot(world_export, 
+         aes(x=date, 
+             y=estimated_daily_excess_deaths_per_100k,
+             col = world))+
+    geom_line(aes(y=estimated_daily_excess_deaths_ci_95_top_per_100k))+
+    geom_line(aes(y=estimated_daily_excess_deaths_ci_90_top_per_100k))+
+    geom_line(aes(y=estimated_daily_excess_deaths_ci_90_bot_per_100k))+
+    geom_line(aes(y=estimated_daily_excess_deaths_ci_95_bot_per_100k))+
+    geom_line(col="black", linetype = "dashed")+theme_minimal()+
+    theme(legend.position = "none")
+}
 
 # Write to file:
 write_csv(world_export, "output-data/export_world_per_100k.csv")
@@ -513,22 +557,24 @@ country_export <- confidence_intervals(new_col_names = "estimated_daily_excess_d
                                        include_model_prediction_in_ci = F)
 
 # Inspect:
-ggplot(country_export[country_export$iso3c %in% c("IND", "CHN"), ], 
-       aes(x=date, 
-           y=cumulative_estimated_daily_excess_deaths,
-           col = iso3c))+
-  geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_95_top))+
-  geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_90_top))+
-  geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_50_top))+
-  geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_50_bot))+
-  geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_90_bot))+
-  geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_95_bot))+
-  geom_line(col="black", linetype = "dashed")+
-  geom_line(aes(y=cumulative_daily_excess_deaths), 
-            col="black", linetype = "solid")+
-  geom_line(aes(y=cumulative_daily_covid_deaths), col = "red")+
-  facet_wrap(.~iso3c)+theme_minimal()+
-  theme(legend.position = "none")
+if(inspect){
+  ggplot(country_export[country_export$iso3c %in% c("IND", "CHN"), ], 
+         aes(x=date, 
+             y=cumulative_estimated_daily_excess_deaths,
+             col = iso3c))+
+    geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_95_top))+
+    geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_90_top))+
+    geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_50_top))+
+    geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_50_bot))+
+    geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_90_bot))+
+    geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_95_bot))+
+    geom_line(col="black", linetype = "dashed")+
+    geom_line(aes(y=cumulative_daily_excess_deaths), 
+              col="black", linetype = "solid")+
+    geom_line(aes(y=cumulative_daily_covid_deaths), col = "red")+
+    facet_wrap(.~iso3c)+theme_minimal()+
+    theme(legend.position = "none")
+}
 
 # Write to file:
 write_csv(country_export, "output-data/export_country_cumulative.csv")
@@ -553,20 +599,22 @@ for(i in per_capita_columns){
 colnames(country_export)[per_capita_columns] <- paste0(colnames(country_export)[per_capita_columns], "_per_100k")
 
 # Inspect:
-ggplot(country_export[country_export$iso3c %in% c("IND", "USA", "MEX", "PER",
-                                                  "RUS", "ZAF"), ], 
-       aes(x=date, 
-           y=cumulative_estimated_daily_excess_deaths_per_100k,
-           col = iso3c))+
-  geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_95_top_per_100k))+
-  geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_90_top_per_100k))+
-  geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_90_bot_per_100k))+
-  geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_95_bot_per_100k))+
-  geom_line(col="black", linetype = "dashed")+
-  geom_line(aes(y=cumulative_daily_excess_deaths_per_100k), 
-            col="black", linetype = "solid")+
-  facet_wrap(.~iso3c)+theme_minimal()+
-  theme(legend.position = "none")
+if(inspect){
+  ggplot(country_export[country_export$iso3c %in% c("IND", "USA", "MEX", "PER",
+                                                    "RUS", "ZAF"), ], 
+         aes(x=date, 
+             y=cumulative_estimated_daily_excess_deaths_per_100k,
+             col = iso3c))+
+    geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_95_top_per_100k))+
+    geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_90_top_per_100k))+
+    geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_90_bot_per_100k))+
+    geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_95_bot_per_100k))+
+    geom_line(col="black", linetype = "dashed")+
+    geom_line(aes(y=cumulative_daily_excess_deaths_per_100k), 
+              col="black", linetype = "solid")+
+    facet_wrap(.~iso3c)+theme_minimal()+
+    theme(legend.position = "none")
+}
 
 # Write to file:
 write_csv(country_export, "output-data/export_country_per_100k_cumulative.csv")
@@ -585,26 +633,24 @@ region_export <- confidence_intervals(new_col_names = "estimated_daily_excess_de
                                       include_model_prediction_in_ci = F)
 
 # Inspect:
-ggplot(region_export, 
-       aes(x=date, 
-           y=cumulative_estimated_daily_excess_deaths,
-           col = continent))+
-  geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_95_top))+
-  geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_90_top))+
-  geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_50_top))+
-  geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_50_bot))+
-  geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_90_bot))+
-  geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_95_bot))+
-  geom_line(col="black", linetype = "dashed")+geom_line(aes(y=cumulative_daily_covid_deaths), col = "red")+
-  facet_wrap(.~continent)+theme_minimal()+
-  theme(legend.position = "none")
+if(inspect){
+  ggplot(region_export, 
+         aes(x=date, 
+             y=cumulative_estimated_daily_excess_deaths,
+             col = continent))+
+    geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_95_top))+
+    geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_90_top))+
+    geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_50_top))+
+    geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_50_bot))+
+    geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_90_bot))+
+    geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_95_bot))+
+    geom_line(col="black", linetype = "dashed")+geom_line(aes(y=cumulative_daily_covid_deaths), col = "red")+
+    facet_wrap(.~continent)+theme_minimal()+
+    theme(legend.position = "none")
+}
 
 # Write to file:
 write_csv(region_export, "output-data/export_regions_cumulative.csv")
-
-
-
-
 
 
 # Export 4: Region-week level, per 100k
@@ -627,17 +673,19 @@ for(i in per_capita_columns){
 colnames(region_export)[per_capita_columns] <- paste0(colnames(region_export)[per_capita_columns], "_per_100k")
 
 # Inspect:
-ggplot(region_export, 
-       aes(x=date, 
-           y=cumulative_estimated_daily_excess_deaths_per_100k,
-           col = continent))+
-  geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_95_top_per_100k))+
-  geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_90_top_per_100k))+
-  geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_90_bot_per_100k))+
-  geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_95_bot_per_100k))+
-  geom_line(col="black", linetype = "dashed")+
-  facet_wrap(.~continent)+theme_minimal()+
-  theme(legend.position = "none")
+if(inspect){
+  ggplot(region_export, 
+         aes(x=date, 
+             y=cumulative_estimated_daily_excess_deaths_per_100k,
+             col = continent))+
+    geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_95_top_per_100k))+
+    geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_90_top_per_100k))+
+    geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_90_bot_per_100k))+
+    geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_95_bot_per_100k))+
+    geom_line(col="black", linetype = "dashed")+
+    facet_wrap(.~continent)+theme_minimal()+
+    theme(legend.position = "none")
+}
 
 # Write to file:
 write_csv(region_export, "output-data/export_regions_per_100k_cumulative.csv")
@@ -657,19 +705,41 @@ world_export <- confidence_intervals(new_col_names = "estimated_daily_excess_dea
                                      include_model_prediction_in_ci = F)
 
 # Inspect:
-ggplot(world_export, 
-       aes(x=date, 
-           y=cumulative_estimated_daily_excess_deaths,
-           col = world))+
-  geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_95_top))+
-  geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_90_top))+
-  geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_90_bot))+
-  geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_95_bot))+#  geom_line(aes(y=cumulative_daily_covid_deaths), col = "red")+
-  geom_line(col="black", linetype = "dashed")+theme_minimal()+
-  theme(legend.position = "none")+xlab("")+ylab("Total excess deaths, World")
+  ggplot(world_export, 
+         aes(x=date, 
+             y=cumulative_estimated_daily_excess_deaths,
+             col = world))+
+    geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_95_top))+
+#    geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_90_top))+
+#    geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_90_bot))+
+    geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_95_bot))+
+    geom_line(aes(y=cumulative_daily_covid_deaths), col = "blue")+
+    geom_ribbon(aes(ymin=cumulative_estimated_daily_excess_deaths_ci_95_top,
+                    ymax=cumulative_estimated_daily_excess_deaths_ci_95_bot), 
+                fill = 'darkred', alpha=0.3)+
+    geom_line(col="black", linetype = "dashed")+theme_minimal()+
+    theme(legend.position = "none")+xlab("Estimated excess deaths (red), confirmed covid-19 deaths (blue)")+ylab("Total deaths, World")
+  ggsave('global_mortality.png', width = 8, height = 5)
 
 # Write to file:
 write_csv(world_export, "output-data/export_world_cumulative.csv")
+
+# Export equivalent histagram data: 
+export_covariates$world <- "World"
+world_export <- confidence_intervals(new_col_names = "estimated_daily_excess_deaths",
+                                     group = "world", 
+                                     time = "date",
+                                     covars = export_covariates,
+                                     return_cumulative = T,
+                                     drop_ci_if_known_data = T,
+                                     bootstrap_predictions = pred_matrix,
+                                     known_data_column = "daily_excess_deaths",
+                                     model_prediction = estimate,
+                                     include_model_prediction_in_ci = F,
+                                     return_histogram_data = T)
+
+# Write to file:
+write_csv(world_export, "output-data/export_world_cumulative_histogram_data.csv")
 
 
 # Export 6: World level, per 100k
@@ -692,21 +762,21 @@ for(i in per_capita_columns){
 colnames(world_export)[per_capita_columns] <- paste0(colnames(world_export)[per_capita_columns], "_per_100k")
 
 # Inspect:
-ggplot(world_export, 
-       aes(x=date, 
-           y=cumulative_estimated_daily_excess_deaths_per_100k,
-           col = world))+
-  geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_95_top_per_100k))+
-  geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_90_top_per_100k))+
-  geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_90_bot_per_100k))+
-  geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_95_bot_per_100k))+
-  geom_line(col="black", linetype = "dashed")+theme_minimal()+
-  theme(legend.position = "none")
+if(inspect){
+  ggplot(world_export, 
+         aes(x=date, 
+             y=cumulative_estimated_daily_excess_deaths_per_100k,
+             col = world))+
+    geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_95_top_per_100k))+
+    geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_90_top_per_100k))+
+    geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_90_bot_per_100k))+
+    geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_95_bot_per_100k))+
+    geom_line(col="black", linetype = "dashed")+theme_minimal()+
+    theme(legend.position = "none")
+}
 
 # Write to file:
 write_csv(world_export, "output-data/export_world_per_100k_cumulative.csv")
-
-
 
 
 # Export 7: World level, absolute units, with alternative excess deaths metric (excess where known, otherwise covid deaths)
@@ -742,25 +812,186 @@ world_export_alt <- confidence_intervals(new_col_names = "estimated_daily_excess
 world_export$cumulative_daily_excess_deaths_alternative <- world_export_alt$cumulative_daily_covid_deaths
 
 # Inspect:
-ggplot(world_export, 
-       aes(x=date, 
-           y=cumulative_estimated_daily_excess_deaths,
-           col = world))+
-  geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_95_top))+
-  geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_90_top))+
-  geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_90_bot))+
-  geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_95_bot))+
-  geom_line(aes(y=cumulative_daily_excess_deaths_alternative, col = "red"))+
-  geom_line(aes(y=cumulative_daily_covid_deaths), col = "black")+
-  geom_line(col="black", linetype = "dashed")+theme_minimal()+
-  theme(legend.position = "none")
+if(inspect){
+  ggplot(world_export, 
+         aes(x=date, 
+             y=cumulative_estimated_daily_excess_deaths,
+             col = world))+
+    geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_95_top))+
+    geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_90_top))+
+    geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_90_bot))+
+    geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_95_bot))+
+    geom_line(aes(y=cumulative_daily_excess_deaths_alternative, col = "red"))+
+    geom_line(aes(y=cumulative_daily_covid_deaths), col = "black")+
+    geom_line(col="black", linetype = "dashed")+theme_minimal()+
+    theme(legend.position = "none")
+}
+
+# Write to file if desired:
+# write_csv(world_export, "output-data/export_world_cumulative_with_alternative_excess_deaths.csv")
+
+# Step 5: Construct custom exports used as inputs for interactive export scripts: ------------------------------------------------------------------------------
+
+# Define alternative set of regions:
+export_covariates$continent_alt <- countrycode(export_covariates$iso3c, "iso3c",
+                                               "continent")
+export_covariates$continent_alt[export_covariates$continent_alt == "Europe"] <- "Europe, United States, Canada, and Oceania"
+export_covariates$continent_alt[export_covariates$iso3c %in% c("USA", "CAN")] <- "Europe, United States, Canada, and Oceania"
+export_covariates$continent_alt[export_covariates$continent_alt == "Oceania"] <- "Europe, United States, Canada, and Oceania"
+export_covariates$continent_alt[export_covariates$continent_alt == "Americas"] <- "Latin America and Caribbean"
+
+region_export <- confidence_intervals(new_col_names = "estimated_daily_excess_deaths",
+                                      group = "continent_alt", 
+                                      time = "date",
+                                      covars = export_covariates,
+                                      return_cumulative = F,
+                                      drop_ci_if_known_data = T,
+                                      bootstrap_predictions = pred_matrix,
+                                      known_data_column = "daily_excess_deaths",
+                                      model_prediction = estimate,
+                                      include_model_prediction_in_ci = F)
+
+# Inspect:
+if(inspect){
+  ggplot(region_export, 
+         aes(x=date, 
+             y=estimated_daily_excess_deaths,
+             col = continent_alt))+
+    geom_line(aes(y=estimated_daily_excess_deaths_ci_95_top))+
+    geom_line(aes(y=estimated_daily_excess_deaths_ci_90_top))+
+    geom_line(aes(y=estimated_daily_excess_deaths_ci_90_bot))+
+    geom_line(aes(y=estimated_daily_excess_deaths_ci_95_bot))+
+    geom_line(col="black", linetype = "dashed")+
+    facet_wrap(.~continent_alt)+theme_minimal()+
+    theme(legend.position = "none")
+}
 
 # Write to file:
-write_csv(world_export, "output-data/export_world_cumulative_with_alternative_excess_deaths.csv")
+write_csv(region_export, "output-data/output-by-alternative-regions/export_regions_EU_NA_Oceania_collapsed.csv")
+
+### Custom groupings for interactive (EU, Lat. Am, and North America and Oceania without being combined with Asia):
+export_covariates$custom_regions <- countrycode(export_covariates$iso3c, "iso3c", "continent")
+export_covariates$custom_regions[export_covariates$iso3c %in% c("USA", "CAN")] <- "North America"
+export_covariates$custom_regions[export_covariates$custom_regions == "Americas"] <- "Latin America and Caribbean"
+export_covariates$custom_regions[export_covariates$iso3c %in% c("AUT", "BEL", "BGR", "HRV", "CYP", "CZE", "DNK", "EST", "FIN", "FRA", "DEU", "GRC", "HUN", "IRL", "ITA", "LVA", "LTU", "LUX", "MLT", "NLD", "POL", "PRT", "ROU", "SVK", "SVN", "ESP", "SWE")] <- "European Union"
+export_covariates$custom_regions[export_covariates$custom_regions == "Europe"] <- "Europe (not EU)"
+
+# Absolute, per day
+export <- confidence_intervals(new_col_names = "estimated_daily_excess_deaths",
+                               group = "custom_regions", 
+                               time = "date",
+                               covars = export_covariates,
+                               return_cumulative = F,
+                               drop_ci_if_known_data = T,
+                               bootstrap_predictions = pred_matrix,
+                               known_data_column = "daily_excess_deaths",
+                               model_prediction = estimate,
+                               include_model_prediction_in_ci = F)
+export <- export[export$custom_regions %in% c("Latin America and Caribbean",
+                                              "North America", 
+                                              "European Union", "Asia", "Oceania"), ]
+
+# Inspect:
+if(inspect){
+  ggplot(export[, ], 
+         aes(x=date, 
+             y=estimated_daily_excess_deaths,
+             col = custom_regions))+
+    geom_line(aes(y=estimated_daily_excess_deaths_ci_95_top))+
+    geom_line(aes(y=estimated_daily_excess_deaths_ci_90_top))+
+    geom_line(aes(y=estimated_daily_excess_deaths_ci_90_bot))+
+    geom_line(aes(y=estimated_daily_excess_deaths_ci_95_bot))+
+    geom_line(col="black", linetype = "dashed")+
+    facet_wrap(.~custom_regions)+theme_minimal()+
+    theme(legend.position = "none")
+}
+
+# write to file:
+write_csv(export, "output-data/output-by-alternative-regions/export_regions_lat_am_na_eu.csv")
+
+per_capita_columns <- grep("deaths", colnames(export))
+
+for(i in per_capita_columns){
+  export[, i] <- 100000*export[, i]/export[, "population"]
+}
+colnames(export)[per_capita_columns] <- paste0(colnames(export)[per_capita_columns], "_per_100k")
+
+if(inspect){
+  ggplot(export[, ], 
+         aes(x=date, 
+             y=estimated_daily_excess_deaths_per_100k,
+             col = custom_regions))+
+    geom_line(aes(y=estimated_daily_excess_deaths_ci_95_top_per_100k))+
+    geom_line(aes(y=estimated_daily_excess_deaths_ci_90_top_per_100k))+
+    geom_line(aes(y=estimated_daily_excess_deaths_ci_90_bot_per_100k))+
+    geom_line(aes(y=estimated_daily_excess_deaths_ci_95_bot_per_100k))+
+    geom_line(col="black", linetype = "dashed")+
+    facet_wrap(.~custom_regions)+theme_minimal()+
+    theme(legend.position = "none")
+}
+
+# write to file:
+write_csv(export, "output-data/output-by-alternative-regions/export_regions_lat_am_na_eu_per_100k.csv")
+
+# Absolute, cumulative
+export <- confidence_intervals(new_col_names = "estimated_daily_excess_deaths",
+                               group = "custom_regions", 
+                               time = "date",
+                               covars = export_covariates,
+                               return_cumulative = T,
+                               drop_ci_if_known_data = T,
+                               bootstrap_predictions = pred_matrix,
+                               known_data_column = "daily_excess_deaths",
+                               model_prediction = estimate,
+                               include_model_prediction_in_ci = F)
+export <- export[export$custom_regions %in% c("Latin America and Caribbean",
+                                              "North America", 
+                                              "European Union", "Asia", "Oceania"), ]
+
+# Inspect:
+if(inspect){
+  ggplot(export[, ], 
+         aes(x=date, 
+             y=cumulative_estimated_daily_excess_deaths,
+             col = custom_regions))+
+    geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_95_top))+
+    geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_90_top))+
+    geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_90_bot))+
+    geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_95_bot))+
+    geom_line(col="black", linetype = "dashed")+
+    facet_wrap(.~custom_regions)+theme_minimal()+
+    theme(legend.position = "none")
+}
+
+# write to file:
+write_csv(export, "output-data/output-by-alternative-regions/export_regions_lat_am_na_eu_cumulative.csv")
+
+per_capita_columns <- grep("deaths", colnames(export))
+
+for(i in per_capita_columns){
+  export[, i] <- 100000*export[, i]/export[, "population"]
+}
+colnames(export)[per_capita_columns] <- paste0(colnames(export)[per_capita_columns], "_per_100k")
+
+if(inspect){
+  ggplot(export[, ], 
+         aes(x=date, 
+             y=cumulative_estimated_daily_excess_deaths_per_100k,
+             col = custom_regions))+
+    geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_95_top_per_100k))+
+    geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_90_top_per_100k))+
+    geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_90_bot_per_100k))+
+    geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_95_bot_per_100k))+
+    geom_line(col="black", linetype = "dashed")+
+    facet_wrap(.~custom_regions)+theme_minimal()+
+    theme(legend.position = "none")
+}
+
+# write to file:
+write_csv(export, "output-data/output-by-alternative-regions/export_regions_lat_am_na_eu_per_100k_cumulative.csv")
 
 
-
-# Step 5: Construct custom data frames based on alternative groupings or subsets of the data ------------------------------------------------------------------------------
+# Step 6: Construct custom data frames based on alternative groupings or subsets of the data ------------------------------------------------------------------------------
 # This script supports export of any grouping. 
 
 # To get statistics for a given group, do the following
@@ -788,24 +1019,25 @@ region_export <- confidence_intervals(new_col_names = "estimated_daily_excess_de
                                       model_prediction = estimate,
                                       include_model_prediction_in_ci = F)
 
-# Inspect the results:
-ggplot(region_export, 
-       aes(x=date, 
-           y=estimated_daily_excess_deaths,
-           col = continent_alt))+
-  geom_line(aes(y=estimated_daily_excess_deaths_ci_95_top))+
-  geom_line(aes(y=estimated_daily_excess_deaths_ci_90_top))+
-  geom_line(aes(y=estimated_daily_excess_deaths_ci_90_bot))+
-  geom_line(aes(y=estimated_daily_excess_deaths_ci_95_bot))+
-  geom_line(col="black", linetype = "dashed")+
-  facet_wrap(.~continent_alt)+theme_minimal()+
-  theme(legend.position = "none")
+# Inspect:
+if(inspect){
+  ggplot(region_export, 
+         aes(x=date, 
+             y=estimated_daily_excess_deaths,
+             col = continent_alt))+
+    geom_line(aes(y=estimated_daily_excess_deaths_ci_95_top))+
+    geom_line(aes(y=estimated_daily_excess_deaths_ci_90_top))+
+    geom_line(aes(y=estimated_daily_excess_deaths_ci_90_bot))+
+    geom_line(aes(y=estimated_daily_excess_deaths_ci_95_bot))+
+    geom_line(col="black", linetype = "dashed")+
+    facet_wrap(.~continent_alt)+theme_minimal()+
+    theme(legend.position = "none")
+}
 
-# And write them to a file:
-write_csv(region_export, "output-data/export_alternative_regions.csv")
+# Write to file if desired
+# write_csv(region_export, "output-data/export_alternative_regions.csv")
 
-
-# At the request of CNN, added the corresponding per 100k population, and cumulative numbers in absolute and per 100k population
+# At the request of CNN, I added the corresponding per 100k population, and cumulative numbers in absolute and per 100k population
 
 # Same for per 100k
 per_capita_columns <- grep("deaths", colnames(region_export))
@@ -815,19 +1047,22 @@ for(i in per_capita_columns){
 }
 colnames(region_export)[per_capita_columns] <- paste0(colnames(region_export)[per_capita_columns], "_per_100k")
 
-ggplot(region_export, 
-       aes(x=date, 
-           y=estimated_daily_excess_deaths_per_100k,
-           col = continent_alt))+
-  geom_line(aes(y=estimated_daily_excess_deaths_ci_95_top_per_100k))+
-  geom_line(aes(y=estimated_daily_excess_deaths_ci_90_top_per_100k))+
-  geom_line(aes(y=estimated_daily_excess_deaths_ci_90_bot_per_100k))+
-  geom_line(aes(y=estimated_daily_excess_deaths_ci_95_bot_per_100k))+
-  geom_line(col="black", linetype = "dashed")+
-  facet_wrap(.~continent_alt)+theme_minimal()+
-  theme(legend.position = "none")
+if(inspect){
+  ggplot(region_export, 
+         aes(x=date, 
+             y=estimated_daily_excess_deaths_per_100k,
+             col = continent_alt))+
+    geom_line(aes(y=estimated_daily_excess_deaths_ci_95_top_per_100k))+
+    geom_line(aes(y=estimated_daily_excess_deaths_ci_90_top_per_100k))+
+    geom_line(aes(y=estimated_daily_excess_deaths_ci_90_bot_per_100k))+
+    geom_line(aes(y=estimated_daily_excess_deaths_ci_95_bot_per_100k))+
+    geom_line(col="black", linetype = "dashed")+
+    facet_wrap(.~continent_alt)+theme_minimal()+
+    theme(legend.position = "none")
+}
 
-write_csv(region_export, "output-data/export_alternative_regions_per_100k.csv")
+# Write to file if desired
+# write_csv(region_export, "output-data/export_alternative_regions_per_100k.csv")
 
 region_export <- confidence_intervals(new_col_names = "estimated_daily_excess_deaths",
                                       group = "continent_alt", 
@@ -841,20 +1076,22 @@ region_export <- confidence_intervals(new_col_names = "estimated_daily_excess_de
                                       include_model_prediction_in_ci = F)
 
 # Inspect the results:
-ggplot(region_export, 
-       aes(x=date, 
-           y=cumulative_estimated_daily_excess_deaths,
-           col = continent_alt))+
-  geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_95_top))+
-  geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_90_top))+
-  geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_90_bot))+
-  geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_95_bot))+
-  geom_line(col="black", linetype = "dashed")+
-  facet_wrap(.~continent_alt)+theme_minimal()+
-  theme(legend.position = "none")
+if(inspect){
+  ggplot(region_export, 
+         aes(x=date, 
+             y=cumulative_estimated_daily_excess_deaths,
+             col = continent_alt))+
+    geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_95_top))+
+    geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_90_top))+
+    geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_90_bot))+
+    geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_95_bot))+
+    geom_line(col="black", linetype = "dashed")+
+    facet_wrap(.~continent_alt)+theme_minimal()+
+    theme(legend.position = "none")
+}
 
-# And write them to a file:
-write_csv(region_export, "output-data/export_alternative_regions_cumulative.csv")
+# Write to file if desired
+# write_csv(region_export, "output-data/export_alternative_regions_cumulative.csv")
 
 # Same for per 100k
 per_capita_columns <- grep("deaths", colnames(region_export))
@@ -864,22 +1101,22 @@ for(i in per_capita_columns){
 }
 colnames(region_export)[per_capita_columns] <- paste0(colnames(region_export)[per_capita_columns], "_per_100k")
 
-ggplot(region_export, 
-       aes(x=date, 
-           y=cumulative_estimated_daily_excess_deaths_per_100k,
-           col = continent_alt))+
-  geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_95_top_per_100k))+
-  geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_90_top_per_100k))+
-  geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_90_bot_per_100k))+
-  geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_95_bot_per_100k))+
-  geom_line(col="black", linetype = "dashed")+
-  facet_wrap(.~continent_alt)+theme_minimal()+
-  theme(legend.position = "none")
+if(inspect){
+  ggplot(region_export, 
+         aes(x=date, 
+             y=cumulative_estimated_daily_excess_deaths_per_100k,
+             col = continent_alt))+
+    geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_95_top_per_100k))+
+    geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_90_top_per_100k))+
+    geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_90_bot_per_100k))+
+    geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_95_bot_per_100k))+
+    geom_line(col="black", linetype = "dashed")+
+    facet_wrap(.~continent_alt)+theme_minimal()+
+    theme(legend.position = "none")
+}
 
-write_csv(region_export, "output-data/export_alternative_regions_per_100k_cumulative.csv")
-
-
-
+# Write to file if desired
+# write_csv(region_export, "output-data/export_alternative_regions_per_100k_cumulative.csv")
 
 
 ### Replication: Egypt spotlight chart for methodology:
@@ -895,20 +1132,23 @@ country_export <- confidence_intervals(new_col_names = "estimated_daily_excess_d
                                        model_prediction = estimate,
                                        include_model_prediction_in_ci = T)
 
-write_csv(country_export[country_export$iso3c %in% c("EGY"), ], "output-data/Egypt_Example_plot.csv")
+# Write to file if desired
+# write_csv(country_export[country_export$iso3c %in% c("EGY"), ], "output-data/Egypt_Example_plot.csv")
 
 # Inspect:
-ggplot(country_export[country_export$iso3c %in% c("EGY"), ], 
-       aes(x=date, 
-           y=estimated_daily_excess_deaths,
-           col = iso3c))+  geom_line(col="black", linetype = "dashed")+
-  geom_line(aes(y=daily_excess_deaths), 
-            col="black", linetype = "solid")+
-  geom_line(aes(y=estimated_daily_excess_deaths_ci_90_top))+
-  geom_line(aes(y=estimated_daily_excess_deaths_ci_90_bot))+
-  geom_line(aes(y=estimated_daily_excess_deaths_raw_estimate))+
-  facet_wrap(.~iso3c)+theme_minimal()+
-  theme(legend.position = "none")
+if(inspect){
+  ggplot(country_export[country_export$iso3c %in% c("EGY"), ], 
+         aes(x=date, 
+             y=estimated_daily_excess_deaths,
+             col = iso3c))+  geom_line(col="black", linetype = "dashed")+
+    geom_line(aes(y=daily_excess_deaths), 
+              col="black", linetype = "solid")+
+    geom_line(aes(y=estimated_daily_excess_deaths_ci_90_top))+
+    geom_line(aes(y=estimated_daily_excess_deaths_ci_90_bot))+
+    geom_line(aes(y=estimated_daily_excess_deaths_raw_estimate))+
+    facet_wrap(.~iso3c)+theme_minimal()+
+    theme(legend.position = "none")
+}
 
 
 ### OECD statistic (central estimate excess deaths vs official covid deaths):
@@ -971,20 +1211,22 @@ wb_export <- confidence_intervals(new_col_names = "estimated_daily_excess_deaths
                                   include_model_prediction_in_ci = F)
 
 # Inspect:
-ggplot(wb_export[wb_export$World_Bank_income_group != "Unknown income group", ], 
-       aes(x=date, 
-           y=estimated_daily_excess_deaths,
-           col = World_Bank_income_group))+
-  geom_line(aes(y=estimated_daily_excess_deaths_ci_95_top))+
-  geom_line(aes(y=estimated_daily_excess_deaths_ci_90_top))+
-  geom_line(aes(y=estimated_daily_excess_deaths_ci_90_bot))+
-  geom_line(aes(y=estimated_daily_excess_deaths_ci_95_bot))+
-  geom_line(col="black", linetype = "dashed")+
-  facet_wrap(.~World_Bank_income_group)+theme_minimal()+
-  theme(legend.position = "none")
+if(inspect){
+  ggplot(wb_export[wb_export$World_Bank_income_group != "Unknown income group", ], 
+         aes(x=date, 
+             y=estimated_daily_excess_deaths,
+             col = World_Bank_income_group))+
+    geom_line(aes(y=estimated_daily_excess_deaths_ci_95_top))+
+    geom_line(aes(y=estimated_daily_excess_deaths_ci_90_top))+
+    geom_line(aes(y=estimated_daily_excess_deaths_ci_90_bot))+
+    geom_line(aes(y=estimated_daily_excess_deaths_ci_95_bot))+
+    geom_line(col="black", linetype = "dashed")+
+    facet_wrap(.~World_Bank_income_group)+theme_minimal()+
+    theme(legend.position = "none")
+}
 
 # write to file:
-write_csv(wb_export, "output-data/wb_income_groups.csv")
+write_csv(wb_export, "output-data/output-by-world-bank-income-group/wb_income_groups.csv")
 
 
 per_capita_columns <- grep("deaths", colnames(wb_export))
@@ -994,21 +1236,22 @@ for(i in per_capita_columns){
 }
 colnames(wb_export)[per_capita_columns] <- paste0(colnames(wb_export)[per_capita_columns], "_per_100k")
 
-
-ggplot(wb_export[wb_export$World_Bank_income_group != "Unknown income group", ], 
-       aes(x=date, 
-           y=estimated_daily_excess_deaths_per_100k,
-           col = World_Bank_income_group))+
-  geom_line(aes(y=estimated_daily_excess_deaths_ci_95_top_per_100k))+
-  geom_line(aes(y=estimated_daily_excess_deaths_ci_90_top_per_100k))+
-  geom_line(aes(y=estimated_daily_excess_deaths_ci_90_bot_per_100k))+
-  geom_line(aes(y=estimated_daily_excess_deaths_ci_95_bot_per_100k))+
-  geom_line(col="black", linetype = "dashed")+
-  facet_wrap(.~World_Bank_income_group)+theme_minimal()+
-  theme(legend.position = "none")
+if(inspect){
+  ggplot(wb_export[wb_export$World_Bank_income_group != "Unknown income group", ], 
+         aes(x=date, 
+             y=estimated_daily_excess_deaths_per_100k,
+             col = World_Bank_income_group))+
+    geom_line(aes(y=estimated_daily_excess_deaths_ci_95_top_per_100k))+
+    geom_line(aes(y=estimated_daily_excess_deaths_ci_90_top_per_100k))+
+    geom_line(aes(y=estimated_daily_excess_deaths_ci_90_bot_per_100k))+
+    geom_line(aes(y=estimated_daily_excess_deaths_ci_95_bot_per_100k))+
+    geom_line(col="black", linetype = "dashed")+
+    facet_wrap(.~World_Bank_income_group)+theme_minimal()+
+    theme(legend.position = "none")
+}
 
 # write to file:
-write_csv(wb_export, "output-data/wb_income_groups_per_100k.csv")
+write_csv(wb_export, "output-data/output-by-world-bank-income-group/wb_income_groups_per_100k.csv")
 
 
 # Absolute, cumulative
@@ -1024,20 +1267,22 @@ wb_export <- confidence_intervals(new_col_names = "estimated_daily_excess_deaths
                                   include_model_prediction_in_ci = F)
 
 # Inspect:
-ggplot(wb_export[wb_export$World_Bank_income_group != "Unknown income group", ], 
-       aes(x=date, 
-           y=cumulative_estimated_daily_excess_deaths,
-           col = World_Bank_income_group))+
-  geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_95_top))+
-  geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_90_top))+
-  geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_90_bot))+
-  geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_95_bot))+
-  geom_line(col="black", linetype = "dashed")+
-  facet_wrap(.~World_Bank_income_group)+theme_minimal()+
-  theme(legend.position = "none")
+if(inspect){
+  ggplot(wb_export[wb_export$World_Bank_income_group != "Unknown income group", ], 
+         aes(x=date, 
+             y=cumulative_estimated_daily_excess_deaths,
+             col = World_Bank_income_group))+
+    geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_95_top))+
+    geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_90_top))+
+    geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_90_bot))+
+    geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_95_bot))+
+    geom_line(col="black", linetype = "dashed")+
+    facet_wrap(.~World_Bank_income_group)+theme_minimal()+
+    theme(legend.position = "none")
+}
 
 # write to file:
-write_csv(wb_export, "output-data/wb_income_groups_cumulative.csv")
+write_csv(wb_export, "output-data/output-by-world-bank-income-group/wb_income_groups_cumulative.csv")
 
 per_capita_columns <- grep("deaths", colnames(wb_export))
 
@@ -1046,19 +1291,19 @@ for(i in per_capita_columns){
 }
 colnames(wb_export)[per_capita_columns] <- paste0(colnames(wb_export)[per_capita_columns], "_per_100k")
 
-
-ggplot(wb_export[wb_export$World_Bank_income_group != "Unknown income group", ], 
-       aes(x=date, 
-           y=cumulative_estimated_daily_excess_deaths_per_100k,
-           col = World_Bank_income_group))+
-  geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_95_top_per_100k))+
-  geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_90_top_per_100k))+
-  geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_90_bot_per_100k))+
-  geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_95_bot_per_100k))+
-  geom_line(col="black", linetype = "dashed")+
-  facet_wrap(.~World_Bank_income_group)+theme_minimal()+
-  theme(legend.position = "none")
+if(inspect){
+  ggplot(wb_export[wb_export$World_Bank_income_group != "Unknown income group", ], 
+         aes(x=date, 
+             y=cumulative_estimated_daily_excess_deaths_per_100k,
+             col = World_Bank_income_group))+
+    geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_95_top_per_100k))+
+    geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_90_top_per_100k))+
+    geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_90_bot_per_100k))+
+    geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_95_bot_per_100k))+
+    geom_line(col="black", linetype = "dashed")+
+    facet_wrap(.~World_Bank_income_group)+theme_minimal()+
+    theme(legend.position = "none")
+}
 
 # write to file:
-write_csv(wb_export, "output-data/wb_income_groups_per_100k_cumulative.csv")
-
+write_csv(wb_export, "output-data/output-by-world-bank-income-group/wb_income_groups_per_100k_cumulative.csv")

@@ -1,2 +1,5 @@
-
+.DS_Store
+output-data/country_daily_excess_deaths_with_covariates.csv
 .Rhistory
+.Rproj.user
+node_modules
