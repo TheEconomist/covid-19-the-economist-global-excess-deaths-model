@@ -29,7 +29,8 @@ To update the model dynamically on a daily basis, go to the scripts folder and r
 To replicate the model and export estimated excess deaths for a locality, please run the scripts [1](https://github.com/TheEconomist/covid-19-the-economist-global-excess-deaths-model/blob/main/scripts/1_excess_deaths_global_estimates_data_generation.R), [2](https://github.com/TheEconomist/covid-19-the-economist-global-excess-deaths-model/blob/main/scripts/2_excess_deaths_global_estimates_model.R), and [3](https://github.com/TheEconomist/covid-19-the-economist-global-excess-deaths-model/blob/main/scripts/3_excess_deaths_global_estimates_export.R), in the scripts folder. As the model draws most of its data dynamically, you can also use these scripts to generate updated estimates and models as time passes.
 
 - To read about what the model shows, see our [Briefing: Counting the dead.](https://www.economist.com/briefing/2021/05/15/there-have-been-7m-13m-excess-deaths-worldwide-during-the-pandemic)     
-- To understand how we constructed it, see our [Methodology: How we estimated the true death toll of the pandemic.](https://www.economist.com/ExcessDeathsModel).  - To see all the improvements we have made since, as well as all our estimates, updated daily, see our interactive: [Interactive: The pandemic’s true death toll](https://www.economist.com/graphic-detail/coronavirus-excess-deaths-estimates)
+- To understand how we constructed it, see our [Methodology: How we estimated the true death toll of the pandemic.](https://www.economist.com/ExcessDeathsModel).  
+- - To see all the improvements we have made since, as well as all our estimates, updated daily, see our interactive: [Interactive: The pandemic’s true death toll](https://www.economist.com/graphic-detail/coronavirus-excess-deaths-estimates)
 
 ## Acknowledgements
 
