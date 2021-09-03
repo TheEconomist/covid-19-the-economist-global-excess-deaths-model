@@ -950,6 +950,8 @@ china <- read_csv("source-data/china_bmj_excess_deaths.csv", skip = 1)
 china_wuhan <- china[, 1:5]
 china_hubei_except_wuhan <- china[, c(1:2, 6:8)]
 china_outside_hubei <- china[, c(1:2, 9:11)]
+colnames(china_wuhan)[3] <- "Mean No. of reported Deaths, 2015-19"
+colnames(china_wuhan)[5] <- "No. of reported deaths in 2020"
 colnames(china_hubei_except_wuhan) <- colnames(china_wuhan)
 colnames(china_outside_hubei) <- colnames(china_wuhan)
 
