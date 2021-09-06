@@ -179,9 +179,22 @@ covars_for_export_latest <- covars_for_export_latest[!duplicated(covars_for_expo
 
 saveRDS(rbind(covars_for_export, covars_for_export_latest), "output-data/export_covariates.RDS")
 
+# Get pre-update cumulative world total:
+pre_updated_world_total <- read.csv('output-data/export_world_cumulative.csv')
+pre_updated_world_total <- pre_updated_world_total[order(pre_updated_world_total$date, decreasing = T), "cumulative_estimated_daily_excess_deaths"][1]
+
 # Run export script:
 source("scripts/3_excess_deaths_global_estimates_export.R")
 source("scripts/4_excess_deaths_global_estimates_export_for_interactive.R")
+
+# Compare pre and post-update world total:
+post_updated_world_total <- read.csv('output-data/export_world_cumulative.csv')
+post_updated_world_total <- post_updated_world_total[order(post_updated_world_total$date, decreasing = T), "cumulative_estimated_daily_excess_deaths"][1]
+
+# If day-to-day difference is over 0.5m, throw an error to stop the automatic update. This notifies the maintainers, who can then ensure such large jumps are inspected manually before they are pushed to the live page.
+if(abs(post_updated_world_total - pre_updated_world_total) > 500000){
+  stop("Large change in cumulative world total, please inspect manually.")
+}
 
 end_time <- Sys.time()
 
