@@ -1,5 +1,7 @@
 # The Economist's excess deaths model
 
+[![update](https://github.com/TheEconomist/covid-19-the-economist-global-excess-deaths-model/actions/workflows/update.yaml/badge.svg)](https://github.com/TheEconomist/covid-19-the-economist-global-excess-deaths-model/actions/workflows/update.yaml)
+
 This repository contains the replication code and data for *The Economist*'s excess deaths model, used to estimate excess deaths due to the covid-19 pandemic.  
 
 ![Chart of total deaths over time](global_mortality.png)  
