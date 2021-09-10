@@ -191,8 +191,8 @@ source("scripts/4_excess_deaths_global_estimates_export_for_interactive.R")
 post_updated_world_total <- read.csv('output-data/export_world_cumulative.csv')
 post_updated_world_total <- post_updated_world_total[order(post_updated_world_total$date, decreasing = T), "cumulative_estimated_daily_excess_deaths"][1]
 
-# If day-to-day difference is over 0.5m, throw an error to stop the automatic update. This notifies the maintainers, who can then ensure such large jumps are inspected manually before they are pushed to the live page.
-if(abs(post_updated_world_total - pre_updated_world_total) > 500000){
+# If day-to-day difference is over 0.25m, throw an error to stop the automatic update. This notifies the maintainers, who can then ensure such large jumps are inspected manually before they are pushed to the live page.
+if(abs(post_updated_world_total - pre_updated_world_total) > 250000){
   stop("Large change in cumulative world total, please inspect manually.")
 }
 
