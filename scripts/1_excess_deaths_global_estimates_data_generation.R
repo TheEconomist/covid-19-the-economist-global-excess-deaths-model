@@ -45,6 +45,11 @@ daily_excess_deaths <- expand.grid(date = seq(min(excess_deaths_source$date), as
 # Ensure no duplicated country-dates
 daily_excess_deaths <- daily_excess_deaths[!duplicated(paste0(daily_excess_deaths$iso3c, "_", daily_excess_deaths$date)), ]
 
+# This forces a manual inspection if new countries are added to the excess deaths data. This is important, because countries past observations enter into distance and region averages the models are trained on. That means large additions should be accompanied by the training of new models, or these new countries contribution to distance and region-weighted averages nullified.
+if(!identical(sort(unique(daily_excess_deaths$iso3c)), c('ALB', 'AUS', 'AUT', 'BEL', 'BGR', 'BIH', 'BLR', 'BOL', 'BRA', 'CAN', 'CHE', 'CHL', 'COL', 'CRI', 'CUB', 'CYP', 'CZE', 'DEU', 'DNK', 'ECU', 'EGY', 'ESP', 'EST', 'FIN', 'FRA', 'GBR', 'GEO', 'GRC', 'GTM', 'HRV', 'HUN', 'IRL', 'IRN', 'ISL', 'ISR', 'ITA', 'JAM', 'JPN', 'KAZ', 'KGZ', 'KOR', 'LBN', 'LTU', 'LUX', 'LVA', 'MDA', 'MEX', 'MKD', 'MLT', 'MNE', 'MNG', 'MUS', 'MYS', 'NIC', 'NLD', 'NOR', 'NZL', 'OMN', 'PAN', 'PER', 'PHL', 'POL', 'PRT', 'PRY', 'QAT', 'ROU', 'RUS', 'SGP', 'SLV', 'SRB', 'SVK', 'SVN', 'SWE', 'THA', 'TJK', 'TUN', 'TWN', 'UKR', 'URY', 'USA', 'UZB', 'ZAF'))){
+  stop()
+}
+
 # Step 3: import OWID data on testing and cases, creating a daily time series ---------------------------------------
 
 # Import daily data for countries from Our World In Data
