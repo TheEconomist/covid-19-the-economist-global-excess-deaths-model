@@ -50,6 +50,25 @@ if(!identical(sort(unique(daily_excess_deaths$iso3c)), c('ALB', 'AUS', 'AUT', 'B
   stop()
 }
 
+# This temporarily uses back-up data for Iran and Tajikistan, while issues at source are resolved:
+temp <- readRDS("country_daily_excess_deaths_with_covariates.RDS")
+temp <- temp[temp$iso3c %in% c("TJK", "IRN"), c("iso3c", "date", "daily_excess_deaths_per_100k")]
+irn_backup <- temp[temp$iso3c == "IRN", ]
+tjk_backup <- temp[temp$iso3c == "TJK", ]
+
+for(i in setdiff(colnames(daily_excess_deaths), c("iso3c", "date"))){
+  daily_excess_deaths[daily_excess_deaths$iso3c %in% c("TJK", "IRN"), i] <- NA
+}
+
+for(i in unique(irn_backup$date)){
+  daily_excess_deaths$daily_excess_deaths_per_100k[daily_excess_deaths$iso3c == "IRN" & daily_excess_deaths$date == i] <- irn_backup$daily_excess_deaths_per_100k[irn_backup$date == i]
+}
+
+for(i in unique(tjk_backup$date)){
+  daily_excess_deaths$daily_excess_deaths_per_100k[daily_excess_deaths$iso3c == "TJK" & daily_excess_deaths$date == i] <- tjk_backup$daily_excess_deaths_per_100k[tjk_backup$date == i]
+}
+
+
 # Step 3: import OWID data on testing and cases, creating a daily time series ---------------------------------------
 
 # Import daily data for countries from Our World In Data
