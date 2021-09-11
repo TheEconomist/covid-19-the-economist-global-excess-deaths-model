@@ -51,7 +51,7 @@ if(!identical(sort(unique(daily_excess_deaths$iso3c)), c('ALB', 'AUS', 'AUT', 'B
 }
 
 # This temporarily uses back-up data for Iran and Tajikistan, while issues at source are resolved:
-temp <- readRDS("country_daily_excess_deaths_with_covariates.RDS")
+temp <- readRDS("output-data/country_daily_excess_deaths_with_covariates.RDS")
 temp <- temp[temp$iso3c %in% c("TJK", "IRN"), c("iso3c", "date", "daily_excess_deaths_per_100k")]
 irn_backup <- temp[temp$iso3c == "IRN", ]
 tjk_backup <- temp[temp$iso3c == "TJK", ]
