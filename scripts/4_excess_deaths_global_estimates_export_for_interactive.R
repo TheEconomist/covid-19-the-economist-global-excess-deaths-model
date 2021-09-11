@@ -648,6 +648,9 @@ hist$bin_max <- NA
 hist$bin <- NA
 hist$bin_n <- 1
 
+hist_date <- unique(hist$date)[1]
+hist$date <- NULL
+
 # Place observations in groups
 for(i in 2:length(groups)){
 hist$bin_min[hist$value >= groups[i-1] & hist$value <= groups[i]] <- groups[i-1]  
@@ -655,13 +658,13 @@ hist$bin_max[hist$value >= groups[i-1] & hist$value <= groups[i]] <- groups[i]
 hist$bin[hist$value >= groups[i-1] & hist$value <= groups[i]] <- i-1
 
 if(sum(hist$bin == i-1, na.rm = T) == 0){
-  hist <- rbind(hist, c(NA, NA, NA, NA, NA, NA, 
+  hist <- rbind(hist, c(NA, NA, NA, NA, NA, 
                         groups[i-1], groups[i], i-1, 0))
 }
 }
 
 hist$world <- unique(na.omit(hist$world)[1])
-hist$date <- unique(na.omit(hist$date)[1])
+hist$date <- hist_date
 hist$estimate <- unique(na.omit(hist$estimate)[1])
 
 # Sum observations per bin:
