@@ -46,28 +46,9 @@ daily_excess_deaths <- expand.grid(date = seq(min(excess_deaths_source$date), as
 daily_excess_deaths <- daily_excess_deaths[!duplicated(paste0(daily_excess_deaths$iso3c, "_", daily_excess_deaths$date)), ]
 
 # This forces a manual inspection if new countries are added to the excess deaths data. This is important, because countries past observations enter into distance and region averages the models are trained on. That means large additions should be accompanied by the training of new models, or these new countries contribution to distance and region-weighted averages nullified.
-if(!identical(sort(unique(daily_excess_deaths$iso3c)), c('ALB', 'AUS', 'AUT', 'BEL', 'BGR', 'BIH', 'BLR', 'BOL', 'BRA', 'CAN', 'CHE', 'CHL', 'COL', 'CRI', 'CUB', 'CYP', 'CZE', 'DEU', 'DNK', 'ECU', 'EGY', 'ESP', 'EST', 'FIN', 'FRA', 'GBR', 'GEO', 'GRC', 'GTM', 'HRV', 'HUN', 'IRL', 'IRN', 'ISL', 'ISR', 'ITA', 'JAM', 'JPN', 'KAZ', 'KGZ', 'KOR', 'LBN', 'LTU', 'LUX', 'LVA', 'MDA', 'MEX', 'MKD', 'MLT', 'MNE', 'MNG', 'MUS', 'MYS', 'NIC', 'NLD', 'NOR', 'NZL', 'OMN', 'PAN', 'PER', 'PHL', 'POL', 'PRT', 'PRY', 'QAT', 'ROU', 'RUS', 'SGP', 'SLV', 'SRB', 'SVK', 'SVN', 'SWE', 'THA', 'TJK', 'TUN', 'TWN', 'UKR', 'URY', 'USA', 'UZB', 'ZAF'))){
-  stop()
+if(!identical(sort(unique(daily_excess_deaths$iso3c)), sort(c('ALB', 'AUS', 'AUT', 'BEL', 'BGR', 'BIH', 'BLR', 'BOL', 'BRA', 'CAN', 'CHE', 'CHL', 'COL', 'CRI', 'CUB', 'CYP', 'CZE', 'DEU', 'DNK', 'ECU', 'EGY', 'ESP', 'EST', 'FIN', 'FRA', 'GBR', 'GEO', 'GRC', 'GTM', 'HRV', 'HUN', 'IRL', 'IRN', 'ISL', 'ISR', 'ITA', 'JAM', 'JPN', 'KAZ', 'KGZ', 'KOR', 'LBN', 'LTU', 'LUX', 'LVA', 'MDA', 'MEX', 'MKD', 'MLT', 'MNE', 'MNG', 'MUS', 'MYS', 'NIC', 'NLD', 'NOR', 'NZL', 'OMN', 'PAN', 'PER', 'PHL', 'POL', 'PRT', 'PRY', 'QAT', 'ROU', 'RUS', 'SGP', 'SLV', 'SRB', 'SVK', 'SVN', 'SWE', 'THA', 'TJK', 'TUN', 'TWN', 'UKR', 'URY', 'USA', 'UZB', 'ZAF', "AND", "ARG", "ATG", "HKG", "LIE", "MCO", "SMR", "SYC")))){
+  stop("New countries added to excess deaths data, please inspect manually.")
 }
-
-# This temporarily uses back-up data for Iran and Tajikistan, while issues at source are resolved:
-temp <- readRDS("output-data/country_daily_excess_deaths_with_covariates.RDS")
-temp <- temp[temp$iso3c %in% c("TJK", "IRN"), c("iso3c", "date", "daily_excess_deaths_per_100k")]
-irn_backup <- temp[temp$iso3c == "IRN", ]
-tjk_backup <- temp[temp$iso3c == "TJK", ]
-
-for(i in setdiff(colnames(daily_excess_deaths), c("iso3c", "date"))){
-  daily_excess_deaths[daily_excess_deaths$iso3c %in% c("TJK", "IRN"), i] <- NA
-}
-
-for(i in unique(irn_backup$date)){
-  daily_excess_deaths$daily_excess_deaths_per_100k[daily_excess_deaths$iso3c == "IRN" & daily_excess_deaths$date == i] <- irn_backup$daily_excess_deaths_per_100k[irn_backup$date == i]
-}
-
-for(i in unique(tjk_backup$date)){
-  daily_excess_deaths$daily_excess_deaths_per_100k[daily_excess_deaths$iso3c == "TJK" & daily_excess_deaths$date == i] <- tjk_backup$daily_excess_deaths_per_100k[tjk_backup$date == i]
-}
-
 
 # Step 3: import OWID data on testing and cases, creating a daily time series ---------------------------------------
 
