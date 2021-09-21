@@ -23,7 +23,7 @@ excess_deaths_source <- bind_rows(list(Weekly = read_csv(paste0(excess_deaths_gi
   filter(country == region & end_date <= today()) %>%
   select(timeframe, country, start_date, end_date, days, population, 
          total_deaths, covid_deaths, expected_deaths, excess_deaths, non_covid_deaths, covid_deaths_per_100k, excess_deaths_per_100k) %>% 
-  group_by(country, start_date, end_date) %>% slice(1:1) %>% ungroup() %>% # This removes one of the duplicate Israel entries for w/c 2021-05-17 - should be fixed at source.
+  group_by(country, start_date, end_date) %>% slice(1:1) %>% ungroup() %>% 
   pivot_longer(cols = c("start_date", "end_date"), names_to = "date_type", values_to = "date")
 
 daily_excess_deaths <- expand.grid(date = seq(min(excess_deaths_source$date), as.Date(today()), by = "days"),
@@ -42,7 +42,10 @@ daily_excess_deaths <- expand.grid(date = seq(min(excess_deaths_source$date), as
   drop_na(-date, -iso3c) %>% 
   filter(!iso3c %in% c("ARM","AZE","ETH","MMR")) # Removes countries which have entered (possibly civil) wars
 
-# Ensure no duplicated country-dates
+# Removing very recent data for countries with clear reporting lag issues (Malaysia) after discussions with our source for this data:
+daily_excess_deaths <- daily_excess_deaths[!(daily_excess_deaths$iso3c == "MYS" & daily_excess_deaths$date >= Sys.Date()-30*5), ]
+
+# Check to ensure and remove any duplicated country-dates
 daily_excess_deaths <- daily_excess_deaths[!duplicated(paste0(daily_excess_deaths$iso3c, "_", daily_excess_deaths$date)), ]
 
 # This forces a manual inspection if new countries are added to the excess deaths data. This is important, because countries past observations enter into distance and region averages the models are trained on. That means large additions should be accompanied by the training of new models, or these new countries contribution to distance and region-weighted averages nullified.
