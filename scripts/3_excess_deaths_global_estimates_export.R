@@ -1307,3 +1307,75 @@ if(inspect){
 
 # write to file:
 write_csv(wb_export, "output-data/output-by-world-bank-income-group/wb_income_groups_per_100k_cumulative.csv")
+
+
+
+# Western Europe, North America, Australia, and New Zealand
+# Here, we use the "countrycode" package to place countries (defined by iso3c) into groups based on the continents they below to. 
+export_covariates$continent_alt <- "Other"
+export_covariates$continent_alt[export_covariates$iso3c %in% c("AUS", "AUT", "BEL", "BGR", "CAN", "CHE", "CHI", "CYP", "CZE", "DEU", "DNK", "ESP", "EST", "FIN", "FRA", "FRO", "GBR", "GIB", "GRC", "GRL", "HRV", "HUN", "IMN", "IRL", "ISL", "ITA", "LIE", "LTU", "LUX", "LVA", "MCO", "MEX", "MLT", "NLD", "NOR", "NZL", "POL", "PRT", "ROU", "SHN", "SMR", "SPM", "SVK", "SVN", "SWE", "USA", "VAT")] <- "W. Europe, NA, and Aus/NZ"
+
+# We then use our export function to export summary statistics for these groups:
+region_export <- confidence_intervals(new_col_names = "estimated_daily_excess_deaths",
+                                      group = "continent_alt", 
+                                      time = "date",
+                                      covars = export_covariates,
+                                      return_cumulative = F,
+                                      drop_ci_if_known_data = T,
+                                      bootstrap_predictions = pred_matrix,
+                                      known_data_column = "daily_excess_deaths",
+                                      model_prediction = estimate,
+                                      include_model_prediction_in_ci = F)
+
+# Inspect:
+if(inspect){
+  ggplot(region_export[region_export$continent_alt != "Other", ], 
+         aes(x=date, 
+             y=estimated_daily_excess_deaths,
+             col = continent_alt))+
+    geom_line(aes(y=estimated_daily_excess_deaths_ci_95_top))+
+    geom_line(aes(y=estimated_daily_excess_deaths_ci_90_top))+
+    geom_line(aes(y=estimated_daily_excess_deaths_ci_90_bot))+
+    geom_line(aes(y=estimated_daily_excess_deaths_ci_95_bot))+
+    geom_line(col="black", linetype = "dashed")+
+    facet_wrap(.~continent_alt)+theme_minimal()+
+    theme(legend.position = "none")
+}
+
+write_csv(region_export[region_export$continent_alt != "Other", ], "output-data/output-by-alternative-regions/export_regions_w_europe_aus_nz_north_america.csv")
+
+# Western Europe
+# Here, we use the "countrycode" package to place countries (defined by iso3c) into groups based on the continents they below to. 
+export_covariates$continent_alt <- "Other"
+export_covariates$continent_alt[export_covariates$iso3c %in% c( "AUT", "BEL", "BGR", "CHE", "CHI", "CYP", "CZE", "DEU", "DNK", "ESP", "EST", "FIN", "FRA", "FRO", "GBR", "GIB", "GRC", "GRL", "HRV", "HUN", "IMN", "IRL", "ISL", "ITA", "LIE", "LTU", "LUX", "LVA", "MCO", "MLT", "NLD", "NOR",  "POL", "PRT", "ROU", "SHN", "SMR", "SPM", "SVK", "SVN", "SWE",  "VAT")] <- "W. Europe"
+
+# We then use our export function to export summary statistics for these groups:
+region_export <- confidence_intervals(new_col_names = "estimated_daily_excess_deaths",
+                                      group = "continent_alt", 
+                                      time = "date",
+                                      covars = export_covariates,
+                                      return_cumulative = F,
+                                      drop_ci_if_known_data = T,
+                                      bootstrap_predictions = pred_matrix,
+                                      known_data_column = "daily_excess_deaths",
+                                      model_prediction = estimate,
+                                      include_model_prediction_in_ci = F)
+
+# Inspect:
+if(inspect){
+  ggplot(region_export[region_export$continent_alt != "Other", ], 
+         aes(x=date, 
+             y=estimated_daily_excess_deaths,
+             col = continent_alt))+
+    geom_line(aes(y=estimated_daily_excess_deaths_ci_95_top))+
+    geom_line(aes(y=estimated_daily_excess_deaths_ci_90_top))+
+    geom_line(aes(y=estimated_daily_excess_deaths_ci_90_bot))+
+    geom_line(aes(y=estimated_daily_excess_deaths_ci_95_bot))+
+    geom_line(col="black", linetype = "dashed")+
+    facet_wrap(.~continent_alt)+theme_minimal()+
+    theme(legend.position = "none")
+}
+
+# Write to file if desired
+write_csv(region_export[region_export$continent_alt != "Other", ], "output-data/output-by-alternative-regions/export_regions_western_europe.csv")
+
