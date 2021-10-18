@@ -627,6 +627,7 @@ write_csv(table_B[, c("location",
                       "implied_infections_per_100_persons_bot_95")], 
           "output-data/output-for-interactive/table_B.csv")
 
+# Extra exports:  ------------------------------------------------------------------------------
 # Step 9: Histogram data ------------------------------------------------------------------------------
 # This is exported in case people want more information on the distribution of predictions at the world cumulative level for the present day.
 
@@ -681,7 +682,115 @@ ggplot(hist)+geom_rect(aes(xmin=bin_min, xmax=bin_max, ymax=bin_n, ymin=0))+
 write_csv(hist, 
           "output-data/output-for-interactive/world_estimates_histogram.csv")
 
+
+# Step 10: Implied infections over time ------------------------------------------------------------------------------
+# Load data:
+infections <-
+  read_csv("output-data/output-for-interactive/by_location.csv")
+infections$iso3c <- countrycode(infections$location, "country.name", "iso3c")
+infections <- infections[!is.na(infections$iso3c), ]
+
+# Load estimated demography-adjusted IFR by iso3c:
+ifr_by_iso <- readRDS("source-data/ifr_cache.RDS")
+ifr_by_iso$iso2c[ifr_by_iso$area == "Namibia"] <- "NA"
+ifr_by_iso$iso3c <- countrycode(ifr_by_iso$iso2c, "iso2c", "iso3c")
+ifr_by_iso$demography_adjusted_ifr_percent <- ifr_by_iso$area_ifr
+
+# Load estimated share of population over 65:
+age_over_65 <-
+  unique(country_daily_data[, c("iso_code", "aged_65_older")])
+age_over_65$iso3c <- age_over_65$iso_code
+age_over_65$aged_65_older_pct <- age_over_65$aged_65_older
+
+infections <-
+  merge(infections, na.omit(ifr_by_iso[, c("iso3c", "demography_adjusted_ifr_percent")]), by = "iso3c", all.x = T)
+infections <-
+  merge(infections, na.omit(age_over_65[, c("iso3c", "aged_65_older_pct")]), by = "iso3c", all.x = T)
+
+# Get implied infections:
+infections$estimate <- infections$estimate / (infections$demography_adjusted_ifr_percent /
+                                                                                 100)
+infections$estimate_top_95 <- infections$estimate_top_95 /
+  (infections$demography_adjusted_ifr_percent / 100)
+infections$estimate_bot_95 <- infections$estimate_bot_95 /
+  (infections$demography_adjusted_ifr_percent / 100)
+
+# Ensure infections are not negative:
+infections$estimate[infections$estimate < 0] <-  0
+infections$estimate_top_95[infections$estimate_top_95 < 0] <-  0
+infections$estimate_bot_95[infections$estimate_bot_95 < 0] <-  0
+
+# Write to file:
+write_csv(infections,
+          "output-data/output-for-interactive/infections_per_day.csv")
+# Generating world-wide estimate assuming IFR is 50% higher than that estimated in rich countries for the world on average:
+infections$world_total <- ave(infections$estimate, infections$date, FUN = function(x) sum(x, na.rm=T))/1.5
+infections$world_total_top_95 <- ave(infections$estimate_top_95, infections$date, FUN = function(x) sum(x, na.rm=T))/1.5
+infections$world_total_bot_95 <- ave(infections$estimate_bot_95, infections$date, FUN = function(x) sum(x, na.rm=T))/1.5
+
+if(inspect){
+  ggplot(infections, aes(x=date, y=world_total))+geom_ribbon(aes(ymin=world_total_bot_95, ymax =world_total_top_95, xmin = date, xmax = date), fill = "lightgray")+geom_line()+theme_minimal()
+}
+
+# Load data:
+infections <-
+  read_csv("output-data/output-for-interactive/by_location_cumulative.csv")
+infections$iso3c <- countrycode(infections$location, "country.name", "iso3c")
+infections <- infections[!is.na(infections$iso3c), ]
+
+# Load estimated demography-adjusted IFR by iso3c:
+ifr_by_iso <- readRDS("source-data/ifr_cache.RDS")
+ifr_by_iso$iso2c[ifr_by_iso$area == "Namibia"] <- "NA"
+ifr_by_iso$iso3c <- countrycode(ifr_by_iso$iso2c, "iso2c", "iso3c")
+ifr_by_iso$demography_adjusted_ifr_percent <- ifr_by_iso$area_ifr
+
+# Load estimated share of population over 65:
+age_over_65 <-
+  unique(country_daily_data[, c("iso_code", "aged_65_older")])
+age_over_65$iso3c <- age_over_65$iso_code
+age_over_65$aged_65_older_pct <- age_over_65$aged_65_older
+
+infections <-
+  merge(infections, na.omit(ifr_by_iso[, c("iso3c", "demography_adjusted_ifr_percent")]), by = "iso3c", all.x = T)
+infections <-
+  merge(infections, na.omit(age_over_65[, c("iso3c", "aged_65_older_pct")]), by = "iso3c", all.x = T)
+
+# Get implied infections:
+infections$estimate <- infections$estimate / (infections$demography_adjusted_ifr_percent /
+                                                100)
+infections$estimate_top_95 <- infections$estimate_top_95 /
+  (infections$demography_adjusted_ifr_percent / 100)
+infections$estimate_bot_95 <- infections$estimate_bot_95 /
+  (infections$demography_adjusted_ifr_percent / 100)
+
+# If one wants total with plausible past exposure, set the below to true
+none_infected_twice <- FALSE
+if(none_infected_twice){
+# Ensure infections are not negative:
+infections$estimate[infections$estimate < 0] <-  0
+infections$estimate_top_95[infections$estimate_top_95 < 0] <-  0
+infections$estimate_bot_95[infections$estimate_bot_95 < 0] <-  0
+}
+
+# Ensure infections are not higher than population:
+infections$estimate[infections$estimate < infections$population] <-  infections$population[infections$estimate < infections$population]
+infections$estimate_top_95[infections$estimate_top_95 < infections$population] <-  infections$population[infections$estimate < infections$population]
+infections$estimate_bot_95[infections$estimate_bot_95 < infections$population] <-  infections$population[infections$estimate < infections$population]
+
+# Write to file:
+write_csv(infections,
+          "output-data/output-for-interactive/infections_per_day_cumulative.csv")
+# Generating world-wide estimate assuming IFR is 50% higher than that estimated in rich countries for the world on average:
+infections$world_total <- ave(infections$estimate, infections$date, FUN = function(x) sum(x, na.rm=T))/1.5
+infections$world_total_top_95 <- ave(infections$estimate_top_95, infections$date, FUN = function(x) sum(x, na.rm=T))/1.5
+infections$world_total_bot_95 <- ave(infections$estimate_bot_95, infections$date, FUN = function(x) sum(x, na.rm=T))/1.5
+
+ggplot(infections, aes(x=date, y=world_total))+geom_ribbon(aes(ymin=world_total_bot_95, ymax =world_total_top_95, xmin = date, xmax = date), fill = "lightgray")+geom_line()+theme_minimal()
+
+# Final step: Add timestamp ------------------------------------------------------------------------------
+
 # Add timestamp:
 tibble(timestamp = now(tzone = "UTC")) %>% 
   write_csv('output-data/output-for-interactive/timestamp.csv')
+
 
