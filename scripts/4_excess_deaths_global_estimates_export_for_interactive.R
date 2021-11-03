@@ -312,6 +312,18 @@ for(i in unique(export_long$date)){
   }
 }
 
+# This cycles through countries, and finds the latest date before which all numbers are based on recorded excess deaths. It then sets the "known_excess_deaths" to "TRUE" before that date for the cumulative totals.
+export_long <- export_long[order(export_long$date), ]
+for(i in unique(export_long$location)){
+  temp <- export_long[export_long$location == i & export_long$type == "daily_excess_deaths", c("date", "known_excess_deaths")]
+  if(sum(!temp$known_excess_deaths) > 0){
+  export_long$known_excess_deaths[export_long$location == i & 
+                export_long$type %in% c("daily_excess_deaths_cumulative",
+                                        "daily_excess_deaths_per_100k_cumulative") &
+                export_long$date < min(temp$date[!temp$known_excess_deaths])] <- TRUE
+  }
+}
+
 # Inspect if desired:
 if(inspect){
   type <- "daily_excess_deaths"
