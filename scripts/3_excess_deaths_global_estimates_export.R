@@ -1309,9 +1309,7 @@ if(inspect){
 write_csv(wb_export, "output-data/output-by-world-bank-income-group/wb_income_groups_per_100k_cumulative.csv")
 
 
-
 # Western Europe, North America, Australia, and New Zealand
-# Here, we use the "countrycode" package to place countries (defined by iso3c) into groups based on the continents they below to. 
 export_covariates$continent_alt <- "Other"
 export_covariates$continent_alt[export_covariates$iso3c %in% c("AUS", "AUT", "BEL", "BGR", "CAN", "CHE", "CHI", "CYP", "CZE", "DEU", "DNK", "ESP", "EST", "FIN", "FRA", "FRO", "GBR", "GIB", "GRC", "GRL", "HRV", "HUN", "IMN", "IRL", "ISL", "ITA", "LIE", "LTU", "LUX", "LVA", "MCO", "MEX", "MLT", "NLD", "NOR", "NZL", "POL", "PRT", "ROU", "SHN", "SMR", "SPM", "SVK", "SVN", "SWE", "USA", "VAT")] <- "W. Europe, NA, and Aus/NZ"
 
