@@ -108,7 +108,7 @@ X <- rbind(X[!duplicated(ids), ],
 
 # 1. Impute missing:
 source("scripts/shared-functions/impute_missing.R")
-X <- impute_missing(X[order(X$date), c(predictors, "iso3c")])
+X <- impute_missing(X[order(X$date), c(predictors, "iso3c")], cached_NA_cols = T)
 
 # 2. Make NA indicators either 0 or 1
 for(i in grep("NA_matrix", colnames(X))){

@@ -1,7 +1,8 @@
 # This function takes a data frame as its input, and uses min-impute or mean-impute to replace NAs.  
 impute_missing <- function(X = dat,
                            method = "min-impute",
-                           replace.inf = T){
+                           replace.inf = T,
+                           cached_NA_cols = F){
   
   # Transform to data table
   library(data.table)
@@ -13,6 +14,19 @@ impute_missing <- function(X = dat,
   
   # Find columns with missing values
   na_cols <- unlist(lapply(1:ncol(X), FUN = function(i){any(is.na(X[, i]))}))
+  
+  # Save or compare + replace with cache
+  if(cached_NA_cols){
+    cache <- readRDS('output-data/model-objects/na_cols.RDS')
+    if(sum(na_cols & !cache) > 0){
+      stop('Data error: a column with previously no missing variables now has missing variables')
+      } else {
+      na_cols <- cache
+      }
+    } else {
+    saveRDS(na_cols, 'output-data/model-objects/na_cols.RDS')
+  }
+  
   n <- nrow(X)
   
   # Generate matrix of zeroes
