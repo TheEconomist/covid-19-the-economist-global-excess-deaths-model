@@ -16,7 +16,7 @@ start_time <- Sys.time()
 
 # For memory efficiency, this is executed within a temporary local environment created by the update_data function:
 update_data <- function(){source("scripts/1_excess_deaths_global_estimates_data_generation.R", local = TRUE)}
-update_data()  
+# update_data()  
 
 # 2. Load updated data ---------------------------------------
 dat <- readRDS("output-data/country_daily_excess_deaths_with_covariates.RDS")
