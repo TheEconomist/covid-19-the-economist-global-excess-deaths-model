@@ -26,7 +26,7 @@ devtools::install_github("Blunde1/agtboost/R-package")
 
 ## Running the models
 
-To update the model dynamically on a daily basis, go to the scripts folder and run [`0_excess_deaths_global_estimates_autoupdater.R`](https://github.com/TheEconomist/covid-19-the-economist-global-excess-deaths-model/blob/main/scripts/0_excess_deaths_global_estimates_autoupdater.R). This will generate update excess deaths estimates for every country and territory from Jan 1st 2020 until the present.
+To update the model dynamically on a daily basis, run [`scripts/0_excess_deaths_global_estimates_autoupdater.R`](https://github.com/TheEconomist/covid-19-the-economist-global-excess-deaths-model/blob/main/scripts/0_excess_deaths_global_estimates_autoupdater.R) (from the main directory). This will generate update excess deaths estimates for every country and territory from Jan 1st 2020 until the present.
 
 To replicate the model and export estimated excess deaths for a locality, please run the scripts [1](https://github.com/TheEconomist/covid-19-the-economist-global-excess-deaths-model/blob/main/scripts/1_excess_deaths_global_estimates_data_generation.R), [2](https://github.com/TheEconomist/covid-19-the-economist-global-excess-deaths-model/blob/main/scripts/2_excess_deaths_global_estimates_model.R), and [3](https://github.com/TheEconomist/covid-19-the-economist-global-excess-deaths-model/blob/main/scripts/3_excess_deaths_global_estimates_export.R), in the scripts folder. As the model draws most of its data dynamically, you can also use these scripts to generate updated estimates and models as time passes.
 
