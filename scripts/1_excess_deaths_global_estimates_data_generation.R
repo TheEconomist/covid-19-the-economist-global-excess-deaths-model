@@ -1456,7 +1456,6 @@ country_daily_excess_deaths$vaccinated_pct_over_pop_65[!is.na(country_daily_exce
 country_daily_excess_deaths$fully_vaccinated_pct_over_pop_65 <- NA
 country_daily_excess_deaths$fully_vaccinated_pct_over_pop_65[!is.na(country_daily_excess_deaths$aged_65_older)] <- (100-country_daily_excess_deaths$fully_vaccinated_pct[!is.na(country_daily_excess_deaths$aged_65_older)]) / country_daily_excess_deaths$aged_65_older[!is.na(country_daily_excess_deaths$aged_65_older)]
 
-
 # Covid deaths x vaccination rate
 country_daily_excess_deaths$vaccinated_pct_over_covid_deaths <- (100-country_daily_excess_deaths$vaccinated_pct)* country_daily_excess_deaths$daily_covid_deaths_per_100k
 
@@ -1477,6 +1476,29 @@ country_daily_excess_deaths$fully_vaccinated_pct_65_plus_over_covid_deaths <- (1
 
 # Indicator for country where the virus was first discovered:
 country_daily_excess_deaths$virus_discovery_country <- country_daily_excess_deaths$iso3c == "CHN"
+
+# Adding linearly imputed vaccinations data columns (as some do not release regularly - this assumes linear trend between known values):
+for(i in c("vaccinated_pct",
+           "fully_vaccinated_pct",
+           "cumulative_daily_vaccinations_per_100k",
+           "vaccinated_pct_lagged_two_weeks",
+           "fully_vaccinated_pct_lagged_two_weeks",
+           "cumulative_daily_vaccinations_per_100k_lagged_two_weeks",
+           "vaccinated_pct_over_pop_65",
+           "fully_vaccinated_pct_over_pop_65")){
+  
+  country_daily_excess_deaths[, paste0(i, "_intp")] <- ave(country_daily_excess_deaths[, i], country_daily_excess_deaths$iso3c, FUN = function(x){
+    zoo::na.approx(x, na.rm = F)
+  })
+}
+
+# Adding IMF's estimates of GDP at constant prices in 2019
+# Source: https://www.imf.org/en/Publications/WEO/weo-database/2021/April/download-entire-database (indicator - 'NGDPRPPPPC')
+imf_gdppc <- read_csv('source-data/imf_gdppc_ppp.csv')
+country_daily_excess_deaths <- merge(country_daily_excess_deaths, imf_gdppc, by = 'iso3c', all.x = T)
+
+# Adding temporal recency indicator:
+country_daily_excess_deaths$temporal_recency <- country_daily_excess_deaths$date - Sys.Date()
 
 add_china_approx_test <- F
 if(add_china_approx_test){
