@@ -1,2 +1,2 @@
 location,date,estimate,estimate_top_95,estimate_top_50,estimate_bot_50,estimate_bot_95,official_covid_deaths,known_excess_deaths
-World,2021-12-20,18294969.064,21342401.312,18857400.271,16055960.138,11412347.135,5361332,FALSE
+World,2021-12-21,18322261.542,21370356.488,18875467.882,16078900.289,11427792.112,5369161,FALSE
