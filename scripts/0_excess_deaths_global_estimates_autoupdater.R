@@ -125,6 +125,7 @@ rm(df)
 # Create container matrix for predictions
 pred_matrix <- data.frame()
 
+
 # Load model (= estimate) and bootstrap predictions 
 library(agtboost)
 
@@ -146,6 +147,15 @@ for(i in 1:(B+1)){
   # Load model object
   gbt_model <- gbt.load(paste0("output-data/model-objects/gbt_model_B_", i, ".agtb"))
   
+  # Save importance (temporary add-on at request of Nature):
+  if(i == 1){
+    # Create container list for importance
+    importance_matrix <- c()
+  }
+  importance <- list(gbt.importance(m_predictors, gbt_model))
+  importance_matrix <- c(importance_matrix, importance)
+  rm(importance)
+  
   # Save model predictions
   preds <- predict(gbt_model, newdata = X)
   pred_matrix <- rbind(pred_matrix, preds)
@@ -161,6 +171,9 @@ colnames(pred_matrix) <- c("estimate", paste0("B", 1:B))
 rownames(pred_matrix) <- 1:nrow(pred_matrix)
 
 saveRDS(pred_matrix, "output-data/pred_matrix.RDS")
+
+# Save importance matrix
+saveRDS(importance_matrix, 'output-data/model-objects/importance_matrix.RDS')
 
 # 6. Generate exports ---------------------------------------
 
