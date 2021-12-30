@@ -1377,3 +1377,86 @@ if(inspect){
 # Write to file if desired
 write_csv(region_export[region_export$continent_alt != "Other", ], "output-data/output-by-alternative-regions/export_regions_western_europe.csv")
 
+### Short aux function to export for a custom region:
+custom_region_export <- function(
+  region, 
+  name = "un_subregion", 
+  data = export_covariates,
+  folder_prefix = "output-data/output-by-alternative-regions/export_regions_"){
+  
+  data[, "region"] <- data[, region]
+  data$region[is.na(data$region)] <- "Other"
+
+  # Generate per day
+  region_export <- confidence_intervals(new_col_names = "estimated_daily_excess_deaths",
+                                        group = "region", 
+                                        time = "date",
+                                        covars = data,
+                                        return_cumulative = F,
+                                        drop_ci_if_known_data = T,
+                                        bootstrap_predictions = pred_matrix,
+                                        known_data_column = "daily_excess_deaths",
+                                        model_prediction = estimate,
+                                        include_model_prediction_in_ci = T)
+  # Save per day
+  write_csv(region_export, paste0(folder_prefix, name, ".csv"))
+  
+  # Generate per day per 100k
+  per_capita_columns <- grep("deaths", colnames(region_export))
+  
+  for(i in per_capita_columns){
+    region_export[, i] <- 100000*region_export[, i]/region_export[, "population"]
+  }
+  colnames(region_export)[per_capita_columns] <- paste0(colnames(region_export)[per_capita_columns], "_per_100k")
+  
+  # Save per day per 100k
+  write_csv(region_export, paste0(folder_prefix, name, "_per_100k.csv"))
+  
+  # Generate cumulative
+  region_export <- confidence_intervals(new_col_names = "estimated_daily_excess_deaths",
+                                        group = "region", 
+                                        time = "date",
+                                        covars = data,
+                                        return_cumulative = T,
+                                        drop_ci_if_known_data = T,
+                                        bootstrap_predictions = pred_matrix,
+                                        known_data_column = "daily_excess_deaths",
+                                        model_prediction = estimate,
+                                        include_model_prediction_in_ci = T)
+  # Save cumulative per day
+  write_csv(region_export, paste0(folder_prefix, name, "_cumulative.csv"))
+  
+  # Generate absolute per day per 100k
+  per_capita_columns <- grep("deaths", colnames(region_export))
+  
+  for(i in per_capita_columns){
+    region_export[, i] <- 100000*region_export[, i]/region_export[, "population"]
+  }
+  colnames(region_export)[per_capita_columns] <- paste0(colnames(region_export)[per_capita_columns], "_per_100k")
+  
+  # Save per day per 100k
+  write_csv(region_export, paste0(folder_prefix, name, "_per_100k_cumulative.csv"))
+}
+
+# UN subregion
+export_covariates$un_subregion <- countrycode(export_covariates$iso3c, "iso3c", "un.regionsub.name")
+custom_region_export(region = "un_subregion",
+                     name = "un_subregion")
+
+# World bank regions
+export_covariates$wb_region <- countrycode(export_covariates$iso3c, "iso3c", "region")
+custom_region_export(region = "wb_region",
+                     name = "wb_region")
+
+if(inspect){
+  for(name in c("un_subregion", "wb_region")){
+    pdat <- read_csv(paste0(folder_prefix, name, ".csv"))
+    ggplot(pdat, aes(x=date, y=estimated_daily_excess_deaths))+facet_wrap(.~region)+geom_line()
+    pdat <- read_csv(paste0(folder_prefix, name, "_per_100k.csv"))
+    ggplot(pdat, aes(x=date, y=estimated_daily_excess_deaths_per_100k))+facet_wrap(.~region)+geom_line()
+    pdat <- read_csv(paste0(folder_prefix, name, "_cumulative.csv"))
+    ggplot(pdat, aes(x=date, y=cumulative_estimated_daily_excess_deaths))+facet_wrap(.~region)+geom_line()
+    pdat <- read_csv(paste0(folder_prefix, name, "_per_100k_cumulative.csv"))
+    ggplot(pdat, aes(x=date, y=cumulative_estimated_daily_excess_deaths_per_100k))+facet_wrap(.~region)+geom_line()
+  }
+}
