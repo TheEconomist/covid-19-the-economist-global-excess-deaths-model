@@ -35,7 +35,7 @@ To replicate the model and export estimated excess deaths for a locality, please
 - To see all the improvements we have made since, as well as all our estimates, updated daily, see our [Interactive: The pandemic’s true death toll](https://www.economist.com/graphic-detail/coronavirus-excess-deaths-estimates)
 
 ## Interpreting estimates
-Estimating excess deaths for every country every day since the pandemic began is a complex and difficult task. Rather than being overly confident in a single number, limited data means that we can often only give a very very wide range of plausible values. Focusing on central estimates in such cases would be misleading: unless ranges are very narrow, the 95% range should be reported when possible. 
+Estimating excess deaths for every country every day since the pandemic began is a complex and difficult task. Rather than being overly confident in a single number, limited data means that we can often only give a very very wide range of plausible values. Focusing on central estimates in such cases would be misleading: unless ranges are very narrow, the 95% range should be reported when possible. Please see [our tracker page](https://www.economist.com/graphic-detail/coronavirus-excess-deaths-estimates) and [methodology](https://www.economist.com/graphic-detail/2021/05/13/how-we-estimated-the-true-death-toll-of-the-pandemic) for more information.
 
 ## Acknowledgements
 
