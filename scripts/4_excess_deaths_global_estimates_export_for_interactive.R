@@ -473,6 +473,11 @@ write_csv(world_line_chart[world_line_chart$type == "daily_excess_deaths_per_100
 # World top-line chart:
 write_csv(world_line_chart[world_line_chart$type == "daily_excess_deaths_cumulative" & world_line_chart$date == max(world_line_chart$date, na.rm = T), columns_to_export], "output-data/output-for-interactive/world_most_recent_cumulative_deaths.csv")
 
+# Check that cumulative daily excess deaths not NA:
+if(nrow(na.omit(world_line_chart[world_line_chart$type == "daily_excess_deaths_cumulative" & world_line_chart$date == max(world_line_chart$date, na.rm = T), columns_to_export])) != 1){
+  stop('Missing most recent cumulative global confirmed covid-19 deaths. Check interactive export script.')
+}
+
 # Step 6: Generate data for table A ------------------------------------------------------------------------------
 
 # We here rely on "export_long" created above.
