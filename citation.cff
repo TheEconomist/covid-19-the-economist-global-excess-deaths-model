@@ -2,8 +2,14 @@ cff-version: 1.2.0
 message: "If you use this software, please cite it as below."
 authors:
   - family-names: "The Economist"
-    given-names: "(economist.com)"
-  - family-names: "Solstad (corresponding author)"
+    given-names: ""
+  - family-names: "Solstad"
+    given-names: "Sondre Ulvund"
+    affiliation: "The Economist"
+    email: "sondresolstad@economist.com"
+    orcid: "https://orcid.org/0000-0002-6132-256X"
+contact:
+  - family-names: "Solstad"
     given-names: "Sondre Ulvund"
     affiliation: "The Economist"
     email: "sondresolstad@economist.com"
