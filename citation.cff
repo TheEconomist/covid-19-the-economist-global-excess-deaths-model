@@ -1,33 +1,13 @@
 cff-version: 1.2.0
 message: "If you use this software, please cite it as below."
 authors:
-- family-names: "The Economist"
-  given-names: ""
-  orcid: ""
-- family-names: "Solstad (corresponding author)"
-  given-names: "Sondre Ulvund"
-  orcid: "https://orcid.org/0000-0002-6132-256X"
-title: "The pandemic's true death toll"
-version: 1.0.0
-date-released: 2021-05-15
-url: "https://github.com/TheEconomist/covid-19-the-economist-global-excess-deaths-model"
-preferred-citation:
-  type: article
-  authors:
   - family-names: "The Economist"
-    given-names: ""
-    orcid: ""
   - family-names: "Solstad (corresponding author)"
     given-names: "Sondre Ulvund"
     affiliation: "The Economist"
     email: "sondresolstad@economist.com"
     orcid: "https://orcid.org/0000-0002-6132-256X"
-  doi: ""
-  journal: "The Economist"
-  month: 5
-  start:  # First page number
-  end:  # Last page number
-  title: "Counting the dead"
-  issue: 20
-  volume: 1
-  year: 2021
+title: "The pandemic's true death toll"
+version: 1.0.0
+date-released: 2021-05-13
+url: "https://github.com/TheEconomist/covid-19-the-economist-global-excess-deaths-model"
