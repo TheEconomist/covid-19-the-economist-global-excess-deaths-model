@@ -47,3 +47,8 @@ A special thanks to all our sources and to those who have made the data to creat
 Calculating excess deaths for the entire world over multiple years is both complex and imprecise. We welcome any suggestions on how to improve the model, be it data, algorithm, or  logic. If you have one, please open an issue.
 
 *The Economist* would also like to acknowledge the many people who have helped us refine the model so far, be it through discussions, facilitating data access, or offering coding assistance. A special thanks to Ariel Karlinsky, Philip Schellekens, Oliver Watson, Lukas Appelhans, Berent Å. S. Lunde, Gideon Wakefield, Johannes Hunger, Carol D'Souza, Yun Wei, Mehran Hosseini, Samantha Dolan, Mollie Van Gordon, Rahul Arora and Austin Teda Atmaja.
+
+## Cite these estimates
+The Economist and Solstad (corresponding author), S., 2021. The pandemic’s true death toll. [online] The Economist. Available at: <https://www.economist.com/graphic-detail/coronavirus-excess-deaths-estimates> [Accessed ---]. First published in the article "Counting the dead", _The Economist_, issue 20, 2021. 
+  
+(See also our [citation file](https://github.com/TheEconomist/covid-19-the-economist-global-excess-deaths-model/blob/main/citation.cff))
