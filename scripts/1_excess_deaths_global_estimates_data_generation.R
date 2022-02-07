@@ -88,6 +88,13 @@ country_daily_data <- fread("https://raw.githubusercontent.com/owid/covid-19-dat
 country_daily_data$region[country_daily_data$iso3c == "TWN"] <- "Asia"
 country_daily_data$subregion[country_daily_data$iso3c == "TWN"] <- "Eastern Asia"
 
+
+# Fix for Chinese testing data, which erroneously provides tests per day per 100k for a small interval in 2020 (see source notes here https://ourworldindata.org/coronavirus-testing#china). No testing data for China is at the moment available. 
+country_daily_data$daily_tests[country_daily_data$iso3c == "CHN"] <- NA
+country_daily_data$daily_tests_per_100k[country_daily_data$iso3c == "CHN"] <- NA
+country_daily_data$daily_positive_rate[country_daily_data$iso3c == "CHN"] <- NA
+
+
 # Join excess deaths onto dataframe
 country_daily_excess_deaths <- country_daily_data %>%
   ungroup() %>%
@@ -124,8 +131,10 @@ for(i in c("country","iso3c","region","subregion","population",
                                           country_daily_excess_deaths$iso3c, FUN = function(x){na.omit(x)[1]})
 }
 
+
 # Fill in leading 0s for covid data:
-# Sort
+
+# Order by date
 country_daily_excess_deaths <- country_daily_excess_deaths[order(country_daily_excess_deaths$date), ]
 
 # Define function
@@ -153,11 +162,12 @@ for(i in c("daily_covid_deaths", "daily_covid_deaths_per_100k",
 }
 
 # Generate cumulative tests, cases, deaths, and vaccinations:
-# country_daily_excess_deaths[order(country_daily_excess_deaths$date), ]
 for(i in c("daily_tests", "daily_covid_cases", "daily_covid_deaths", "daily_vaccinations")){
   country_daily_excess_deaths[, paste0("cumulative_", i, "_per_100k")] <- ave(
     country_daily_excess_deaths[, i], country_daily_excess_deaths$iso3c, 
-    FUN = function(x){cumsum(ifelse(is.na(x), 0, x))}
+    FUN = function(x){
+      if(sum(is.na(x)) == length(x)){x} else {
+      cumsum(ifelse(is.na(x), 0, x))}}
   )*(100000/country_daily_excess_deaths$population)
 }
 
@@ -721,27 +731,32 @@ message(e)})
 }    
 
 ### Restrict to national or regional surveys with random or quasi-random sampling among adult population and without high risk of bias.
-sero <- sero_raw %>% 
+sero <- sero <- sero_raw %>% 
   filter(`Grade of Estimate Scope` %in% c("National", "Regional")) %>% 
   mutate(`Sampling Method` = case_when(`Prevalence Estimate Name` %in% c("200609_Bergamo_HealthAgency_GenPop", # miss-coded in original.
-                                                                        "210206_China_ChineseCenterforDiseaseControlandPrevention_Overall",  # Does not match the number in the paper for the national seropositivity. 
-                                                                        "210320_Wuhan_ChineseAcademyOfMedicalSciences_overall_Roche", # Excluded as it targeted areas within Wuhan specifically (and thus unrepresentative even at the regional level). 
-                                                                        "210312_NorthCarolina_WakeForestBaptistHealth") ~ "Convenience", # miss-coded in original (recruited via email, etc.). 35.2% are healthcare workers, etc.. % seropositivity is also the estimate for endpoint, not total over sample period.
+                                                                         "210206_China_ChineseCenterforDiseaseControlandPrevention_Overall",  # Does not match the number in the paper for the national seropositivity. 
+                                                                         "210320_Wuhan_ChineseAcademyOfMedicalSciences_overall_Roche", # Excluded as it targeted areas within Wuhan specifically (and thus unrepresentative even at the regional level). 
+                                                                         "210312_NorthCarolina_WakeForestBaptistHealth") ~ "Convenience", # miss-coded in original (recruited via email, etc.). 35.2% are healthcare workers, etc.. % seropositivity is also the estimate for endpoint, not total over sample period.
                                        T ~ `Sampling Method`)) %>% 
+  mutate(`Grade of Estimate Scope` = case_when(`Prevalence Estimate Name` %in% c("210815_Ethiopia_FederalMinistryofHealth_Overall_Adjusted", # Urban areas only.
+                                                                                 "210311_Egypt_CenterofScientificExcellenceforInfluenzaViruses_October3", # Rural areas only
+                                                                                 "210525_Pakistan_RiphahInternationalUniversity" # Selected cities                       
+  ) ~ "Regional", 
+  T ~ `Grade of Estimate Scope`))   %>% 
   filter(`Sampling Method` %in% c("Sequential", "Simplified probability", "Stratified probability", "Stratified non-probability")) %>% 
   filter(`Sample Frame (groups of interest)` %in% c("Household and community samples", "Residual sera", "Multiple populations", "Blood donors")) %>% 
   filter(`Sample Frame (age)` %in% c("Adults (18-64 years)", "Multiple groups", "Not reported")) %>% 
   filter(!`Overall Risk of Bias (JBI)` %in% c("High")) %>%
   filter(!(`Overall Risk of Bias (JBI)` == "Unclear" &
-           `Data Quality Status` == "Unverified")) %>%
+             `Data Quality Status` == "Unverified")) %>%
   filter(!`Prevalence Estimate Name` %in% c("210302_Diredawa_TheUniversityofSheffield_Overall", #= places with overcrowding
-         "210309_Zambia_ZambiaMinistryofHealth_overall", #= Does not include overall, which was 10%.
-         "210108_CapeVerde_MestreEmSaúdeEDesenvolvimento_overall", # = recorded estimate does not match numbers in abstract.
-         "210116_SaudiArabia_MinistryofHealth_overall" # Sample excluded those with past or current infection.
-         )) %>% 
-  filter(!(`Country` %in% c("Estonia" 
-  ) & `Sampling End Date (ISO)` >= as.Date("2021-04-18")) # = appears to include post-stratification based on vaccination)
-  ) %>%
+                                            "210309_Zambia_ZambiaMinistryofHealth_overall", #= Does not include overall.
+                                            "210108_CapeVerde_MestreEmSaúdeEDesenvolvimento_overall", # = recorded estimate does not match numbers in abstract.
+                                            "210116_SaudiArabia_MinistryofHealth_overall", # Sample excluded those with past or current infection.
+                                            "201217_Honduras_ColegioMédico_OverallGenpop", # Only took samples from unaffected regions      
+                                            "210618_Brazil_UniversidadeFederaldePelotas_primary", # Only children 
+                                            "210424_EmirateofAbuDhabi_AbuDhabiPublicHealthCenter_Households_TestAdj." # Excluded labor camps (which were much higher)
+  )) %>%
   ### If start date is unknown but end date is not, assume all done in one day. Set date to midpoint.
   mutate(start_date = as.Date(anytime(`Sampling Start Date (ISO)`)),
          end_date = as.Date(anytime(`Sampling End Date (ISO)`))) %>% 
@@ -1419,7 +1434,32 @@ for(i in average_columns){
   }
 }
   
-# Step 11: Add back in countries who have back-ward engineered covid deaths, add two-week lag columns for vaccinations and various feature-engineering   ---------------------------------------
+# Finally: Ensure distance-based seroprevalence estimates are non-decreasing
+
+# Select columns:
+sero_columns <- c("sero_nat_30d_wma_interpolated_region_average",
+                  "sero_nat_30d_wma_interpolated_sub_region_average",
+                  "sero_nat_30d_wma_interpolated_econ_region_average",
+                  "sero_reg_or_nat_30d_wma_interpolated_region_average",
+                  "sero_reg_or_nat_30d_wma_interpolated_sub_region_average",
+                  "sero_reg_or_nat_30d_wma_interpolated_econ_region_average")
+
+# Sort data by date
+country_daily_excess_deaths <- country_daily_excess_deaths[order(country_daily_excess_deaths$date), ]
+
+# Cycle through columns and then within each country, get cumulative maximum, respecting NAs:
+for(i in sero_columns){
+  country_daily_excess_deaths[, i] <- ave(country_daily_excess_deaths[, i],
+                                          country_daily_excess_deaths$date, 
+                                          FUN = function(x){
+                                            temp <- x
+                                            x <- cummax(ifelse(is.na(x), 0, x))
+                                            x[is.na(temp)] <- NA
+                                            x
+                                          })
+}
+
+# Step 11: Add back in countries who have backward engineered covid deaths, add two-week lag columns for vaccinations and various other feature-engineering   ---------------------------------------
 
 # Add omitted countries data back in (these were the ones who have backward-engineered their covid deaths):
 country_daily_excess_deaths <- country_daily_excess_deaths[order(country_daily_excess_deaths$row_order), ]

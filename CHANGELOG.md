@@ -1,3 +1,12 @@
+## Feb 7th 2022
+- Retrained all models based on greatly expanded data: now 107 countries and 6 subnational regions (from 82 countries and 6 subnational units). Note that added countries tend to be small in population, giving them a smaller impact than their raw number would imply.
+- Made models now automatically retrain: Every update run, one new model is trained, replacing one randomly selected old model. This means that not only do estimates update daily in light of the latest data, as previously, but that the models used to interpret these data also continually improve. 
+- Central estimate made based on medians of ensemble of 10 models with different starting seeds. This increases number of models to 210 including those used to construct uncertainty ranges.
+- Improved imputation of leading zeros for cumulative series, which now only impute zero if non-zero observations are eventually observed (matters for small number of series with no observations).
+- Distance-based seroprevalence estimates made to be non-decreasing, like their country-level countryparts.
+- Added 31 seroprevalence studies from 16 different countries.
+- Added population density estimates to subnational data.
+
 ## Sep 2nd 2021
 - Changed all data sources to update daily where applicable.
 - Tweaked dimensionality reduction of missingness indicators, removing possibility of the column order and dimensionality changing between training and prediction steps as a result of previously complete data ceasing to be so.
@@ -14,6 +23,6 @@
 - Feature-engineering to include covid deaths interacted with vaccination data and population over 65 to facilitate model learning. Also added two-week lagged variables of vaccination indicators to account for time-lag in their effectiveness.
 - Adjusted bootstrapping step to sample strata then observations within them, rather than drawing one strata then observations within it iteratively until sample size approached original data. Increased bootstrap iterations to 200.
 
-## May 2020
+## May 2021
 
 Initial release.

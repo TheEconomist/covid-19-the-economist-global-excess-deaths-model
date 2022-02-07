@@ -74,6 +74,8 @@ if(diagnostics){
     geom_vline(aes(xintercept = as.Date("2021-05-10")))+
     xlab("")+ylab("")
   ggsave("plots/diagnostic_2_NA_by_variable_and_day.png", height = 14, width = 10)
+  
+  rm(pdat)
 }
 
 # 4. Generate data matrix ------------------------------------------------------ 
@@ -115,16 +117,22 @@ for(i in grep("NA_matrix", colnames(X))){
   X[X[, i] != 1, i] <- 0  
 }
 
-# 5. Load models and populate prediction matrix --------------------------------------- 
+# Extract DV vector (with the same length and order as the X matrix)
+Y <- X[, c('iso3c', 'date')]
+Y$order <- 1:nrow(Y)
+Y <- merge(Y[, c('iso3c', 'date', 'order')], 
+           df[, c('iso3c', 'date', 'daily_excess_deaths_per_100k')], all.x = T)
+Y <- Y[order(Y$order), 'daily_excess_deaths_per_100k']
+X_train <- X
 
 # Clean workspace for memory efficiency
-rm(pdat)
 rm(temp)
 rm(df)
 
+# 5. Load models and populate prediction matrix --------------------------------------- 
+
 # Create container matrix for predictions
 pred_matrix <- data.frame()
-
 
 # Load model (= estimate) and bootstrap predictions 
 library(agtboost)
@@ -136,25 +144,19 @@ m_predictors <- readRDS("output-data/model-objects/m_predictors.RDS")
 B = 200
 counter = -1
 
+# Define ensemble size for central estimate
+main_estimate_models <- readRDS("output-data/model-objects/main_estimate_models_n.RDS")
+
 # Select predictors and create predictor matrix
 X <- as.matrix(X[, m_predictors])
 
 # Loop over bootstrap iterations
-for(i in 1:(B+1)){
+for(i in 1:(B+main_estimate_models)){
   counter = counter + 1
-  cat(paste("\n\nStarting B:", counter, "at : ", Sys.time(), "\n\n"))
+  cat(paste("\n\nStarting prediction by model:", counter, "of", B+main_estimate_models, "at : ", Sys.time(), "\n\n"))
   
   # Load model object
   gbt_model <- gbt.load(paste0("output-data/model-objects/gbt_model_B_", i, ".agtb"))
-  
-  # Save importance (temporary add-on at request of Nature):
-  if(i == 1){
-    # Create container list for importance
-    importance_matrix <- c()
-  }
-  importance <- list(gbt.importance(m_predictors, gbt_model))
-  importance_matrix <- c(importance_matrix, importance)
-  rm(importance)
   
   # Save model predictions
   preds <- predict(gbt_model, newdata = X)
@@ -162,18 +164,22 @@ for(i in 1:(B+1)){
   rm(gbt_model)
   rm(preds)
 
-  cat(paste("\nCompleted B:", counter, "at : ", Sys.time(), "\n\n"))
+  cat(paste("\nCompleted:", counter, "at : ", Sys.time(), "\n\n"))
 }
 
 # Fix column and row names of prediction matrix:
 pred_matrix <- t(pred_matrix)
+
+# Combine main estimate models (with different seeds) via median
+if(main_estimate_models > 1){
+  pred_matrix[, 1] <- apply(pred_matrix[, 1:main_estimate_models], 1, median, na.rm=T)
+  pred_matrix <- pred_matrix[, c(1, (main_estimate_models+1):ncol(pred_matrix))]
+}
+
 colnames(pred_matrix) <- c("estimate", paste0("B", 1:B))
 rownames(pred_matrix) <- 1:nrow(pred_matrix)
 
 saveRDS(pred_matrix, "output-data/pred_matrix.RDS")
-
-# Save importance matrix
-saveRDS(importance_matrix, 'output-data/model-objects/importance_matrix.RDS')
 
 # 6. Generate exports ---------------------------------------
 
@@ -194,7 +200,7 @@ saveRDS(rbind(covars_for_export, covars_for_export_latest), "output-data/export_
 
 # Get pre-update cumulative world total:
 pre_updated_world_total <- read.csv('output-data/export_world_cumulative.csv')
-pre_updated_world_total <- pre_updated_world_total[order(pre_updated_world_total$date, decreasing = T), "cumulative_estimated_daily_excess_deaths"][1]
+pre_updated_world_total <- pre_updated_world_total[order(pre_updated_world_total$date, decreasing = T), c("cumulative_estimated_daily_excess_deaths", "cumulative_estimated_daily_excess_deaths_ci_95_top", "cumulative_estimated_daily_excess_deaths_ci_95_bot")][1, ]
 
 # Run export script:
 source("scripts/3_excess_deaths_global_estimates_export.R")
@@ -202,13 +208,39 @@ source("scripts/4_excess_deaths_global_estimates_export_for_interactive.R")
 
 # Compare pre and post-update world total:
 post_updated_world_total <- read.csv('output-data/export_world_cumulative.csv')
-post_updated_world_total <- post_updated_world_total[order(post_updated_world_total$date, decreasing = T), "cumulative_estimated_daily_excess_deaths"][1]
+post_updated_world_total <- post_updated_world_total[order(post_updated_world_total$date, decreasing = T), c("cumulative_estimated_daily_excess_deaths", "cumulative_estimated_daily_excess_deaths_ci_95_top", "cumulative_estimated_daily_excess_deaths_ci_95_bot")][1, ]
 
 # If day-to-day difference is over 0.25m, throw an error to stop the automatic update. This notifies the maintainers, who can then ensure such large jumps are inspected manually before they are pushed to the live page.
-if(abs(post_updated_world_total - pre_updated_world_total) > 250000){
+if(abs(post_updated_world_total[1] - pre_updated_world_total[1]) > 250000 |
+   abs(post_updated_world_total[2] - pre_updated_world_total[2]) > 250000 |
+   abs(post_updated_world_total[3] - pre_updated_world_total[3]) > 250000){
   stop("Large change in cumulative world total, please inspect manually.")
 }
 
-end_time <- Sys.time()
+# 7. Train a new bootstrap model ---------------------------------------
+  X <- X_train
+  X$daily_excess_deaths_per_100k <- Y
+  
+  # We first drop very recent observations (<21 days):
+  Y <- Y[!X$date > Sys.Date()-21]
+  X <- X[!X$date > Sys.Date()-21, ]
+  
+  # We then load the model-generation loop function:
+  source('scripts/aux_generate_model_loop.R')
+  
+  # We then use this to generate one new bootstrap model, overwriting a random prior model
+  generate_model_loop(
+    X_full = X[!is.na(Y), ], # Defines training set
+    Y_full = Y[!is.na(Y)],   # Defines outcome variable
+    B = 1, 
+    include_main_estimate = F,
+    main_estimate_learning_rate = 0.1,
+    bootstrap_learning_rate = 0.3,
+    custom_model_index = 99999,
+    new_predictor_set = F
+  )
+  cat('\n\n One bootstrap model successfully re-trained.\n\n')
 
+end_time <- Sys.time()
+  
 print(paste("Total time:", end_time - start_time))
