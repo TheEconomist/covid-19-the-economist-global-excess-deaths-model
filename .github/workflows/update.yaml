@@ -34,7 +34,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ${{ env.R_LIBS_USER }}
-          key: r-v4-${{ env.R_VERSION }}
+          key: r-v5-${{ env.R_VERSION }}
           restore-keys: r-v5
 
       - name: Cache node modules
