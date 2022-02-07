@@ -67,7 +67,7 @@ jobs:
             "WDI",
             "zoo"
           ))
-          devtools::install_github("Blunde1/agtboost/R-package")
+          devtools::install_github('sondreus/agtboost/r-package')
         shell: Rscript {0}
 
       - name: Run R script
