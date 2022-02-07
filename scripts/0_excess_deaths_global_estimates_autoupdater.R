@@ -165,6 +165,7 @@ for(i in 1:(B+main_estimate_models)){
   rm(preds)
 
   cat(paste("\nCompleted:", counter, "at : ", Sys.time(), "\n\n"))
+  stop()
 }
 
 # Fix column and row names of prediction matrix:
@@ -234,9 +235,9 @@ if(abs(post_updated_world_total[1] - pre_updated_world_total[1]) > 250000 |
     Y_full = Y[!is.na(Y)],   # Defines outcome variable
     B = 1, 
     include_main_estimate = F,
-    main_estimate_learning_rate = 0.1,
-    bootstrap_learning_rate = 0.3,
-    custom_model_index = 99999,
+    main_estimate_learning_rate = 0.001,
+    bootstrap_learning_rate = 0.003,
+    custom_model_index = sample(11:210, 1),
     new_predictor_set = F
   )
   cat('\n\n One bootstrap model successfully re-trained.\n\n')
