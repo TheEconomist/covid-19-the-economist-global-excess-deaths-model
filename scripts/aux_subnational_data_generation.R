@@ -375,7 +375,15 @@ dat <- dat %>%
 
 # To check which data we are missing at the sub-regional level:
 # 
-setdiff(colnames(country_daily_excess_deaths)[1:95], colnames(dat))
+dat$population_density <- NA
+dat$population_density[dat$local_unit_name == "Jakarta Province" ] <- 15906.5
+dat$population_density[dat$local_unit_name == "Kolkata City"] <- 22000
+dat$population_density[dat$local_unit_name == "Tamil Nadu State"] <- 550
+dat$population_density[dat$local_unit_name == "Mumbai City"] <- 21000
+dat$population_density[dat$local_unit_name == "Andhra Pradesh State"] <- 308
+dat$population_density[dat$local_unit_name == "Madhya Pradesh State"] <- 240
+
+setdiff(colnames(country_daily_excess_deaths)[1:93], colnames(dat))
 
 # Fix for NA testing data
 dat$daily_positive_rate[dat$daily_positive_rate > 100] <- NA
