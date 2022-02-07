@@ -165,7 +165,6 @@ for(i in 1:(B+main_estimate_models)){
   rm(preds)
 
   cat(paste("\nCompleted:", counter, "at : ", Sys.time(), "\n\n"))
-  stop()
 }
 
 # Fix column and row names of prediction matrix:
