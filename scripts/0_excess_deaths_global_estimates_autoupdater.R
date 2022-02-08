@@ -105,6 +105,7 @@ for(i in setdiff(colnames(X), c("iso3c"))){
 # 3. Combine the latest day with the rest of the data:
 X <- rbind(X[!duplicated(ids), ],
            X_latest[!duplicated(X_latest$iso3c), ])
+rm(X_latest)
 
 # Impute missing data (using min-impute coupled with one-hot encoding of NA locations) 
 
@@ -158,18 +159,22 @@ X <- as.matrix(X[, m_predictors])
 # Loop over bootstrap iterations
 for(i in 1:(B+main_estimate_models)){
   counter = counter + 1
-  cat(paste("\n\nStarting prediction by model:", counter, "of", B+main_estimate_models, "at : ", Sys.time(), "\n\n"))
+  cat(paste("\n\nStarting prediction by model:", counter, "of", B+main_estimate_models, "at : ", Sys.time(), "\n"))
   
   # Load model object
+  cat("\n -- loading model -- ")
   gbt_model <- gbt.load(paste0("output-data/model-objects/gbt_model_B_", i, ".agtb"))
   
   # Save model predictions
+  cat("generating predictions -- ")
   preds <- predict(gbt_model, newdata = X)
-  pred_matrix <- rbind(pred_matrix, preds)
   rm(gbt_model)
+  cat("saving prediction --\n")
+  pred_matrix <- rbind(pred_matrix, preds)
   rm(preds)
-
+  
   cat(paste("\nCompleted:", counter, "at : ", Sys.time(), "\n\n"))
+  gc()
 }
 
 # Fix column and row names of prediction matrix:
