@@ -123,11 +123,16 @@ Y$order <- 1:nrow(Y)
 Y <- merge(Y[, c('iso3c', 'date', 'order')], 
            df[, c('iso3c', 'date', 'daily_excess_deaths_per_100k')], all.x = T)
 Y <- Y[order(Y$order), 'daily_excess_deaths_per_100k']
-X_train <- X
 
 # Clean workspace for memory efficiency
+saveRDS(X, 'output-data/model-objects/X_train.RDS')
+saveRDS(Y, 'output-data/model-objects/Y_train.RDS')
+saveRDS(dat, "output-data/model-objects/dat.RDS")
+rm(Y)
+rm(dat)
 rm(temp)
 rm(df)
+gc()
 
 # 5. Load models and populate prediction matrix --------------------------------------- 
 
@@ -142,14 +147,16 @@ m_predictors <- readRDS("output-data/model-objects/m_predictors.RDS")
 
 # Define number of bootstrap iterations. We use 200.
 B = 200
-counter = -1
+counter = 0
 
 # Define ensemble size for central estimate
 main_estimate_models <- readRDS("output-data/model-objects/main_estimate_models_n.RDS")
 
 # Select predictors and create predictor matrix
 X <- as.matrix(X[, m_predictors])
-
+    
+if(false){
+  
 # Loop over bootstrap iterations
 for(i in 1:(B+main_estimate_models)){
   counter = counter + 1
@@ -184,6 +191,7 @@ saveRDS(pred_matrix, "output-data/pred_matrix.RDS")
 # 6. Generate exports ---------------------------------------
 
 # Save covariates at weekly level:
+dat <- readRDS("output-data/model-objects/dat.RDS")
 covars_for_export_cols <- c("iso3c", "country", "date", "region", "subregion", "population", "median_age", "aged_65_older", "life_expectancy", "daily_covid_deaths_per_100k", "daily_covid_cases_per_100k", "daily_tests_per_100k", "cumulative_daily_covid_cases_per_100k", 
                            "cumulative_daily_covid_deaths_per_100k",
                            "cumulative_daily_tests_per_100k", "demography_adjusted_ifr",
@@ -216,9 +224,11 @@ if(abs(post_updated_world_total[1] - pre_updated_world_total[1]) > 250000 |
    abs(post_updated_world_total[3] - pre_updated_world_total[3]) > 250000){
   stop("Large change in cumulative world total, please inspect manually.")
 }
+}
 
 # 7. Train a new bootstrap model ---------------------------------------
-  X <- X_train
+  X <- readRDS('output-data/model-objects/X_train.RDS')
+  Y <- readRDS('output-data/model-objects/Y_train.RDS')
   X$daily_excess_deaths_per_100k <- Y
   
   # We first drop very recent observations (<21 days):
