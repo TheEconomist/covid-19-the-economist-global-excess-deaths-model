@@ -68,7 +68,7 @@ if(inspect){
 }
 
 
-# Drop very recent observations (<28 days):
+# Drop very recent observations (<21 days):
 Y <- Y[!X$date > Sys.Date()-21]
 X <- X[!X$date > Sys.Date()-21, ]
 
