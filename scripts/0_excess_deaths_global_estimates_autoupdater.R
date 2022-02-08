@@ -155,7 +155,7 @@ main_estimate_models <- readRDS("output-data/model-objects/main_estimate_models_
 # Select predictors and create predictor matrix
 X <- as.matrix(X[, m_predictors])
     
-if(false){
+if(FALSE){
   
 # Loop over bootstrap iterations
 for(i in 1:(B+main_estimate_models)){
