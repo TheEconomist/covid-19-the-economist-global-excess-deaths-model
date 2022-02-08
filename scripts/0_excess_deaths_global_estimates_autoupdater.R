@@ -155,8 +155,6 @@ main_estimate_models <- readRDS("output-data/model-objects/main_estimate_models_
 # Select predictors and create predictor matrix
 X <- as.matrix(X[, m_predictors])
     
-if(FALSE){
-  
 # Loop over bootstrap iterations
 for(i in 1:(B+main_estimate_models)){
   counter = counter + 1
@@ -223,7 +221,6 @@ if(abs(post_updated_world_total[1] - pre_updated_world_total[1]) > 250000 |
    abs(post_updated_world_total[2] - pre_updated_world_total[2]) > 250000 |
    abs(post_updated_world_total[3] - pre_updated_world_total[3]) > 250000){
   stop("Large change in cumulative world total, please inspect manually.")
-}
 }
 
 # 7. Train a new bootstrap model ---------------------------------------
