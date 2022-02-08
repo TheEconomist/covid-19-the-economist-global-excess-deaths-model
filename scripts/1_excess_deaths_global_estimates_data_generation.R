@@ -444,6 +444,7 @@ world.cities$population <- NULL
 
 # Add to list of static datasets:
 static_data[[length(static_data) + 1]] <- world.cities
+rm(world.cities)
 
 # Import estimated IFR if infections random and no difference in care (source: https://www.economist.com/graphic-detail/2020/11/16/why-rich-countries-are-so-vulnerable-to-covid-19 and github: https://github.com/TheEconomist/covid-19-age-adjusted-ifr):
 ifr <- readRDS("source-data/ifr_cache.RDS")
