@@ -16,7 +16,7 @@ start_time <- Sys.time()
 
 # For memory efficiency, this is executed within a temporary local environment created by the update_data function:
 update_data <- function(){source("scripts/1_excess_deaths_global_estimates_data_generation.R", local = TRUE)}
-update_data()  
+# update_data()  
 
 # 2. Load updated data ---------------------------------------
 dat <- readRDS("output-data/country_daily_excess_deaths_with_covariates.RDS")
@@ -214,7 +214,7 @@ post_updated_world_total <- post_updated_world_total[order(post_updated_world_to
 if(abs(post_updated_world_total[1] - pre_updated_world_total[1]) > 250000 |
    abs(post_updated_world_total[2] - pre_updated_world_total[2]) > 250000 |
    abs(post_updated_world_total[3] - pre_updated_world_total[3]) > 250000){
-#  stop("Large change in cumulative world total, please inspect manually.")
+  stop("Large change in cumulative world total, please inspect manually.")
 }
 
 # 7. Train a new bootstrap model ---------------------------------------
