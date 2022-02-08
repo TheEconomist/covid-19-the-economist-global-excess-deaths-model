@@ -1,4 +1,4 @@
-# This script defines a function to generate population-weighted gradient boosted tree models for a given X training matrix and Y outcome vector. By default, it generates a main estimate using all the data, and 200 models based on bootstrap samples. The custom_model_index allows specification of the name used when saving the model. The new_predictor_set parameter decided if the current run should update the list of predictors (saved/loaded at "output-data/model-objects/m_predictors.RDS").
+# This script defines a function to generate population-weighted gradient boosted tree models for a given X training matrix and Y outcome vector. By default, it generates a main estimate using all the data, and 200 models based on bootstrap samples. The custom_model_index allows specification of the name used when saving the model, this is hard-coded so that any replacements of main estimate models will use the full sample and use the main estimate model learning rate. The new_predictor_set parameter decided if the current run should update the list of predictors (saved/loaded at "output-data/model-objects/m_predictors.RDS").
 
 generate_model_loop <- function(X_full = X[!is.na(Y), ],
                                 Y_full = Y[!is.na(Y)], 
@@ -37,6 +37,55 @@ generate_model_loop <- function(X_full = X[!is.na(Y), ],
   
   # Generate model (= estimate) and bootstrap predictions 
   library(agtboost)
+  
+  # If custom model index supplied, generate one new model:
+  if(!missing(custom_model_index)){
+
+  cat(paste("\n\nStarting training replacement of model:", custom_model_index, "at : ", Sys.time(), "\n\n"))
+
+  # Container for row indicies
+  obs <- c()
+  
+  # Select observations for bootstrap (stratified)
+  if(custom_model_index %in% 1:main_estimate_model_n){
+    # First fit is estimation (i.e. no random sampling of data) if main estimate requested
+    obs <- 1:nrow(X_full)
+
+    } else {
+    
+    # Other fits use stratified bootstrap
+    iso3cs <- sample(unique(X_full$iso3c), length(unique(X_full$iso3c)), replace = T)
+    
+    for(j in 1:length(iso3cs)){
+      obs <- c(obs, sample(which(X_full$iso3c == iso3cs[j]), length(which(X_full$iso3c == iso3cs[j])), replace = T))
+    }
+  }
+  
+  # Define model weights - we use log(country population)
+  weights_temp <- X_full$weights[obs]/mean(X_full$weights[obs])
+  
+  Y_temp <- Y_full[obs]
+  X_temp <- as.matrix(X_full[obs, m_predictors])
+  
+  lr_temp <- ifelse(custom_model_index %in% 1:main_estimate_model_n, 
+                    main_estimate_learning_rate, 
+                    bootstrap_learning_rate)
+  
+  # Fit model:
+  gbt_model <- gbt.train(Y_temp, 
+                         X_temp, 
+                         learning_rate = lr_temp,
+                         nrounds = 35000,
+                         verbose = 200,
+                         weights = weights_temp,
+                         algorithm = "global_subset")
+  
+  # Save model objects
+  gbt.save(gbt_model, paste0("output-data/model-objects/gbt_model_B_", custom_model_index, ".agtb"))
+    
+  cat(paste("\nCompleted replacement of model", custom_model_index, "at : ", Sys.time(), "\n\n"))
+  
+  } else {
   
   # Loop over bootstrap iterations (and main estimate if requested)
   for(i in 1:(B+include_main_estimate*main_estimate_model_n)){
@@ -79,12 +128,8 @@ generate_model_loop <- function(X_full = X[!is.na(Y), ],
                            algorithm = "global_subset")
     
     # Save model objects
-    if(!missing(custom_model_index)){
-      gbt.save(gbt_model, paste0("output-data/model-objects/gbt_model_B_", custom_model_index, ".agtb"))
-    } else {
-    gbt.save(gbt_model, paste0("output-data/model-objects/gbt_model_B_", ifelse(include_main_estimate, i, i+1), ".agtb"))
-    }
+    gbt.save(gbt_model, paste0("output-data/model-objects/gbt_model_B_", ifelse(include_main_estimate, i, i+main_estimate_model_n), ".agtb"))
     cat(paste("\nCompleted B:", i, "at : ", Sys.time(), "\n\n"))
-    
+  }
   }
 }

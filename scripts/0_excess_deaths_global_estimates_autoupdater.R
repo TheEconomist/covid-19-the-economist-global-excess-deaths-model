@@ -243,10 +243,10 @@ if(abs(post_updated_world_total[1] - pre_updated_world_total[1]) > 250000 |
     X_full = X[!is.na(Y), ], # Defines training set
     Y_full = Y[!is.na(Y)],   # Defines outcome variable
     B = 1, 
-    include_main_estimate = F,
+    include_main_estimate = T,
     main_estimate_learning_rate = 0.001,
     bootstrap_learning_rate = 0.003,
-    custom_model_index = sample(11:210, 1),
+    custom_model_index = sample(1:210, 1),
     new_predictor_set = F
   )
   cat('\n\n One bootstrap model successfully re-trained.\n\n')
