@@ -141,7 +141,6 @@ gc()
 pred_matrix <- data.frame()
 
 # Load model (= estimate) and bootstrap predictions 
-library(agtboost)
 
 # Load list of model predictors
 m_predictors <- readRDS("output-data/model-objects/m_predictors.RDS")
@@ -155,7 +154,20 @@ main_estimate_models <- readRDS("output-data/model-objects/main_estimate_models_
 
 # Select predictors and create predictor matrix
 X <- as.matrix(X[, m_predictors])
-    
+
+# For memory efficiency, detach all currently loaded packages
+detachAllPackages <- function() {
+  basic.packages <- c("package:stats","package:graphics","package:grDevices","package:utils","package:datasets","package:methods","package:base")
+  package.list <- search()[ifelse(unlist(gregexpr("package:",search()))==1,TRUE,FALSE)]
+  
+  package.list <- setdiff(package.list,basic.packages)
+  if (length(package.list)>0)  for (package in package.list) detach(package, character.only=TRUE)
+}
+detachAllPackages()
+
+# Load machine learning library
+library(agtboost)
+
 # Loop over bootstrap iterations
 for(i in 1:(B+main_estimate_models)){
   counter <- counter + 1
@@ -176,6 +188,11 @@ for(i in 1:(B+main_estimate_models)){
   cat(paste("\nCompleted:", counter, "at : ", Sys.time(), "\n\n"))
   gc()
 }
+
+# Re-import base libraries post-loop
+library(ggplot2)
+library(tidyverse)
+library(data.table)
 
 # Load and combine predictions from individual models
 for(i in 1:(B+main_estimate_models)){
