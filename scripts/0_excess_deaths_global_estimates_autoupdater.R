@@ -147,8 +147,8 @@ library(agtboost)
 m_predictors <- readRDS("output-data/model-objects/m_predictors.RDS")
 
 # Define number of bootstrap iterations. We use 200.
-B = 100
-counter = 0
+B <- 200
+counter <- 0
 
 # Define ensemble size for central estimate
 main_estimate_models <- readRDS("output-data/model-objects/main_estimate_models_n.RDS")
@@ -158,7 +158,7 @@ X <- as.matrix(X[, m_predictors])
     
 # Loop over bootstrap iterations
 for(i in 1:(B+main_estimate_models)){
-  counter = counter + 1
+  counter <- counter + 1
   cat(paste("\n\nStarting prediction by model:", counter, "of", B+main_estimate_models, "at : ", Sys.time(), "\n"))
   
   # Load model object
@@ -170,11 +170,16 @@ for(i in 1:(B+main_estimate_models)){
   preds <- predict(gbt_model, newdata = X)
   rm(gbt_model)
   cat("saving prediction --\n")
-  pred_matrix <- rbind(pred_matrix, preds)
+  saveRDS(preds, paste0('output-data/model-objects/model-predictions/model_', i , '_prediction.RDS'))
   rm(preds)
   
   cat(paste("\nCompleted:", counter, "at : ", Sys.time(), "\n\n"))
   gc()
+}
+
+# Load and combine predictions from individual models
+for(i in 1:(B+main_estimate_models)){
+  pred_matrix <- rbind(pred_matrix, readRDS(paste0('output-data/model-objects/model-predictions/model_', i , '_prediction.RDS')))
 }
 
 # Fix column and row names of prediction matrix:
