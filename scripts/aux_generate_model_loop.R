@@ -9,7 +9,15 @@ generate_model_loop <- function(X_full = X[!is.na(Y), ],
                                  bootstrap_learning_rate = 0.003,
                                  custom_model_index,
                                 new_predictor_set = T){
-
+  
+  # An anamolous drop was found in Mumbai at the very tail end of its observations. A source confirms that registration for that month was still ongoing (https://timesofindia.indiatimes.com/city/mumbai/excess-deaths-in-city-call-for-scientific-survey-tiss/articleshow/84001199.cms):
+  Y_full <- Y_full[!(X_full$iso3c == "IND_Mumbai_City" & X_full$date > 18744)]
+  X_full <- X_full[!(X_full$iso3c == "IND_Mumbai_City" & X_full$date > 18744),]
+  
+  # Equador and Peru have backward adjusted their covid-19 deaths, incorporating excess deaths information. These therefore had to be dropped, as current covid deaths differ greatly from those backward adjusted:
+  Y_full <- Y_full[!X_full$iso3c %in% c("PER", "ECU")]
+  X_full <- X_full[!X_full$iso3c %in% c("PER", "ECU"), ]
+  
   # Define weights, using half-values for subnational units to reflect greater uncertainty in their covariates and estimates. That value was selected based on correlations between covid-deaths and excess deaths in these units (which was much weaker - these also had fewer non-NA observations):
   X_full$weights <- log(X_full$population)
   X_full$weights[nchar(X_full$iso3c) > 3] <- X_full$weights[nchar(X_full$iso3c) > 3]/2
