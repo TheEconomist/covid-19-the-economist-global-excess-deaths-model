@@ -40,6 +40,8 @@ Estimating excess deaths for every country every day since the pandemic began is
 ## Omicron and new variants
 The Omicron variant, first detected in southern Africa in November 2021, appears to have characteristics that are different to earlier versions of sars-cov-2. Where this variant is now dominant, this change makes estimates uncertain beyond the ranges indicated. Should Omicron cause less severe disease, as some studies suggest, estimates for recent dates may be revised downwards once more data become available. Estimates are updated every day, incorporating total mortality data when available. As more data on Omicron is incorporated by the models via new training runs, predictions will also improve. 
 
+Note: Models are currently being updated, and estimates are thus changing more than usual. Expect this to stablize by February 15th.
+
 ## Acknowledgements
 
 A special thanks to all our sources and to those who have made the data to create these estimates available. We list all our sources in our methodology. Within [script 1](https://github.com/TheEconomist/covid-19-the-economist-global-excess-deaths-model/blob/main/scripts/1_excess_deaths_global_estimates_data_generation.R), the source for each variable is also given as the data is loaded, with the exception of our sources for excess deaths data, which we detail in on our free-to-read [excess deaths tracker](https://www.economist.com/graphic-detail/coronavirus-excess-deaths-tracker). The gradient booster implementation used to fit the models is aGTBoost, detailed [here.](https://arxiv.org/abs/2008.05926)
