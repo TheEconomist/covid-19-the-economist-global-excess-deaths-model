@@ -21,7 +21,7 @@ install.packages('devtools')
 And then install the development version from GitHub:
 
 ```r
-devtools::install_github("sondreus/agtboost/R-package")
+devtools::install_github("Blunde1/agtboost/R-package")
 ```
 
 ## Running the models
