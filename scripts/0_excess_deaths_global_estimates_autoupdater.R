@@ -179,6 +179,7 @@ for(i in 1:(B+main_estimate_models)){
   
   # Save model predictions
   cat("generating predictions -- ")
+  preds <- rep(NA, nrow(X))
   preds <- predict(gbt_model, newdata = X)
   rm(gbt_model)
   cat("saving prediction --\n")
