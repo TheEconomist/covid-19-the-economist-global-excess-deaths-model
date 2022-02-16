@@ -10,7 +10,7 @@ This repository contains the replication code and data for *The Economist*'s exc
 
 Before running the R scripts, please install all the dependencies listed in [this file](https://github.com/TheEconomist/covid-19-the-economist-global-excess-deaths-model/blob/main/scripts/list_of_required_packages.txt).
 
-Keep in mind that you need to use a modified development version of [agtboost](https://github.com/sondreus/agtboost/R-package), which has been rewritten to load machine learning ensembles faster (our approach requires loading 210 of these).
+Keep in mind that you need to use a modified development version of [agtboost](https://github.com/Blunde1/agtboost/R-package), which has been rewritten to load machine learning ensembles faster (our approach requires loading 210 of these).
 
 To install it, first install the devtools package:
 
