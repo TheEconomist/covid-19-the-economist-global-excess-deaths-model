@@ -146,7 +146,7 @@ pred_matrix <- data.frame()
 m_predictors <- readRDS("output-data/model-objects/m_predictors.RDS")
 
 # Define number of bootstrap iterations. We use 200.
-B <- 100
+B <- 200
 counter <- 0
 
 # Define ensemble size for central estimate
@@ -155,21 +155,19 @@ main_estimate_models <- readRDS("output-data/model-objects/main_estimate_models_
 # Select predictors and create predictor matrix
 X <- as.matrix(X[, m_predictors])
 
-# For memory efficiency, detach all currently loaded packages
-detachAllPackages <- function() {
-  basic.packages <- c("package:stats","package:graphics","package:grDevices","package:utils","package:datasets","package:methods","package:base")
-  package.list <- search()[ifelse(unlist(gregexpr("package:",search()))==1,TRUE,FALSE)]
-  
-  package.list <- setdiff(package.list,basic.packages)
-  if (length(package.list)>0)  for (package in package.list) detach(package, character.only=TRUE)
-}
-detachAllPackages()
-
 # Load machine learning library
 library(agtboost)
 
+# The update now happens in two runs, updating twice daily. The first loads predictions from models 1:110. The second refines these by re-calculating models 1:10, and adding 110:210. 
+current_update_run <- readRDS('output-data/model-objects/current_update_run.RDS') 
+if(current_update_run == "A"){
+  load_predictions_model_set <- 1:(floor(B/2)+main_estimate_models)
+} else {
+  load_predictions_model_set <- c(1:main_estimate_models, (floor(B/2)+1):B)
+}
+
 # Loop over bootstrap iterations
-for(i in 1:(B+main_estimate_models)){
+for(i in load_predictions_model_set){
   counter <- counter + 1
   cat(paste("\n\nStarting prediction by model:", counter, "of", B+main_estimate_models, "at : ", Sys.time(), "\n"))
   
@@ -179,6 +177,7 @@ for(i in 1:(B+main_estimate_models)){
   
   # Save model predictions
   cat("generating predictions -- ")
+  preds <- rep(NA, nrow(X))
   preds <- predict(gbt_model, newdata = X)
   rm(gbt_model)
   cat("saving prediction --\n")
@@ -194,8 +193,8 @@ library(ggplot2)
 library(tidyverse)
 library(data.table)
 
-# Load and combine predictions from individual models
-for(i in 1:(B+main_estimate_models)){
+# Load and combine predictions from individual models:
+for(i in 1:(ifelse(current_update_run == "A", floor(B/2), B)+main_estimate_models)){
   pred_matrix <- rbind(pred_matrix, readRDS(paste0('output-data/model-objects/model-predictions/model_', i , '_prediction.RDS')))
 }
 
@@ -218,13 +217,13 @@ saveRDS(pred_matrix, "output-data/pred_matrix.RDS")
 # Save covariates at weekly level:
 dat <- readRDS("output-data/model-objects/dat.RDS")
 covars_for_export_cols <- c("iso3c", "country", "date", "region", "subregion", "population", "median_age", "aged_65_older", "life_expectancy", "daily_covid_deaths_per_100k", "daily_covid_cases_per_100k", "daily_tests_per_100k", "cumulative_daily_covid_cases_per_100k", 
-                           "cumulative_daily_covid_deaths_per_100k",
-                           "cumulative_daily_tests_per_100k", "demography_adjusted_ifr",
-                           "daily_covid_cases",
-                           "daily_tests",
-                           "daily_covid_deaths",
-                           "daily_excess_deaths",
-                           "daily_excess_deaths_per_100k")
+                            "cumulative_daily_covid_deaths_per_100k",
+                            "cumulative_daily_tests_per_100k", "demography_adjusted_ifr",
+                            "daily_covid_cases",
+                            "daily_tests",
+                            "daily_covid_deaths",
+                            "daily_excess_deaths",
+                            "daily_excess_deaths_per_100k")
 covars_for_export <- dat[!duplicated(ids), covars_for_export_cols]
 covars_for_export_latest <- dat[dat$date == max(dat$date), covars_for_export_cols]
 covars_for_export_latest <- covars_for_export_latest[!duplicated(covars_for_export_latest$iso3c), ]
@@ -251,30 +250,44 @@ if(abs(post_updated_world_total[1] - pre_updated_world_total[1]) > 250000 |
 }
 
 # 7. Train a new bootstrap model ---------------------------------------
-  X <- readRDS('output-data/model-objects/X_train.RDS')
-  Y <- readRDS('output-data/model-objects/Y_train.RDS')
-  X$daily_excess_deaths_per_100k <- Y
-  
-  # We first drop very recent observations (<21 days):
-  Y <- Y[!X$date > Sys.Date()-21]
-  X <- X[!X$date > Sys.Date()-21, ]
-  
-  # We then load the model-generation loop function:
-  source('scripts/aux_generate_model_loop.R')
-  
-  # We then use this to generate one new bootstrap model, overwriting a random prior model
-  generate_model_loop(
-    X_full = X[!is.na(Y), ], # Defines training set
-    Y_full = Y[!is.na(Y)],   # Defines outcome variable
-    B = 1, 
-    include_main_estimate = T,
-    main_estimate_learning_rate = 0.001,
-    bootstrap_learning_rate = 0.003,
-    custom_model_index = sample(1:210, 1),
-    new_predictor_set = F
-  )
-  cat('\n\n One bootstrap model successfully re-trained.\n\n')
+X <- readRDS('output-data/model-objects/X_train.RDS')
+Y <- readRDS('output-data/model-objects/Y_train.RDS')
+X$daily_excess_deaths_per_100k <- Y
+
+# We first drop very recent observations (<21 days):
+Y <- Y[!X$date > Sys.Date()-21]
+X <- X[!X$date > Sys.Date()-21, ]
+
+# We then load the model-generation loop function:
+source('scripts/aux_generate_model_loop.R')
+
+# Load list of previously updated models. This ensures that all models are eventually replaced:
+recently_updated_models <- readRDS('output-data/model-objects/recently_updated_models.RDS')
+
+# Select model to overwrite:
+update <- setdiff(sample(1:(B+main_estimate_models), 1), unlist(recently_updated_models))
+recently_updated_models <- c(recently_updated_models, update)
+
+# We then use this to generate one new bootstrap model, overwriting a random prior model:
+generate_model_loop(
+  X_full = X[!is.na(Y), ], # Defines training set
+  Y_full = Y[!is.na(Y)],   # Defines outcome variable
+  B = 1, 
+  include_main_estimate = T,
+  main_estimate_learning_rate = 0.001,
+  bootstrap_learning_rate = 0.003,
+  custom_model_index = update,
+  new_predictor_set = F
+)
+cat('\n\n One bootstrap model successfully re-trained.\n\n')
+
+# Save list of updated models, resetting to null if all updated:
+if(length(recently_updated_models) < B+main_estimate_models){
+    saveRDS(recently_updated_models, 'output-data/model-objects/recently_updated_models.RDS')
+  } else {
+    saveRDS(c(), 'output-data/model-objects/recently_updated_models.RDS')
+  }
 
 end_time <- Sys.time()
-  
+
 print(paste("Total time:", end_time - start_time))
