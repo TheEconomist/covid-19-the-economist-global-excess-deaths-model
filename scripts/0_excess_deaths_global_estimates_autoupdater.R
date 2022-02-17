@@ -146,7 +146,7 @@ pred_matrix <- data.frame()
 m_predictors <- readRDS("output-data/model-objects/m_predictors.RDS")
 
 # Define number of bootstrap iterations. We use 200.
-B <- 110
+B <- 100
 counter <- 0
 
 # Define ensemble size for central estimate
