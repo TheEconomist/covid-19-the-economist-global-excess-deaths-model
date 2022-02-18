@@ -207,7 +207,7 @@ if(main_estimate_models > 1){
   pred_matrix <- pred_matrix[, c(1, (main_estimate_models+1):ncol(pred_matrix))]
 }
 
-colnames(pred_matrix) <- c("estimate", paste0("B", 1:B))
+colnames(pred_matrix) <- c("estimate", paste0("B", 1:ifelse(current_update_run == "A", floor(B/2), B)))
 rownames(pred_matrix) <- 1:nrow(pred_matrix)
 
 saveRDS(pred_matrix, "output-data/pred_matrix.RDS")
