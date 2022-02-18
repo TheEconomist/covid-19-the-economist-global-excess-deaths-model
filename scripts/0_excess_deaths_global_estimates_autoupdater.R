@@ -289,9 +289,11 @@ if(length(recently_updated_models) < B+main_estimate_models){
   }
 
 # Update output run:
-ifelse(current_update_run == "A", 
-       saveRDS('B', 'output-data/model-objects/current_update_run.RDS'),
-       saveRDS('A', 'output-data/model-objects/current_update_run.RDS'))
+if(current_update_run == "A"){ 
+       saveRDS('B', 'output-data/model-objects/current_update_run.RDS')
+  } else {
+       saveRDS('A', 'output-data/model-objects/current_update_run.RDS')
+  }
 
 end_time <- Sys.time()
 
