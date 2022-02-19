@@ -158,8 +158,12 @@ X <- as.matrix(X[, m_predictors])
 # Load machine learning library
 library(agtboost)
 
-# The update now happens in two runs, updating twice daily. The first loads predictions from models 1:110. The second refines these by re-calculating models 1:10, and adding 110:210. 
+# The update now happens in two runs, updating twice daily. The first loads predictions from models 1:110. The second refines these by re-calculating models 1:10, and adding 110:210. We ensure that a day of updates always start with update run A.
 current_update_run <- readRDS('output-data/model-objects/current_update_run.RDS') 
+if(readRDS('output-data/model-objects/latest_update.RDS') < Sys.Date()){
+  current_update_run <- "A"
+}
+
 if(current_update_run == "A"){
   load_predictions_model_set <- 1:(floor(B/2)+main_estimate_models)
 } else {
@@ -294,6 +298,7 @@ if(current_update_run == "A"){
   } else {
        saveRDS('A', 'output-data/model-objects/current_update_run.RDS')
   }
+saveRDS(Sys.Date(), 'output-data/model-objects/latest_update.RDS')
 
 end_time <- Sys.time()
 
