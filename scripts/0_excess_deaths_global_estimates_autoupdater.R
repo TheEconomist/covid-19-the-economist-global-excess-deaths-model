@@ -169,7 +169,7 @@ if(current_update_run == "A"){
 # Loop over bootstrap iterations
 for(i in load_predictions_model_set){
   counter <- counter + 1
-  cat(paste("\n\nStarting prediction by model:", counter, "of", B+main_estimate_models, "at : ", Sys.time(), "\n"))
+  cat(paste("\n\nStarting prediction by model:", counter, "of", ifelse(current_update_run == "A", floor(B/2), B)+main_estimate_models, "at : ", Sys.time(), "\n"))
   
   # Load model object
   cat("\n -- loading model -- ")
