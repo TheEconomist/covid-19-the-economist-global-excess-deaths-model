@@ -19,6 +19,7 @@ impute_missing <- function(X = dat,
   if(cached_NA_cols){
     cache <- readRDS('output-data/model-objects/na_cols.RDS')
     if(sum(na_cols & !cache) > 0){
+      print(paste0('Unexpected missing data in ', colnames(X)[na_cols & !cache])) 
       stop('Data error: a column with previously no missing variables now has missing variables')
       } else {
       na_cols <- cache
