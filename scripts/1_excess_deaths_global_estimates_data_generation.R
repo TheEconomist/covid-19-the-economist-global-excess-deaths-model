@@ -71,7 +71,9 @@ country_daily_data <- fread("https://raw.githubusercontent.com/owid/covid-19-dat
          daily_vaccinations = new_vaccinations_smoothed,
          daily_vaccinations_per_100k = (daily_vaccinations / population) * 100000,
          vaccinated_pct = people_vaccinated_per_hundred,
-         fully_vaccinated_pct = people_fully_vaccinated_per_hundred) %>%
+         fully_vaccinated_pct = people_fully_vaccinated_per_hundred,
+         daily_covid_cases_raw = new_cases,
+         daily_covid_deaths_raw = new_deaths) %>%
   filter(date >= as.Date("2020-01-01"),
          !str_detect(iso3c,"OWID")) %>%
   group_by(iso3c) %>%
@@ -86,7 +88,40 @@ country_daily_data <- fread("https://raw.githubusercontent.com/owid/covid-19-dat
                 daily_vaccinations,
                 daily_vaccinations_per_100k,
                 vaccinated_pct,
-                fully_vaccinated_pct)
+                fully_vaccinated_pct,
+                daily_covid_cases_raw,
+                daily_covid_deaths_raw)
+
+# OWID data sometimes lacks the 7-day rolling average, which we here calculate and add manually when missing:
+country_daily_data <- data.frame(country_daily_data[order(country_daily_data$date), ])
+seven_day_average <- function(x){
+  temp <- x
+  for(i in 1:length(x)){
+    x[i] <- mean(temp[max(c(1, i-6)):min(c(length(x), i))], na.rm = T)
+  }
+  x
+}
+# For cases (absolute, per 100k)
+country_daily_data$daily_covid_cases_recalculated <- ave(country_daily_data$daily_covid_cases_raw, country_daily_data$iso3c, FUN = seven_day_average)
+country_daily_data$daily_covid_cases_per_100k_recalculated <- (country_daily_data$daily_covid_cases_recalculated / country_daily_data$population) * 100000
+
+# For deaths (absolute, per 100k)
+country_daily_data$daily_covid_deaths_recalculated <- ave(country_daily_data$daily_covid_deaths_raw, country_daily_data$iso3c, FUN = seven_day_average)
+country_daily_data$daily_covid_deaths_per_100k_recalculated <- (country_daily_data$daily_covid_deaths_recalculated / country_daily_data$population) * 100000
+
+# Adding them in:
+vars <- c('daily_covid_cases',
+          'daily_covid_cases_per_100k',
+          'daily_covid_deaths',
+          'daily_covid_deaths_per_100k')
+
+for(i in vars){
+  # print(length(country_daily_data[!is.na(country_daily_data[, i]), i]) - length(country_daily_data[!is.na(country_daily_data[, paste0(i, '_recalculated')]), paste0(i, '_recalculated')])) # Uncomment this to see how many were re-calculated.
+  country_daily_data[is.na(country_daily_data[, i]), i] <-   country_daily_data[is.na(country_daily_data[, i]), paste0(i, '_recalculated')]
+}
+
+# Removing extra columns:
+for(i in vars){country_daily_data[, paste0(i, '_recalculated')] <- NULL}
 
 # Fix for Taiwan regions:
 country_daily_data$region[country_daily_data$iso3c == "TWN"] <- "Asia"
