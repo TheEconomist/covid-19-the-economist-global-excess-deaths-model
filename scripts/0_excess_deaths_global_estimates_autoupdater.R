@@ -269,7 +269,7 @@ source('scripts/aux_generate_model_loop.R')
 recently_updated_models <- readRDS('output-data/model-objects/recently_updated_models.RDS')
 
 # Select model to overwrite:
-update <- setdiff(sample(1:(B+main_estimate_models), 1), unlist(recently_updated_models))
+update <- sample(setdiff(1:(B+main_estimate_models), unlist(recently_updated_models)), 1)
 recently_updated_models <- c(recently_updated_models, update)
 
 # We then use this to generate one new bootstrap model, overwriting a random prior model:
