@@ -250,7 +250,7 @@ post_updated_world_total <- post_updated_world_total[order(post_updated_world_to
 if(abs(post_updated_world_total[1] - pre_updated_world_total[1]) > 250000 |
    abs(post_updated_world_total[2] - pre_updated_world_total[2]) > 250000 |
    abs(post_updated_world_total[3] - pre_updated_world_total[3]) > 250000){
-#  stop("Large change in cumulative world total, please inspect manually.")
+  stop("Large change in cumulative world total, please inspect manually.")
 }
 
 # 7. Train a new bootstrap model ---------------------------------------
