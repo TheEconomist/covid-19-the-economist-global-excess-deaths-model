@@ -1448,8 +1448,20 @@ export_covariates$wb_region <- countrycode(export_covariates$iso3c, "iso3c", "re
 custom_region_export(region = "wb_region",
                      name = "wb_region")
 
+# WHO regions
+who_groupings <- read_csv('source-data/who_groupings.csv')
+who_groupings$iso3c <- who_groupings$iso3
+
+export_covariates$WHO_region <- NA
+for(i in 1:nrow(who_groupings)){
+  export_covariates$WHO_region[export_covariates$iso3c == who_groupings$iso3c[i]] <- who_groupings$WHO_region[i]
+}
+
+custom_region_export(region = "WHO_region",
+                     name = "WHO_region")
+
 if(inspect){
-  for(name in c("un_subregion", "wb_region")){
+  for(name in c("un_subregion", "wb_region", 'WHO_region')){
     pdat <- read_csv(paste0(folder_prefix, name, ".csv"))
     ggplot(pdat, aes(x=date, y=estimated_daily_excess_deaths))+facet_wrap(.~region)+geom_line()
     pdat <- read_csv(paste0(folder_prefix, name, "_per_100k.csv"))
