@@ -1384,7 +1384,7 @@ custom_region_export <- function(
   data = export_covariates,
   folder_prefix = "output-data/output-by-alternative-regions/export_regions_"){
   
-  data[, "region"] <- data[, region]
+  data[, "region"] <- as.character(data[, region])
   data$region[is.na(data$region)] <- "Other"
 
   # Generate per day
@@ -1397,7 +1397,8 @@ custom_region_export <- function(
                                         bootstrap_predictions = pred_matrix,
                                         known_data_column = "daily_excess_deaths",
                                         model_prediction = estimate,
-                                        include_model_prediction_in_ci = T)
+                                        include_model_prediction_in_ci = F)
+
   # Save per day
   write_csv(region_export, paste0(folder_prefix, name, ".csv"))
   
@@ -1422,7 +1423,7 @@ custom_region_export <- function(
                                         bootstrap_predictions = pred_matrix,
                                         known_data_column = "daily_excess_deaths",
                                         model_prediction = estimate,
-                                        include_model_prediction_in_ci = T)
+                                        include_model_prediction_in_ci = F)
   # Save cumulative per day
   write_csv(region_export, paste0(folder_prefix, name, "_cumulative.csv"))
   
@@ -1461,14 +1462,15 @@ custom_region_export(region = "WHO_region",
                      name = "WHO_region")
 
 if(inspect){
+  folder_prefix = "output-data/output-by-alternative-regions/export_regions_"
   for(name in c("un_subregion", "wb_region", 'WHO_region')){
     pdat <- read_csv(paste0(folder_prefix, name, ".csv"))
-    ggplot(pdat, aes(x=date, y=estimated_daily_excess_deaths))+facet_wrap(.~region)+geom_line()
+    ggplot(pdat, aes(x=date, y=estimated_daily_excess_deaths))+geom_line()+geom_line(aes(y=estimated_daily_excess_deaths_ci_95_top))+geom_line(aes(y=estimated_daily_excess_deaths_ci_95_bot))+facet_wrap(.~region)
     pdat <- read_csv(paste0(folder_prefix, name, "_per_100k.csv"))
-    ggplot(pdat, aes(x=date, y=estimated_daily_excess_deaths_per_100k))+facet_wrap(.~region)+geom_line()
+    ggplot(pdat, aes(x=date, y=estimated_daily_excess_deaths_per_100k))+geom_line(aes(y=estimated_daily_excess_deaths_ci_95_top_per_100k))+geom_line(aes(y=estimated_daily_excess_deaths_ci_95_bot_per_100k))+facet_wrap(.~region)+geom_line()
     pdat <- read_csv(paste0(folder_prefix, name, "_cumulative.csv"))
-    ggplot(pdat, aes(x=date, y=cumulative_estimated_daily_excess_deaths))+facet_wrap(.~region)+geom_line()
+    ggplot(pdat, aes(x=date, y=cumulative_estimated_daily_excess_deaths))+geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_95_top))+geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_95_bot))+facet_wrap(.~region)+geom_line()
     pdat <- read_csv(paste0(folder_prefix, name, "_per_100k_cumulative.csv"))
-    ggplot(pdat, aes(x=date, y=cumulative_estimated_daily_excess_deaths_per_100k))+facet_wrap(.~region)+geom_line()
+    ggplot(pdat, aes(x=date, y=cumulative_estimated_daily_excess_deaths_per_100k))+geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_95_top_per_100k))+geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_95_bot_per_100k))+facet_wrap(.~region)+geom_line()
   }
 }
