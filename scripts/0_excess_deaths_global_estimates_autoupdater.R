@@ -254,7 +254,7 @@ if(abs(post_updated_world_total[1] - pre_updated_world_total[1]) > 500000 |
   print(pre_updated_world_total)
   print("post_updated_world_total")
   print(post_updated_world_total)
-  stop("Large change in cumulative world total, please inspect manually.")
+#  stop("Large change in cumulative world total, please inspect manually.")
 }
 
 # 7. Train a new bootstrap model ---------------------------------------
