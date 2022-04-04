@@ -257,6 +257,12 @@ if(abs(post_updated_world_total[1] - pre_updated_world_total[1]) > 500000 |
 #  stop("Large change in cumulative world total, please inspect manually.")
 }
 
+# Clean workspace:
+rm(covars_for_export)
+rm(covars_for_export_latest)
+rm(pred_matrix)
+gc()
+                                 
 # 7. Train a new bootstrap model ---------------------------------------
 X <- readRDS('output-data/model-objects/X_train.RDS')
 Y <- readRDS('output-data/model-objects/Y_train.RDS')
@@ -277,6 +283,7 @@ update <- sample(setdiff(1:(B+main_estimate_models), unlist(recently_updated_mod
 recently_updated_models <- c(recently_updated_models, update)
 
 # We then use this to generate one new bootstrap model, overwriting a random prior model:
+cat('\n\n Re-training and replacing 1 model based on latest data.\n\n')
 generate_model_loop(
   X_full = X[!is.na(Y), ], # Defines training set
   Y_full = Y[!is.na(Y)],   # Defines outcome variable
@@ -287,7 +294,7 @@ generate_model_loop(
   custom_model_index = update,
   new_predictor_set = F
 )
-cat('\n\n One bootstrap model successfully re-trained.\n\n')
+cat('\n\n One of 210 models successfully re-trained.\n\n')
 
 # Save list of updated models, resetting to null if all updated:
 if(length(recently_updated_models) < B+main_estimate_models){
