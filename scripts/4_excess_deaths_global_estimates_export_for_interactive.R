@@ -10,6 +10,7 @@ library(readr)
 library(countrycode)
 library(ggplot2)
 options(scipen=999)
+inspect <- F
 
 # Step 2: import official covid-19 data from Our World in Data ------------------------------------------------------------------------------
 
@@ -18,6 +19,7 @@ country_daily_data_raw <- fread("https://raw.githubusercontent.com/owid/covid-19
 
 # If no data from current day
 country_daily_data <- country_daily_data_raw[order(country_daily_data_raw$date), ]
+rm(country_daily_data_raw)
 
 # Create 7-day average of deaths for use in graphics (replacing the OWD version)
 country_daily_data$new_deaths_smoothed <- ave(country_daily_data$new_deaths, country_daily_data$location, FUN = function(x){
@@ -802,8 +804,9 @@ infections$world_total <- ave(infections$estimate, infections$date, FUN = functi
 infections$world_total_top_95 <- ave(infections$estimate_top_95, infections$date, FUN = function(x) sum(x, na.rm=T))/1.5
 infections$world_total_bot_95 <- ave(infections$estimate_bot_95, infections$date, FUN = function(x) sum(x, na.rm=T))/1.5
 
+if(inspect){
 ggplot(infections, aes(x=date, y=world_total))+geom_ribbon(aes(ymin=world_total_bot_95, ymax =world_total_top_95, xmin = date, xmax = date), fill = "lightgray")+geom_line()+theme_minimal()
-
+}
 # Final step: Add timestamp ------------------------------------------------------------------------------
 
 # Add timestamp:

@@ -239,8 +239,15 @@ pre_updated_world_total <- read.csv('output-data/export_world_cumulative.csv')
 pre_updated_world_total <- pre_updated_world_total[order(pre_updated_world_total$date, decreasing = T), c("cumulative_estimated_daily_excess_deaths", "cumulative_estimated_daily_excess_deaths_ci_95_top", "cumulative_estimated_daily_excess_deaths_ci_95_bot")][1, ]
 
 # Run export script:
-source("scripts/3_excess_deaths_global_estimates_export.R")
-source("scripts/4_excess_deaths_global_estimates_export_for_interactive.R")
+# For memory efficiency, this is also executed within a temporary local environment created by the update_export_1 and update_export_2 functions)
+cat('\n\n Generate main exports.\n\n')
+update_export_1 <- function(){source("scripts/3_excess_deaths_global_estimates_export.R", local = TRUE)}
+update_export_1()
+
+cat('\n\n Generate exports for interactive.\n\n')
+update_export_2 <- function(){source("scripts/4_excess_deaths_global_estimates_export_for_interactive.R", local = TRUE)}
+update_export_2()
+cat('\n\n Exports completed, testing before push.\n\n')
 
 # Compare pre and post-update world total:
 post_updated_world_total <- read.csv('output-data/export_world_cumulative.csv')
