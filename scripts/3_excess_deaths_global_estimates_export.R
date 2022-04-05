@@ -995,7 +995,6 @@ write_csv(export, "output-data/output-by-alternative-regions/export_regions_lat_
 # This script supports export of any grouping. 
 
 # To get statistics for a given group, do the following
-if(FALSE){
 # Define your own groups:
 # Here, we use the "countrycode" package to place countries (defined by iso3c) into groups based on the continents they below to. 
 export_covariates$continent_alt <- countrycode(export_covariates$iso3c, "iso3c",
@@ -1474,4 +1473,4 @@ if(inspect){
     ggplot(pdat, aes(x=date, y=cumulative_estimated_daily_excess_deaths_per_100k))+geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_95_top_per_100k))+geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_95_bot_per_100k))+facet_wrap(.~region)+geom_line()
   }
 }
-}
+
