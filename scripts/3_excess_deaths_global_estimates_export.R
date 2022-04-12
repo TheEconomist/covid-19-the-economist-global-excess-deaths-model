@@ -290,6 +290,7 @@ confidence_intervals <- function(new_col_names = "estimated_daily_excess_deaths"
 }
 
 
+gc() # Free up memory
 # Step 4: Construct data frames used for graphics (both per 100k and absolute terms), per day ------------------------------------------------------------------------------
 
 # Export 1: Country-week level, absolute units
@@ -542,6 +543,7 @@ if(inspect){
 write_csv(world_export, "output-data/export_world_per_100k.csv")
 
 
+gc() # Free up memory
 # Step 4: Construct data frames used for graphics (both per 100k and absolute terms), cumulative ------------------------------------------------------------------------------
 
 # Export 1: Country-week level, absolute units
@@ -779,7 +781,8 @@ if(inspect){
 write_csv(world_export, "output-data/export_world_per_100k_cumulative.csv")
 
 
-# Export 7: World level, absolute units, with alternative excess deaths metric (excess where known, otherwise covid deaths)
+# Export 7: World level, absolute units, with alternative excess deaths metric (excess where known, otherwise covid deaths) (on request)
+if(FALSE){
 export_covariates$world <- "World"
 world_export <- confidence_intervals(new_col_names = "estimated_daily_excess_deaths",
                                      group = "world", 
@@ -826,10 +829,11 @@ if(inspect){
     geom_line(col="black", linetype = "dashed")+theme_minimal()+
     theme(legend.position = "none")
 }
-
+}
 # Write to file if desired:
 # write_csv(world_export, "output-data/export_world_cumulative_with_alternative_excess_deaths.csv")
 
+gc() # Free up memory
 # Step 5: Construct custom exports used as inputs for interactive export scripts: ------------------------------------------------------------------------------
 
 # Define alternative set of regions:
@@ -991,6 +995,7 @@ if(inspect){
 write_csv(export, "output-data/output-by-alternative-regions/export_regions_lat_am_na_eu_per_100k_cumulative.csv")
 
 
+gc() # Free up memory
 # Step 6: Construct custom data frames based on alternative groupings or subsets of the data ------------------------------------------------------------------------------
 # This script supports export of any grouping. 
 
@@ -1307,6 +1312,7 @@ if(inspect){
 # write to file:
 write_csv(wb_export, "output-data/output-by-world-bank-income-group/wb_income_groups_per_100k_cumulative.csv")
 
+rm(wb_export_covariates)
 
 # Western Europe, North America, Australia, and New Zealand
 export_covariates$continent_alt <- "Other"
@@ -1474,3 +1480,5 @@ if(inspect){
   }
 }
 
+
+gc() # Free up memory
