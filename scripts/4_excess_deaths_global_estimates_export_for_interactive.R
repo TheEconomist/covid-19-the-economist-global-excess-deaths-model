@@ -15,11 +15,23 @@ inspect <- F
 # Step 2: import official covid-19 data from Our World in Data ------------------------------------------------------------------------------
 
 ## A. Import official covid data from Our World In Data
-country_daily_data_raw <- fread("https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/owid-covid-data.csv") 
-
-# If no data from current day
-country_daily_data <- country_daily_data_raw[order(country_daily_data_raw$date), ]
-rm(country_daily_data_raw)
+country_daily_data <- fread("https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/owid-covid-data.csv") 
+country_daily_data <- country_daily_data[order(country_daily_data$date), 
+                                         c("location",
+                                           "date",
+                                           "iso_code",
+                                           "continent",
+                                           "population",
+                                           "new_deaths",
+                                           "new_deaths_smoothed",
+                                           "total_deaths",
+                                           "people_vaccinated",
+                                           "people_fully_vaccinated",
+                                           "new_vaccinations_smoothed",
+                                           "total_vaccinations",
+                                           "aged_65_older",
+                                           "aged_70_older")]
+country_data <- unique(country_daily_data[, c('location', 'iso_code', 'aged_65_older', 'aged_70_older')]) 
 
 # Create 7-day average of deaths for use in graphics (replacing the OWD version)
 country_daily_data$new_deaths_smoothed <- ave(country_daily_data$new_deaths, country_daily_data$location, FUN = function(x){
@@ -30,8 +42,8 @@ country_daily_data$new_deaths_smoothed <- ave(country_daily_data$new_deaths, cou
 
 # Step 3: Generate data for main map ------------------------------------------------------------------------------
 # Import data:
-daily <- read_csv("output-data/export_country_per_100k.csv")
-cumulative <- read_csv("output-data/export_country_per_100k_cumulative.csv")
+daily <- read_csv("output-data/export_country_per_100k.csv", show_col_types = F)
+cumulative <- read_csv("output-data/export_country_per_100k_cumulative.csv", show_col_types = F)
 
 # Reshape the OWD data to prepare for merging with our estimates (create per 100k, etc)
 main_map_covid_data <- country_daily_data %>%
@@ -142,6 +154,7 @@ covid_data_long <- rbind(country_daily_data[country_daily_data$location != "Nort
   dplyr::rename(population_owd = population,
                 official_covid_data_type = name,
                 official_covid_deaths = value)
+rm(country_daily_data)
 
 # Add correspondence to facilitate later merging:
 covid_data_long$merge_column <- NA  
@@ -183,7 +196,7 @@ long_exp_df <- function(files = c("output-data/export_world.csv",
   
   # Cycle through files, rename columns, add type, and bind together
   for(i in 1:length(files)){
-    temp <- read_csv(files[i])
+    temp <- read_csv(files[i], show_col_types = F)
     colnames(temp) <- col_names
     temp$type <- types[i]
     
@@ -278,7 +291,7 @@ export_long <- merge(export_long,
                                           all.x = T)
 
 # 9. Make names follow The Economist standard:
-econ_names <- read_csv("source-data/economist_country_names.csv") %>%
+econ_names <- read_csv("source-data/economist_country_names.csv", show_col_types = F) %>%
   rename(
     econ_name = Name,
     economist_region = Regions,
@@ -551,7 +564,7 @@ write_csv(table_A, "output-data/output-for-interactive/table_A.csv")
 # Step 7: Generate data for second map ------------------------------------------------------------------------------
 # Load data:
 second_map <-
-  read_csv("output-data/output-for-interactive/main_map.csv")[, c(
+  read_csv("output-data/output-for-interactive/main_map.csv", show_col_types = F)[, c(
     "iso3c",
     "date",
     "cumulative_estimated_daily_excess_deaths_per_100k",
@@ -562,12 +575,12 @@ second_map <-
 # Load estimated demography-adjusted IFR by iso3c:
 ifr_by_iso <- readRDS("source-data/ifr_cache.RDS")
 ifr_by_iso$iso2c[ifr_by_iso$area == "Namibia"] <- "NA"
-ifr_by_iso$iso3c <- countrycode(ifr_by_iso$iso2c, "iso2c", "iso3c")
+ifr_by_iso$iso3c <- countrycode(ifr_by_iso$iso2c, "iso2c", "iso3c", warn = F)
 ifr_by_iso$demography_adjusted_ifr_percent <- ifr_by_iso$area_ifr
 
 # Load estimated share of population over 65:
 age_over_65 <-
-  unique(country_daily_data[, c("iso_code", "aged_65_older")])
+  unique(country_data[, c("iso_code", "aged_65_older")])
 age_over_65$iso3c <- age_over_65$iso_code
 age_over_65$aged_65_older_pct <- age_over_65$aged_65_older
 
@@ -610,12 +623,12 @@ write_csv(second_map,
 
 # Step 8: Generate data for table B ------------------------------------------------------------------------------
 # Load data from table 1:
-table_B <- read_csv("output-data/output-for-interactive/table_A.csv")
-table_B$iso3c <- countrycode(table_B$location, "country.name", "iso3c")
+table_B <- read_csv("output-data/output-for-interactive/table_A.csv", show_col_types = F)
+table_B$iso3c <- countrycode(table_B$location, "country.name", "iso3c", warn = F)
 table_B$iso3c[table_B$location == "Micronesia"] <- "FSM"
 
 # Load data from map 2:
-second_map_data <- read_csv("output-data/output-for-interactive/second_map.csv")
+second_map_data <- read_csv("output-data/output-for-interactive/second_map.csv", show_col_types = F)
 
 # Merge the two:
 table_B <- merge(table_B, second_map_data, by = "iso3c", all.x = T)  
@@ -651,7 +664,7 @@ write_csv(table_B[, c("location",
 # This is exported in case people want more information on the distribution of predictions at the world cumulative level for the present day.
 
 # Load raw histogram data
-hist <- read_csv("output-data/export_world_cumulative_histogram_data.csv")
+hist <- read_csv("output-data/export_world_cumulative_histogram_data.csv", show_col_types = F)
 
 # Pivot to long format
 hist <- pivot_longer(hist, cols = grep("B", colnames(hist)))
@@ -705,19 +718,19 @@ write_csv(hist,
 # Step 10: Implied infections over time ------------------------------------------------------------------------------
 # Load data:
 infections <-
-  read_csv("output-data/output-for-interactive/by_location.csv")
-infections$iso3c <- countrycode(infections$location, "country.name", "iso3c")
+  read_csv("output-data/output-for-interactive/by_location.csv", show_col_types = F)
+infections$iso3c <- countrycode(infections$location, "country.name", "iso3c", warn = F)
 infections <- infections[!is.na(infections$iso3c), ]
 
 # Load estimated demography-adjusted IFR by iso3c:
 ifr_by_iso <- readRDS("source-data/ifr_cache.RDS")
 ifr_by_iso$iso2c[ifr_by_iso$area == "Namibia"] <- "NA"
-ifr_by_iso$iso3c <- countrycode(ifr_by_iso$iso2c, "iso2c", "iso3c")
+ifr_by_iso$iso3c <- countrycode(ifr_by_iso$iso2c, "iso2c", "iso3c", warn = F)
 ifr_by_iso$demography_adjusted_ifr_percent <- ifr_by_iso$area_ifr
 
 # Load estimated share of population over 65:
 age_over_65 <-
-  unique(country_daily_data[, c("iso_code", "aged_65_older")])
+  unique(country_data[, c("iso_code", "aged_65_older")])
 age_over_65$iso3c <- age_over_65$iso_code
 age_over_65$aged_65_older_pct <- age_over_65$aged_65_older
 
@@ -753,8 +766,8 @@ if(inspect){
 
 # Load data:
 infections <-
-  read_csv("output-data/output-for-interactive/by_location_cumulative.csv")
-infections$iso3c <- countrycode(infections$location, "country.name", "iso3c")
+  read_csv("output-data/output-for-interactive/by_location_cumulative.csv", show_col_types = F)
+infections$iso3c <- countrycode(infections$location, "country.name", "iso3c", warn = F)
 infections <- infections[!is.na(infections$iso3c), ]
 
 # Load estimated demography-adjusted IFR by iso3c:
@@ -765,7 +778,7 @@ ifr_by_iso$demography_adjusted_ifr_percent <- ifr_by_iso$area_ifr
 
 # Load estimated share of population over 65:
 age_over_65 <-
-  unique(country_daily_data[, c("iso_code", "aged_65_older")])
+  unique(country_data[, c("iso_code", "aged_65_older")])
 age_over_65$iso3c <- age_over_65$iso_code
 age_over_65$aged_65_older_pct <- age_over_65$aged_65_older
 
