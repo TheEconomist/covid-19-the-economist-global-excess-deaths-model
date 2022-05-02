@@ -490,7 +490,7 @@ world_top_line_chart <- world_line_chart[world_line_chart$type == "daily_excess_
 
 # Sometimes the world total for confirmed deaths is not updated by the time we update our estimates. If so, we default to the previous day:                       
 if(nrow(na.omit(world_top_line_chart)) != 1){
-  world_line_chart$official_covid_deaths <- world_line_chart[world_line_chart$type == "daily_excess_deaths_cumulative" & world_line_chart$date == max(world_line_chart$date, na.rm = T)-1, "official_covid_deaths"]
+  world_top_line_chart$official_covid_deaths <- world_line_chart[world_line_chart$type == "daily_excess_deaths_cumulative" & world_line_chart$date == max(world_line_chart$date, na.rm = T)-1, "official_covid_deaths"]
   warning('Defaulting to yesterday world official covid-19 confirmed deaths as todays are missing') 
 }
 
