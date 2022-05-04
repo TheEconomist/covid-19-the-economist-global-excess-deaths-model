@@ -30,6 +30,7 @@ daily_excess_deaths <- expand.grid(date = seq(min(excess_deaths_source$date), as
                                    country = unique(excess_deaths_source$country)) %>% 
   left_join(excess_deaths_source, by = c("country", "date")) %>% 
   mutate(iso3c = countrycode(country, "country.name", "iso3c")) %>% 
+  mutate(iso3c = ifelse(country == 'Kosovo', 'KSV', iso3c)) %>%
   arrange(iso3c, date) %>% 
   group_by(iso3c) %>% tidyr::fill(timeframe:date_type) %>% 
   # The below line removes those entries that are after a "end date" but before a "start date" - original code only does this for trailing dates
@@ -74,6 +75,7 @@ country_daily_data <- fread("https://raw.githubusercontent.com/owid/covid-19-dat
          fully_vaccinated_pct = people_fully_vaccinated_per_hundred,
          daily_covid_cases_raw = new_cases,
          daily_covid_deaths_raw = new_deaths) %>%
+  mutate(iso3c = ifelse(country == 'Kosovo', 'KSV', iso3c)) %>%
   filter(date >= as.Date("2020-01-01"),
          !str_detect(iso3c,"OWID")) %>%
   group_by(iso3c) %>%
@@ -239,6 +241,8 @@ democracy_binary <- democracy_binary[democracy_binary$year == 2015, ]
 
 # Generate iso3c:
 democracy_binary$iso3c <- countrycode(democracy_binary$ccode, "cown", "iso3c")
+democracy_binary$iso3c <- ifelse(democracy_binary$country == 'Kosovo', 'KSV', democracy_binary$iso3c)
+  
 
 # Make descriptive column names and select relevant columns
 democracy_binary <- democracy_binary %>% 
@@ -257,6 +261,8 @@ freedom_house <- read_csv("source-data/freedomhouse.csv")
 
 # Generate iso3c and restrict to entities designated as countries (+ Hong Kong) in most recent year
 freedom_house$iso3c <- countrycode(freedom_house$'Country/Territory', "country.name", "iso3c")
+freedom_house$iso3c <- ifelse(freedom_house$'Country/Territory' == 'Kosovo', "KSV", freedom_house$iso3c)
+
 freedom_house <- freedom_house[freedom_house$Edition == 2020 &
                                (freedom_house$`C/T` == "c" | freedom_house$`Country/Territory` == "Hong Kong"), ]
 
@@ -279,6 +285,7 @@ polity <- readxl::read_xls("source-data/p5v2018.xls")
 
 # Generate iso3c and restrict to most recent year
 polity$iso3c <- countrycode(polity$ccode, "cown", "iso3c")
+polity$iso3c <- ifelse(polity$country == 'Kosovo', "KSV", polity$iso3c)
 polity <- polity[polity$year == 2018, ]
 
 # Make descriptive column names and select relevant columns
@@ -373,6 +380,7 @@ wdi <- WDI(country = 'all',
 
 
 wdi$iso3c <- countrycode(wdi$iso2c, "iso2c", "iso3c")
+wdi$iso3c <- ifelse(wdi$country == 'Kosovo', 'KSV', wdi$iso3c)
 wdi$iso2c <- NULL
 wdi$country <- NULL
 
@@ -467,6 +475,7 @@ world.cities <- world.cities %>%
     largest_city_pop = ave(world.cities$pop, world.cities$country.etc,
                            FUN = max) 
     ) %>% 
+  mutate(iso3c = ifelse(country.etc == 'Kosovo', 'KSV', iso3c)) %>%
   select(iso3c,
          largest_city_pop,
          lat_largest_city,
@@ -739,6 +748,7 @@ ox <- ox %>%
          iso3c = countrycode(CountryName, "country.name", "iso3c"),
          date = as.Date(as.character(Date), format = "%Y%m%d")
          ) %>%
+  mutate(iso3c = ifelse(CountryName == 'Kosovo', 'KSV', iso3c)) %>%
   select(oxcgrt_schools_closed,
          oxcgrt_workplaces_closed,
          oxcgrt_cancel_public_events,
@@ -995,7 +1005,7 @@ country_daily_excess_deaths <- merge(country_daily_excess_deaths,
 # Adding small territories not in master list:
 country_daily_excess_deaths$economist_region[country_daily_excess_deaths$iso3c == "GGY"] <- "Europe"
 country_daily_excess_deaths$economist_region[country_daily_excess_deaths$iso3c == "JEY"] <- "Europe"
-country_daily_excess_deaths$economist_region[country_daily_excess_deaths$iso3c == "JEY"] <- "Europe"
+country_daily_excess_deaths$economist_region[country_daily_excess_deaths$iso3c == "KSV"] <- "Europe"
 
 # Fix for Taiwan regions:
 country_daily_excess_deaths$region[country_daily_excess_deaths$iso3c == "TWN"] <- "Asia"
