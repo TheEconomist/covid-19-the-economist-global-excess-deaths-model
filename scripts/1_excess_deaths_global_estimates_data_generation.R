@@ -76,6 +76,8 @@ country_daily_data <- fread("https://raw.githubusercontent.com/owid/covid-19-dat
          daily_covid_cases_raw = new_cases,
          daily_covid_deaths_raw = new_deaths) %>%
   mutate(iso3c = ifelse(country == 'Kosovo', 'KSV', iso3c)) %>%
+  mutate(region = ifelse(country == 'Kosovo', 'Europe', region)) %>%
+  mutate(subregion = ifelse(country == 'Kosovo', 'Southern Europe', subregion)) %>%
   filter(date >= as.Date("2020-01-01"),
          !str_detect(iso3c,"OWID")) %>%
   group_by(iso3c) %>%
@@ -504,7 +506,7 @@ ifr <- ifr %>%
   select(demography_adjusted_ifr, iso3c)
 ksv <- ifr[ifr$iso3c == 'SRB', ]
 ksv$iso3c <- 'KSV'
-ifr <- rbind(ifr, ksv)
+ifr <- na.omit(rbind(ifr, ksv))
                        
 # Add to list of static datasets:
 static_data[[length(static_data) + 1]] <- ifr
@@ -1075,11 +1077,11 @@ china$expected_deaths <- china$expected_deaths*(china$population/china$mean_popu
 # Note: supplemental figure 2 suggests the mean should work well, no strong over-time-trend in per capita death.
 
 # To inspect our estimates for China excess deaths by area, uncomment the below chunk:
-ggplot(china, aes(x=as.numeric(Week), y=100000*reporting_adjusted_deaths/population, col = "2020"))+
-  geom_line()+
-  geom_line(aes(y=100000*expected_deaths/population, col = "Expected"))+
-  geom_hline(aes(yintercept = 0), col = "black")+ylim(c(-10, 100))+
-theme_minimal()+facet_grid(.~type)+xlab("Week in 2020")+ylab("Deaths per 100k population")
+# ggplot(china, aes(x=as.numeric(Week), y=100000*reporting_adjusted_deaths/population, col = "2020"))+
+#   geom_line()+
+#   geom_line(aes(y=100000*expected_deaths/population, col = "Expected"))+
+#   geom_hline(aes(yintercept = 0), col = "black")+ylim(c(-10, 100))+
+# theme_minimal()+facet_grid(.~type)+xlab("Week in 2020")+ylab("Deaths per 100k population")
 
 # The final week appears anamolous compared to the figures in the paper. Upon inspection, it appears the table reports a drop in expected deaths that seems anamolously large compared to the figures in the paper. We therefore conservatively drop the final week:
 china <- china[china$Week != 13, ]
