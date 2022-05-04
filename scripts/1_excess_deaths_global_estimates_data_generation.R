@@ -1166,10 +1166,20 @@ country_daily_excess_deaths[country_daily_excess_deaths$iso3c %in% omit_iso3c, o
 
 # 0. Select definition of region (NB: 'region' are as defined by World Bank Development Indicators)
 library(countrycode)
-country_daily_excess_deaths$continent <- countrycode(unlist(substr(country_daily_excess_deaths$iso3c, 1, 3)), "iso3c", "continent")
 
+# Continent variable
+country_daily_excess_deaths$continent <- countrycode(unlist(substr(country_daily_excess_deaths$iso3c, 1, 3)), "iso3c", "continent")
+country_daily_excess_deaths$continent[country_daily_excess_deaths$iso3c == "KSV"] <- "Europe" # fix for Saint Helena
+
+# Region variable
 country_daily_excess_deaths$region <- countrycode(unlist(substr(country_daily_excess_deaths$iso3c, 1, 3)), "iso3c", "region")
 country_daily_excess_deaths$region[country_daily_excess_deaths$iso3c == "SHN"] <- "Europe & Central Asia" # fix for Saint Helena
+country_daily_excess_deaths$region[country_daily_excess_deaths$iso3c == "KSV"] <- "Europe & Central Asia" # fix for Kosovo
+country_daily_excess_deaths$region[country_daily_excess_deaths$iso3c == "ESH"] <- "Middle East & North Africa" # fix for Western Sahara
+country_daily_excess_deaths$region[country_daily_excess_deaths$iso3c == "WLF"] <- "East Asia & Pacific" # fix for Wallis and Futuna
+
+# Sub-region variable (fix for Kosovo)
+country_daily_excess_deaths$region[country_daily_excess_deaths$iso3c == "KSV"] <- "Southern Europe" # fix for Kosovo
 
 # 1. Define region-average function:
 region_average <- function(variable = country_daily_excess_deaths$daily_total_deaths_per_100k,
@@ -1296,15 +1306,21 @@ dist_dy$iso_d[dist_dy$iso_d == "ROM"] <- "ROU" # Romania
 dist_dy$iso_o[dist_dy$iso_o == "ROM"] <- "ROU" # 
 dist_dy$iso_d[dist_dy$iso_d == "ZAR"] <- "COD" # Congo
 dist_dy$iso_o[dist_dy$iso_o == "ZAR"] <- "COD" # 
-dist_dy$iso_d[dist_dy$iso_d == "SCG"] <- "SRB" # Serbia
-dist_dy$iso_o[dist_dy$iso_o == "SCG"] <- "SRB" # 
+dist_dy$iso_d[dist_dy$iso_d == "YUG"] <- "SRB" # Serbia
+dist_dy$iso_o[dist_dy$iso_o == "YUG"] <- "SRB" # 
 dist_dy$iso_d[dist_dy$iso_d == "TMP"] <- "TLS" # Timor-Leste
 dist_dy$iso_o[dist_dy$iso_o == "TMP"] <- "TLS" #
 
-# Montenegro (use SCG values)
+# Montenegro (use SRB values)
 temp <- dist_dy[dist_dy$iso_d == "SRB" | dist_dy$iso_o == "SRB", ]
 temp$iso_d[temp$iso_d == "SRB"] <- "MNE"
 temp$iso_o[temp$iso_o == "SRB"] <- "MNE"
+dist_dy <- rbind(dist_dy, temp)
+
+# Kosvo (use SCG values)
+temp <- dist_dy[dist_dy$iso_d == "SRB" | dist_dy$iso_o == "SRB", ]
+temp$iso_d[temp$iso_d == "SRB"] <- "KSV"
+temp$iso_o[temp$iso_o == "SRB"] <- "KSV"
 dist_dy <- rbind(dist_dy, temp)
 
 # South Sudan (use SUD values)
@@ -1326,6 +1342,8 @@ dist_dy <- rbind(dist_dy, temp)
 
 dist_dy$subregion <- countrycode(dist_dy$iso_d, "iso3c", "un.regionsub.name")
 dist_dy$subregion[dist_dy$iso_d == "TWN"] <- "Eastern Asia"
+dist_dy$subregion[dist_dy$iso_d == "KSV"] <- "Southern Europe"
+
 
 # 2. define function to get average of neighbouring countries (within region):
 contig_ave <- function(var = region_average_vars[1],
