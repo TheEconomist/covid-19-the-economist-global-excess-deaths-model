@@ -234,6 +234,14 @@ covars_for_export_latest <- covars_for_export_latest[!duplicated(covars_for_expo
 
 saveRDS(rbind(covars_for_export, covars_for_export_latest), "output-data/export_covariates.RDS")
 
+# Clean workspace:
+rm(covars_for_export)
+rm(covars_for_export_latest)
+rm(pred_matrix)
+rm(dat)
+rm(X)
+gc()
+
 # Get pre-update cumulative world total:
 pre_updated_world_total <- read.csv('output-data/export_world_cumulative.csv')
 pre_updated_world_total <- pre_updated_world_total[order(pre_updated_world_total$date, decreasing = T), c("cumulative_estimated_daily_excess_deaths", "cumulative_estimated_daily_excess_deaths_ci_95_top", "cumulative_estimated_daily_excess_deaths_ci_95_bot")][1, ]
@@ -263,12 +271,6 @@ if(abs(post_updated_world_total[1] - pre_updated_world_total[1]) > 500000 |
   print(post_updated_world_total)
   stop("Large change in cumulative world total, please inspect manually.")
 }
-
-# Clean workspace:
-rm(covars_for_export)
-rm(covars_for_export_latest)
-rm(pred_matrix)
-gc()
                                  
 # 7. Train a new bootstrap model ---------------------------------------
 X <- readRDS('output-data/model-objects/X_train.RDS')
