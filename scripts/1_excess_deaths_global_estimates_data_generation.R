@@ -502,7 +502,10 @@ ifr$demography_adjusted_ifr <- ifr$area_ifr
 ifr <- ifr %>% 
   mutate(iso3c = countrycode(iso2c, "iso2c", "iso3c")) %>%
   select(demography_adjusted_ifr, iso3c)
-
+ksv <- ifr[ifr$iso3c == 'SRB', ]
+ksv$iso3c <- 'KSV'
+ifr <- rbind(ifr, ksv)
+                       
 # Add to list of static datasets:
 static_data[[length(static_data) + 1]] <- ifr
 
