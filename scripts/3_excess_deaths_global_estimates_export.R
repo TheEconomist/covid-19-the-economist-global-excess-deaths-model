@@ -1182,6 +1182,7 @@ sum(oecd$cumulative_estimated_daily_excess_deaths)/sum(oecd$cumulative_daily_cov
 export_covariates$region <- countrycode(export_covariates$iso3c, "iso3c", "region")
 export_covariates$region <- ifelse(export_covariates$iso3c == 'KSV', 'Europe', export_covariates$region)
 export_covariates$region <- ifelse(export_covariates$iso3c == "SHN", 'Sub-Saharan Africa', export_covariates$region) 
+export_covariates$region <- ifelse(is.na(export_covariates$region), 'Other', export_covariates$region) 
 ssa_region_export <- confidence_intervals(new_col_names = "estimated_daily_excess_deaths",
                                           group = "region",
                                           time = "date",
@@ -1489,3 +1490,4 @@ if(inspect){
 
 
 gc() # Free up memory
+
