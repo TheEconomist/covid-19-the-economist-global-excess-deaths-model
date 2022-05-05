@@ -56,10 +56,12 @@ export_covariates$row_order <- NULL
 export_covariates$country <- export_covariates$Name
 export_covariates$country[is.na(export_covariates$country)] <- countrycode(
   export_covariates$iso3c[is.na(export_covariates$country)], "iso3c", "country.name")
+export_covariates$country <- ifelse(export_covariates$iso3c == 'KSV', 'Kosovo', export_covariates$country)
 export_covariates$Name <- NULL
 
 # Define regions for main chart:
 export_covariates$continent <- countrycode(export_covariates$iso3c, "iso3c", "continent")
+export_covariates$continent <- ifelse(export_covariates$iso3c == 'KSV', 'Europe', export_covariates$continent)
 
 # Step 3: Define function to construct confidence interval given grouping ------------------------------------------------------------------------------
 confidence_intervals <- function(new_col_names = "estimated_daily_excess_deaths",
@@ -403,6 +405,7 @@ write_csv(region_export, "output-data/export_regions.csv")
 # Define alternative set of regions:
 export_covariates$continent_alt <- countrycode(export_covariates$iso3c, "iso3c",
                                                "continent")
+export_covariates$continent_alt <- ifelse(export_covariates$iso3c == 'KSV', 'Europe', export_covariates$continent_alt)
 export_covariates$continent_alt[export_covariates$continent_alt == "Europe"] <- "Europe, United States, Canada, and Oceania"
 export_covariates$continent_alt[export_covariates$iso3c %in% c("USA", "CAN")] <- "Europe, United States, Canada, and Oceania"
 export_covariates$continent_alt[export_covariates$continent_alt == "Oceania"] <- "Europe, United States, Canada, and Oceania"
@@ -839,6 +842,7 @@ gc() # Free up memory
 # Define alternative set of regions:
 export_covariates$continent_alt <- countrycode(export_covariates$iso3c, "iso3c",
                                                "continent")
+export_covariates$continent_alt <- ifelse(export_covariates$iso3c == 'KSV', 'Europe', export_covariates$continent_alt)
 export_covariates$continent_alt[export_covariates$continent_alt == "Europe"] <- "Europe, United States, Canada, and Oceania"
 export_covariates$continent_alt[export_covariates$iso3c %in% c("USA", "CAN")] <- "Europe, United States, Canada, and Oceania"
 export_covariates$continent_alt[export_covariates$continent_alt == "Oceania"] <- "Europe, United States, Canada, and Oceania"
@@ -875,6 +879,7 @@ write_csv(region_export, "output-data/output-by-alternative-regions/export_regio
 
 ### Custom groupings for interactive (EU, Lat. Am, and North America and Oceania without being combined with Asia):
 export_covariates$custom_regions <- countrycode(export_covariates$iso3c, "iso3c", "continent")
+export_covariates$custom_regions <- ifelse(export_covariates$iso3c == 'KSV', 'Europe', export_covariates$custom_regions)
 export_covariates$custom_regions[export_covariates$iso3c %in% c("USA", "CAN")] <- "North America"
 export_covariates$custom_regions[export_covariates$custom_regions == "Americas"] <- "Latin America and Caribbean"
 export_covariates$custom_regions[export_covariates$iso3c %in% c("AUT", "BEL", "BGR", "HRV", "CYP", "CZE", "DNK", "EST", "FIN", "FRA", "DEU", "GRC", "HUN", "IRL", "ITA", "LVA", "LTU", "LUX", "MLT", "NLD", "POL", "PRT", "ROU", "SVK", "SVN", "ESP", "SWE")] <- "European Union"
@@ -1004,6 +1009,7 @@ gc() # Free up memory
 # Here, we use the "countrycode" package to place countries (defined by iso3c) into groups based on the continents they below to. 
 export_covariates$continent_alt <- countrycode(export_covariates$iso3c, "iso3c",
                                                "continent")
+export_covariates$continent_alt <- ifelse(export_covariates$iso3c == 'KSV', 'Europe', export_covariates$continent_alt)
 
 # Then manually specify the United States and Canada as a separate group
 export_covariates$continent_alt[export_covariates$iso3c %in% c("USA", "CAN")] <- "US and Canada"
@@ -1174,7 +1180,8 @@ sum(oecd$cumulative_estimated_daily_excess_deaths)/sum(oecd$cumulative_daily_cov
 
 ### Sub-Saharan Africa statistic (central estimate excess deaths vs official covid deaths):
 export_covariates$region <- countrycode(export_covariates$iso3c, "iso3c", "region")
-export_covariates$region[is.na(export_covariates$region)] <- "SHN"
+export_covariates$region <- ifelse(export_covariates$iso3c == 'KSV', 'Europe', export_covariates$region)
+export_covariates$region <- ifelse(export_covariates$iso3c == "SHN", 'Sub-Saharan Africa', export_covariates$region) 
 ssa_region_export <- confidence_intervals(new_col_names = "estimated_daily_excess_deaths",
                                           group = "region",
                                           time = "date",

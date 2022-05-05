@@ -1180,11 +1180,9 @@ country_daily_excess_deaths$continent[country_daily_excess_deaths$iso3c == "KSV"
 country_daily_excess_deaths$region <- countrycode(unlist(substr(country_daily_excess_deaths$iso3c, 1, 3)), "iso3c", "region")
 country_daily_excess_deaths$region[country_daily_excess_deaths$iso3c == "SHN"] <- "Europe & Central Asia" # fix for Saint Helena
 country_daily_excess_deaths$region[country_daily_excess_deaths$iso3c == "KSV"] <- "Europe & Central Asia" # fix for Kosovo
-country_daily_excess_deaths$region[country_daily_excess_deaths$iso3c == "ESH"] <- "Middle East & North Africa" # fix for Western Sahara
-country_daily_excess_deaths$region[country_daily_excess_deaths$iso3c == "WLF"] <- "East Asia & Pacific" # fix for Wallis and Futuna
 
 # Sub-region variable (fix for Kosovo)
-country_daily_excess_deaths$region[country_daily_excess_deaths$iso3c == "KSV"] <- "Southern Europe" # fix for Kosovo
+country_daily_excess_deaths$subregion[country_daily_excess_deaths$iso3c == "KSV"] <- "Southern Europe" # fix for Kosovo
 
 # 1. Define region-average function:
 region_average <- function(variable = country_daily_excess_deaths$daily_total_deaths_per_100k,
@@ -1348,7 +1346,8 @@ dist_dy <- rbind(dist_dy, temp)
 dist_dy$subregion <- countrycode(dist_dy$iso_d, "iso3c", "un.regionsub.name")
 dist_dy$subregion[dist_dy$iso_d == "TWN"] <- "Eastern Asia"
 dist_dy$subregion[dist_dy$iso_d == "KSV"] <- "Southern Europe"
-
+dist_dy$subregion[dist_dy$iso_d == "ANT"] <- "Latin America and the Caribbean"
+dist_dy <- dist_dy[!dist_dy$iso_d == 'PAL', ] 
 
 # 2. define function to get average of neighbouring countries (within region):
 contig_ave <- function(var = region_average_vars[1],
