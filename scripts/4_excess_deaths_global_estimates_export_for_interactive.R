@@ -51,6 +51,7 @@ main_map_covid_data <- country_daily_data %>%
          iso3c = iso_code,
          daily_covid_deaths_per_100k = (new_deaths_smoothed / population) * 100000,
          cumulative_covid_deaths_per_100k = (total_deaths / population) * 100000) %>%
+  mutate(iso3c = ifelse(location == 'Kosovo', 'KSV', iso3c)) %>%
   filter(date == max(date)) %>% # Select most recent date
   dplyr::select(iso3c,daily_covid_deaths_per_100k,cumulative_covid_deaths_per_100k)
 
@@ -134,6 +135,7 @@ covid_data_long <- rbind(country_daily_data[country_daily_data$location != "Nort
          daily_covid_deaths_per_100k = (new_deaths_smoothed / population) * 100000,
          cumulative_covid_deaths = total_deaths,
          cumulative_covid_deaths_per_100k = (total_deaths / population) * 100000) %>%
+  mutate(iso3c = ifelse(location == 'Kosovo', 'KSV', iso3c)) %>%
   dplyr::select(iso3c,
                 location,
                 date,
@@ -635,6 +637,7 @@ write_csv(second_map,
 table_B <- read_csv("output-data/output-for-interactive/table_A.csv", show_col_types = F)
 table_B$iso3c <- countrycode(table_B$location, "country.name", "iso3c", warn = F)
 table_B$iso3c[table_B$location == "Micronesia"] <- "FSM"
+table_B$iso3c[table_B$location == "Kosovo"] <- "KSV"
 
 # Load data from map 2:
 second_map_data <- read_csv("output-data/output-for-interactive/second_map.csv", show_col_types = F)
@@ -729,6 +732,7 @@ write_csv(hist,
 infections <-
   read_csv("output-data/output-for-interactive/by_location.csv", show_col_types = F)
 infections$iso3c <- countrycode(infections$location, "country.name", "iso3c", warn = F)
+infections$iso3c <- ifelse(infections$location == 'Kosovo', 'KSV', infections$iso3c)
 infections <- infections[!is.na(infections$iso3c), ]
 
 # Load estimated demography-adjusted IFR by iso3c:
@@ -777,6 +781,7 @@ if(inspect){
 infections <-
   read_csv("output-data/output-for-interactive/by_location_cumulative.csv", show_col_types = F)
 infections$iso3c <- countrycode(infections$location, "country.name", "iso3c", warn = F)
+infections$iso3c <- ifelse(infections$location == 'Kosovo', 'KSV', infections$iso3c)
 infections <- infections[!is.na(infections$iso3c), ]
 
 # Load estimated demography-adjusted IFR by iso3c:
