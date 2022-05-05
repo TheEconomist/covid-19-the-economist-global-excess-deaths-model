@@ -1174,7 +1174,7 @@ library(countrycode)
 
 # Continent variable
 country_daily_excess_deaths$continent <- countrycode(unlist(substr(country_daily_excess_deaths$iso3c, 1, 3)), "iso3c", "continent")
-country_daily_excess_deaths$continent[country_daily_excess_deaths$iso3c == "KSV"] <- "Europe" # fix for Saint Helena
+country_daily_excess_deaths$continent[country_daily_excess_deaths$iso3c == "KSV"] <- "Europe" # fix for Kosovo
 
 # Region variable
 country_daily_excess_deaths$region <- countrycode(unlist(substr(country_daily_excess_deaths$iso3c, 1, 3)), "iso3c", "region")
