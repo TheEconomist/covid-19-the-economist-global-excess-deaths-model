@@ -37,8 +37,8 @@ To replicate the model and export estimated excess deaths for a locality, please
 ## Interpreting estimates
 Estimating excess deaths for every country every day since the pandemic began is a complex and difficult task. Rather than being overly confident in a single number, limited data means that we can often only give a very very wide range of plausible values. Focusing on central estimates in such cases would be misleading: unless ranges are very narrow, the 95% range should be reported when possible. Please see [our tracker page](https://www.economist.com/graphic-detail/coronavirus-excess-deaths-estimates) and [methodology](https://www.economist.com/graphic-detail/2021/05/13/how-we-estimated-the-true-death-toll-of-the-pandemic) for more information.
 
-## Omicron and new variants
-The Omicron variant, first detected in southern Africa in November 2021, appears to have characteristics that are different to earlier versions of sars-cov-2. Where this variant is now dominant, this change makes estimates uncertain beyond the ranges indicated. Should Omicron cause less severe disease, as some studies suggest, estimates for recent dates may be revised downwards once more data become available. Estimates are updated every day, incorporating total mortality data when available. As more data on Omicron is incorporated by the models via new training runs, predictions will also improve. 
+## New variants
+The Omicron variant, first detected in southern Africa in November 2021, appears to have characteristics that are different to earlier versions of sars-cov-2. Where this variant is now dominant, this change makes estimates uncertain beyond the ranges indicated. Other new variants may do the same. As more data is incorporated from places where new variants are dominant, predictions improve. 
 
 ## Acknowledgements
 
