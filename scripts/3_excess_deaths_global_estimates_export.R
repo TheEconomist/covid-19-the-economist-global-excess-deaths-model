@@ -26,6 +26,10 @@ export_covariates <- readRDS("output-data/export_covariates.RDS")
 pred_matrix <- pred_matrix[nchar(export_covariates$iso3c) == 3, ]
 export_covariates <- export_covariates[nchar(export_covariates$iso3c) == 3, ]
 
+# Temporarily remove DPRK, as it now issues contradictory data (zero confirmed covid-19 cases/deaths to the WHO, but reporting a significant outbreak in national news)
+pred_matrix <- pred_matrix[export_covariates$iso3c != "PRK", ]
+export_covariates <- export_covariates[export_covariates$iso3c != "PRK", ]
+
 # Convert model predictions from per 100k population to absolute numbers
 pred_matrix <- pred_matrix*export_covariates$population / 100000
 
