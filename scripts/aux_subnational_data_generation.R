@@ -18,7 +18,7 @@ lmort <- data.frame(read_csv("source-data/local_mortality.csv"))
 # Get country iso3c code
 lmort$iso3c <- countrycode(lmort$country_name, "country.name", "iso3c")
 
-# Keep only units with at least 3 years of pre 2020 data:
+# Keep only units with at least 4 years of data:
 lmort$years_of_observations <- ave(lmort$year, lmort$local_unit_name, FUN = function(x) length(unique(x)))
 lmort <- lmort[lmort$years_of_observations >= 4, ]
 
@@ -383,7 +383,7 @@ dat$population_density[dat$local_unit_name == "Mumbai City"] <- 21000
 dat$population_density[dat$local_unit_name == "Andhra Pradesh State"] <- 308
 dat$population_density[dat$local_unit_name == "Madhya Pradesh State"] <- 240
 
-setdiff(colnames(country_daily_excess_deaths)[1:93], colnames(dat))
+# setdiff(colnames(country_daily_excess_deaths)[1:93], colnames(dat))
 
 # Fix for NA testing data
 dat$daily_positive_rate[dat$daily_positive_rate > 100] <- NA
