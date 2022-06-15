@@ -251,10 +251,12 @@ pre_updated_world_total <- pre_updated_world_total[order(pre_updated_world_total
 cat('\n\n Generate main exports.\n\n')
 update_export_1 <- function(){source("scripts/3_excess_deaths_global_estimates_export.R", local = TRUE)}
 update_export_1()
+gc()
 
 cat('\n\n Generate exports for interactive.\n\n')
 update_export_2 <- function(){source("scripts/4_excess_deaths_global_estimates_export_for_interactive.R", local = TRUE)}
 update_export_2()
+gc()
 cat('\n\n Exports completed, testing before push.\n\n')
 
 # Compare pre and post-update world total:
