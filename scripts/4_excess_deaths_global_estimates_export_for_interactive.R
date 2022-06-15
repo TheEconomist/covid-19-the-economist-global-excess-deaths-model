@@ -162,6 +162,8 @@ covid_data_long <- rbind(country_daily_data[country_daily_data$location != "Nort
                 official_covid_data_type = name,
                 official_covid_deaths = value)
 rm(country_daily_data)
+rm(lat_am)
+rm(north_am)
 
 # Add correspondence to facilitate later merging:
 covid_data_long$merge_column <- NA  
