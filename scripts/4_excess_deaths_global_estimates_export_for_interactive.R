@@ -289,6 +289,10 @@ export_long <- rbind(world_long,
                      region_long,
                      region_alt,
                      country_long)
+rm(world_long)
+rm(region_long)
+rm(region_alt)
+
 export_long$daily_covid_deaths <- NULL # Remove this, as we are getting this data in the next step
 
 # 8. Merge with official covid data
