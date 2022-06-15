@@ -1,4 +1,5 @@
 # Step 1: import libraries ------------------------------------------------------------------------------
+cat('\n Step 1: import libraries')
 
 # This script constructs custom data frames to populate the The Economist's interactive presentation of this estimates
 
@@ -13,6 +14,7 @@ options(scipen=999)
 inspect <- F
 
 # Step 2: import official covid-19 data from Our World in Data ------------------------------------------------------------------------------
+cat('\n Step 2: import official covid-19 data')
 
 ## A. Import official covid data from Our World In Data
 country_daily_data <- fread("https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/owid-covid-data.csv") 
@@ -41,6 +43,8 @@ country_daily_data$new_deaths_smoothed <- ave(country_daily_data$new_deaths, cou
 })
 
 # Step 3: Generate data for main map ------------------------------------------------------------------------------
+cat('\n Step 3: Generate data for main map')
+
 # Import data:
 daily <- read_csv("output-data/export_country_per_100k.csv", show_col_types = F)
 cumulative <- read_csv("output-data/export_country_per_100k_cumulative.csv", show_col_types = F)
@@ -67,6 +71,7 @@ main_map <- merge(main_map, main_map_covid_data, all.x=T)
 write_csv(main_map, "output-data/output-for-interactive/main_map.csv")
 
 # Step 4: World, country or region by day (data generation) ------------------------------------------------------------------------------
+cat('\n Step 4: World, country or region by day (data generation)')
 
 # Get official covid data in long format:
 # 1. Generate custom regions not in Our World in Data: North America and Latin America
@@ -401,7 +406,8 @@ for(i in c("estimate", "estimate_top_95", "estimate_top_90", "estimate_top_50", 
 # 11. Sort by date
 export_long <- export_long[order(export_long$date), ]
 
-# Step 6: Write line charts to files (and world cumulative for most recent date) ------------------------------------------------------------------------------
+# Step 5: Write line charts to files (and world cumulative for most recent date) ------------------------------------------------------------------------------
+cat('\n Step 5: Write line charts to files (and world cumulative for most recent date)')
 
 # Select columns to include:
 columns_to_include <- c("location", "date", "type", "estimate", 
@@ -505,6 +511,7 @@ if(nrow(na.omit(world_top_line_chart)) != 1){
 write_csv(world_top_line_chart, "output-data/output-for-interactive/world_most_recent_cumulative_deaths.csv")
 
 # Step 6: Generate data for table A ------------------------------------------------------------------------------
+cat('\n Step 6: Generate data for table A')
 
 # We here rely on "export_long" created above.
 
@@ -573,6 +580,8 @@ table_A$estimate_bot_95_absolute[abs(table_A$estimate_bot_95_absolute) < 1] <- f
 write_csv(table_A, "output-data/output-for-interactive/table_A.csv")
 
 # Step 7: Generate data for second map ------------------------------------------------------------------------------
+cat('\n Step 7: Generate data for second map')
+
 # Load data:
 second_map <-
   read_csv("output-data/output-for-interactive/main_map.csv", show_col_types = F)[, c(
@@ -633,6 +642,8 @@ write_csv(second_map,
           "output-data/output-for-interactive/second_map.csv")
 
 # Step 8: Generate data for table B ------------------------------------------------------------------------------
+cat('\n Step 8: Generate data for table B')
+
 # Load data from table 1:
 table_B <- read_csv("output-data/output-for-interactive/table_A.csv", show_col_types = F)
 table_B$iso3c <- countrycode(table_B$location, "country.name", "iso3c", warn = F)
@@ -673,6 +684,8 @@ write_csv(table_B[, c("location",
 
 # Extra exports:  ------------------------------------------------------------------------------
 # Step 9: Histogram data ------------------------------------------------------------------------------
+cat('\n Step 9: Histogram data')
+
 # This is exported in case people want more information on the distribution of predictions at the world cumulative level for the present day.
 
 # Load raw histogram data
@@ -728,6 +741,7 @@ write_csv(hist,
 
 
 # Step 10: Implied infections over time ------------------------------------------------------------------------------
+cat('\n Step 10: Implied infections over time')
 # Load data:
 infections <-
   read_csv("output-data/output-for-interactive/by_location.csv", show_col_types = F)
@@ -835,6 +849,7 @@ if(inspect){
 ggplot(infections, aes(x=date, y=world_total))+geom_ribbon(aes(ymin=world_total_bot_95, ymax =world_total_top_95, xmin = date, xmax = date), fill = "lightgray")+geom_line()+theme_minimal()
 }
 # Final step: Add timestamp ------------------------------------------------------------------------------
+cat('\n Final step: Add timestamp')
 
 # Add timestamp:
 tibble(timestamp = now(tzone = "UTC")) %>% 
