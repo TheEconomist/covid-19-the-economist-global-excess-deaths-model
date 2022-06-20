@@ -311,6 +311,7 @@ export_long$daily_covid_deaths <- NULL # Remove this, as we are getting this dat
 # 8. Merge with official covid data
 cat('\n - Step 4.8')
 
+covid_data_long <- covid_data_long[covid_data_long$date %in% export_long$date & covid_data_long$location %in% export_long$location, ]
 export_long <- merge(export_long,
                      covid_data_long[ , setdiff(colnames(covid_data_long), "iso3c")], 
                      by.x=c("type", "location", "date"),
