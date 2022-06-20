@@ -74,6 +74,7 @@ write_csv(main_map, "output-data/output-for-interactive/main_map.csv")
 cat('\n Step 4: World, country or region by day (data generation)')
 
 # Get official covid data in long format:
+cat('\n - Step 4.1')
 # 1. Generate custom regions not in Our World in Data: North America and Latin America
 lat_am <- data.frame(country_daily_data[country_daily_data$continent %in% 
                                           c("North America", "South America") &
@@ -173,6 +174,8 @@ covid_data_long$merge_column[covid_data_long$official_covid_data_type == "cumula
 covid_data_long$merge_column[covid_data_long$official_covid_data_type == "cumulative_covid_deaths_per_100k"] <- "daily_excess_deaths_per_100k_cumulative"  
 
 # 2. Define function to get model estimates in "long" format:
+cat('\n - Step 4.2')
+
 long_exp_df <- function(files = c("output-data/export_world.csv",
                                   "output-data/export_world_per_100k.csv",
                                   "output-data/export_world_cumulative.csv",
@@ -217,6 +220,8 @@ long_exp_df <- function(files = c("output-data/export_world.csv",
 }
 
 # 3. Load world estimates
+cat('\n - Step 4.3')
+
 world_long <- long_exp_df(files = c("output-data/export_world.csv",
                                     "output-data/export_world_per_100k.csv",
                                     "output-data/export_world_cumulative.csv",
@@ -227,6 +232,8 @@ world_long <- long_exp_df(files = c("output-data/export_world.csv",
                                     "daily_excess_deaths_per_100k_cumulative"))
 
 # 4. Load region estimates
+cat('\n - Step 4.4')
+
 region_long <- long_exp_df(files = c("output-data/export_regions.csv",
                                      "output-data/export_regions_per_100k.csv",
                                      "output-data/export_regions_cumulative.csv",
@@ -255,6 +262,8 @@ region_alt <- long_exp_df(files = c("output-data/output-by-alternative-regions/e
 
 
 # 5. Load country estimates
+cat('\n - Step 4.5')
+
 country_long <- long_exp_df(files = c("output-data/export_country.csv",
                                       "output-data/export_country_per_100k.csv",
                                       "output-data/export_country_cumulative.csv",
@@ -278,6 +287,8 @@ country_long <- long_exp_df(files = c("output-data/export_country.csv",
                                           "daily_covid_deaths"))
 
 # 6. Harmonize location names
+cat('\n - Step 4.6')
+
 country_long <- merge(country_long, unique(covid_data_long[, c("location", "iso3c")]),
                       by="iso3c", all.x = T)
 region_long$iso3c <- NA
@@ -285,6 +296,8 @@ region_alt$iso3c <- NA
 world_long$iso3c <- NA
 
 # 7. Bind all of these together
+cat('\n - Step 4.7')
+
 export_long <- rbind(world_long, 
                      region_long,
                      region_alt,
@@ -296,6 +309,8 @@ rm(region_alt)
 export_long$daily_covid_deaths <- NULL # Remove this, as we are getting this data in the next step
 
 # 8. Merge with official covid data
+cat('\n - Step 4.8')
+
 export_long <- merge(export_long,
                      covid_data_long[ , setdiff(colnames(covid_data_long), "iso3c")], 
                      by.x=c("type", "location", "date"),
@@ -304,6 +319,7 @@ export_long <- merge(export_long,
                                           all.x = T)
 
 # 9. Make names follow The Economist standard:
+cat('\n - Step 4.9')
 econ_names <- read_csv("source-data/economist_country_names.csv", show_col_types = F) %>%
   rename(
     econ_name = Name,
@@ -405,11 +421,13 @@ if(inspect){
 }
 
 # 10. Round location files to 2 digits for interactive
+cat('\n - Step 4.10')
 for(i in c("estimate", "estimate_top_95", "estimate_top_90", "estimate_top_50", "estimate_bot_50", "estimate_bot_90", "estimate_bot_95", "raw_estimate", "recorded", "official_covid_deaths")){
   export_long[, i] <- round(export_long[, i], 3)
 }
 
 # 11. Sort by date
+cat('\n - Step 4.11')
 export_long <- export_long[order(export_long$date), ]
 
 # Step 5: Write line charts to files (and world cumulative for most recent date) ------------------------------------------------------------------------------
