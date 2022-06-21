@@ -320,7 +320,7 @@ export_long <- merge(export_long,
                                           all.x = T)
 
 # 9. Make names follow The Economist standard:
-cat('\n - Step 4.9')
+cat('\n - Step 4.9 a')
 econ_names <- read_csv("source-data/economist_country_names.csv", show_col_types = F) %>%
   rename(
     econ_name = Name,
@@ -333,14 +333,17 @@ econ_names <- read_csv("source-data/economist_country_names.csv", show_col_types
     economist_region
   ) %>% unique()
 
-
-export_long <- merge(export_long, econ_names[!is.na(econ_names$iso3c), ],
+econ_names <- econ_names[!is.na(econ_names$iso3c) & econ_names$iso3c %in% export_long$iso3c, ]
+econ_names <- econ_names[!duplicated(econ_names$iso3c), ]
+                       
+export_long <- merge(export_long, econ_names[, ],
                      by = "iso3c", all.x = T)
 
 export_long$location[!is.na(export_long$econ_name)] <- export_long$econ_name[!is.na(export_long$econ_name)]
 export_long$econ_name <- NULL
 
 # Construct "is recorded" dummy variable:
+cat('\n - Step 4.9 b')
 
 export_long$known_excess_deaths <- FALSE
 export_long$known_excess_deaths[!is.na(export_long$recorded)] <- TRUE
