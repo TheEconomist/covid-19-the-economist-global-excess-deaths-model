@@ -1,4 +1,5 @@
 # Step 1: import libraries ------------------------------------------------------------------------------
+cat('Step 1: import libraries')
 
 # Note: This script by default gives data at the country level, region level, and world level. To supply custom groupings, see "Step 5" below.
 
@@ -15,6 +16,7 @@ options(scipen=999)
 inspect = FALSE
 
 # Step 2: Load predictions and covariates ------------------------------------------------------------------------------
+cat('Step 2: Load predictions and covariates')
 
 # Load all model prediction + 200 bootstrap
 pred_matrix <- readRDS("output-data/pred_matrix.RDS")
@@ -68,6 +70,7 @@ export_covariates$continent <- countrycode(export_covariates$iso3c, "iso3c", "co
 export_covariates$continent <- ifelse(export_covariates$iso3c == 'KSV', 'Europe', export_covariates$continent)
 
 # Step 3: Define function to construct confidence interval given grouping ------------------------------------------------------------------------------
+cat('Step 3: Define function to construct confidence interval given grouping')
 confidence_intervals <- function(new_col_names = "estimated_daily_excess_deaths",
                                  group = "iso3c",
                                  unit = "iso3c",
@@ -298,7 +301,8 @@ confidence_intervals <- function(new_col_names = "estimated_daily_excess_deaths"
 
 gc() # Free up memory
 # Step 4: Construct data frames used for graphics (both per 100k and absolute terms), per day ------------------------------------------------------------------------------
-
+cat('Step 4: Construct data frames used for graphics (both per 100k and absolute terms), per day')
+                             
 # Export 1: Country-week level, absolute units
 country_export <- confidence_intervals(new_col_names = "estimated_daily_excess_deaths",
                                        group = "iso3c", 
@@ -551,8 +555,9 @@ write_csv(world_export, "output-data/export_world_per_100k.csv")
 
 
 gc() # Free up memory
-# Step 4: Construct data frames used for graphics (both per 100k and absolute terms), cumulative ------------------------------------------------------------------------------
-
+# Step 5: Construct data frames used for graphics (both per 100k and absolute terms), cumulative ------------------------------------------------------------------------------
+cat('Step 5: Construct data frames used for graphics (both per 100k and absolute terms), cumulative')
+                             
 # Export 1: Country-week level, absolute units
 country_export <- confidence_intervals(new_col_names = "estimated_daily_excess_deaths",
                                        group = "iso3c", 
@@ -841,7 +846,8 @@ if(inspect){
 # write_csv(world_export, "output-data/export_world_cumulative_with_alternative_excess_deaths.csv")
 
 gc() # Free up memory
-# Step 5: Construct custom exports used as inputs for interactive export scripts: ------------------------------------------------------------------------------
+# Step 6: Construct custom exports used as inputs for interactive export scripts: ------------------------------------------------------------------------------
+cat('Step 6: Construct custom exports used as inputs for interactive export scripts')
 
 # Define alternative set of regions:
 export_covariates$continent_alt <- countrycode(export_covariates$iso3c, "iso3c",
@@ -1005,7 +1011,8 @@ write_csv(export, "output-data/output-by-alternative-regions/export_regions_lat_
 
 
 gc() # Free up memory
-# Step 6: Construct custom data frames based on alternative groupings or subsets of the data ------------------------------------------------------------------------------
+# Step 7: Construct custom data frames based on alternative groupings or subsets of the data ------------------------------------------------------------------------------
+cat('Step 7: Construct custom data frames based on alternative groupings or subsets of the data')
 # This script supports export of any grouping. 
 
 # To get statistics for a given group, do the following
