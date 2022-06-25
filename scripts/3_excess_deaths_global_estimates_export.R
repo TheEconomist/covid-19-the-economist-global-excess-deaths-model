@@ -1042,6 +1042,10 @@ export_covariates$continent_alt[export_covariates$iso3c %in% c("USA", "CAN")] <-
 export_covariates$continent_alt[export_covariates$continent_alt == "Americas"] <- "Latin America and Caribbean"
 
 # We then use our export function to export summary statistics for these groups:
+rm(region_export)
+
+extra_exports <- F # Set this to true to generate these exports:
+if(extra_exports){
 region_export <- confidence_intervals(new_col_names = "estimated_daily_excess_deaths",
                                       group = "continent_alt", 
                                       time = "date",
@@ -1168,7 +1172,8 @@ country_export <- confidence_intervals(new_col_names = "estimated_daily_excess_d
 
 # Write to file if desired
 # write_csv(country_export[country_export$iso3c %in% c("EGY"), ], "output-data/Egypt_Example_plot.csv")
-
+}
+                             
 # Inspect:
 if(inspect){
   ggplot(country_export[country_export$iso3c %in% c("EGY"), ], 
@@ -1288,7 +1293,7 @@ if(inspect){
 
 # write to file:
 write_csv(wb_export, "output-data/output-by-world-bank-income-group/wb_income_groups_per_100k.csv")
-
+rm(wb_export)
 
 # Absolute, cumulative
 wb_export <- confidence_intervals(new_col_names = "estimated_daily_excess_deaths",
@@ -1343,7 +1348,7 @@ if(inspect){
 
 # write to file:
 write_csv(wb_export, "output-data/output-by-world-bank-income-group/wb_income_groups_per_100k_cumulative.csv")
-
+rm(wb_export)
 rm(wb_export_covariates)
 
 # Western Europe, North America, Australia, and New Zealand
@@ -1378,7 +1383,8 @@ if(inspect){
 }
 
 write_csv(region_export[region_export$continent_alt != "Other", ], "output-data/output-by-alternative-regions/export_regions_w_europe_aus_nz_north_america.csv")
-
+rm(region_export)
+                             
 # Western Europe
 # Here, we use the "countrycode" package to place countries (defined by iso3c) into groups based on the continents they below to. 
 export_covariates$continent_alt <- "Other"
@@ -1413,8 +1419,11 @@ if(inspect){
 
 # Write to file if desired
 write_csv(region_export[region_export$continent_alt != "Other", ], "output-data/output-by-alternative-regions/export_regions_western_europe.csv")
+rm(region_export)
 
 ### Short aux function to export for a custom region:
+cat('- Generate output by WHO, UN and World Bank regions\n')
+
 custom_region_export <- function(
   region, 
   name = "un_subregion", 
@@ -1498,6 +1507,7 @@ for(i in 1:nrow(who_groupings)){
 custom_region_export(region = "WHO_region",
                      name = "WHO_region")
 
+                             
 if(inspect){
   folder_prefix = "output-data/output-by-alternative-regions/export_regions_"
   for(name in c("un_subregion", "wb_region", 'WHO_region')){
