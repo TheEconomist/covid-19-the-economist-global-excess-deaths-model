@@ -305,7 +305,9 @@ export_long <- rbind(world_long,
 rm(world_long)
 rm(region_long)
 rm(region_alt)
-
+country_long_iso3c <- unique(country_long$iso3c)
+rm(country_long)
+                       
 export_long$daily_covid_deaths <- NULL # Remove this, as we are getting this data in the next step
 
 # 8. Merge with official covid data
@@ -341,7 +343,8 @@ export_long <- merge(export_long, econ_names[, ],
 
 export_long$location[!is.na(export_long$econ_name)] <- export_long$econ_name[!is.na(export_long$econ_name)]
 export_long$econ_name <- NULL
-
+rm(econ_names)
+                       
 # Construct "is recorded" dummy variable:
 cat('\n - Step 4.9 b')
 
@@ -350,7 +353,7 @@ export_long$known_excess_deaths[!is.na(export_long$recorded)] <- TRUE
 export_long$known_excess_deaths[export_long$type %in% c("daily_excess_deaths_cumulative", "daily_excess_deaths_per_100k_cumulative")] <- FALSE
 
 # No region reports excess deaths directly:
-export_long$known_excess_deaths[!export_long$iso3c %in% country_long$iso3c] <- FALSE
+export_long$known_excess_deaths[!export_long$iso3c %in% country_long_iso3c] <- FALSE
 
 # The EU reports it for all countries for some dates:
 # This cycles through all dates, checks if all EU countries have reported excess deaths, and if so, sets known_excess_deaths for the EU to "TRUE":
