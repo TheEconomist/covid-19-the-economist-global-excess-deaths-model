@@ -191,6 +191,7 @@ for(i in load_predictions_model_set){
   cat(paste("\nCompleted:", counter, "at : ", Sys.time(), "\n\n"))
   gc()
 }
+rm(X)
 
 # Re-import base libraries post-loop
 library(ggplot2)
@@ -239,7 +240,6 @@ rm(covars_for_export)
 rm(covars_for_export_latest)
 rm(pred_matrix)
 rm(dat)
-rm(X)
 gc()
 
 # Get pre-update cumulative world total:
