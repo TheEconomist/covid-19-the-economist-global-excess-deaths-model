@@ -723,12 +723,18 @@ world_export <- confidence_intervals(new_col_names = "estimated_daily_excess_dea
                                      known_data_column = "daily_excess_deaths",
                                      model_prediction = estimate,
                                      include_model_prediction_in_ci = F)
+# Write to file:
+write_csv(world_export, "output-data/export_world_cumulative.csv")
 
 # Inspect and update github repo plot:
- p <- ggplot(world_export, 
+world_export <- unique(world_export[, c("date", "cumulative_estimated_daily_excess_deaths", 
+                                        "cumulative_daily_covid_deaths",
+                                        "cumulative_estimated_daily_excess_deaths_ci_95_bot",
+                                        "cumulative_estimated_daily_excess_deaths_ci_95_top")])                            
+ggplot(world_export, 
          aes(x=date, 
              y=cumulative_estimated_daily_excess_deaths,
-             col = world))+
+             col = "world"))+
     geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_95_top))+
 #    geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_90_top))+
 #    geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_90_bot))+
@@ -739,12 +745,10 @@ world_export <- confidence_intervals(new_col_names = "estimated_daily_excess_dea
                 fill = 'darkred', alpha=0.3)+
     geom_line(col="black", linetype = "dashed")+theme_minimal()+
     theme(legend.position = "none")+xlab("Estimated excess deaths (red), confirmed covid-19 deaths (blue)")+ylab("Total deaths, World")
-ggsave(filename = 'global_mortality.png', plot = p, width = 8, height = 5)
-rm(p)
+ggsave(filename = 'global_mortality.png', width = 6, height = 4)
                              
-# Write to file:
-write_csv(world_export, "output-data/export_world_cumulative.csv")
 rm(world_export)
+cat('- Export of updated github chart complete.')
 
 # Export equivalent histagram data: 
 export_covariates$world <- "World"
