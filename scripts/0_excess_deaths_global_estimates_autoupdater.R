@@ -307,8 +307,8 @@ generate_model_loop(
 )
 cat('\n\n One of 210 models successfully re-trained.\n\n')
 
-# If desired, uncomment below to force additional update of main estimate models:
-recently_updated_models <- setdiff(recently_updated_models, 1:10)
+# If desired, uncomment line below to force additional update of main estimate models:
+# recently_updated_models <- setdiff(recently_updated_models, 1:10)
 
 # Save list of updated models, resetting to null if all updated:
 if(length(recently_updated_models) < B+main_estimate_models){
