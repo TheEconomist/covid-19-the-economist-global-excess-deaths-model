@@ -16,7 +16,7 @@ options(scipen=999)
 inspect = FALSE
 
 # Step 2: Load predictions and covariates ------------------------------------------------------------------------------
-cat('Step 2: Load predictions and covariates')
+cat('Step 2: Load predictions and covariates\n')
 
 # Load all model prediction + 200 bootstrap
 pred_matrix <- readRDS("output-data/pred_matrix.RDS")
@@ -244,6 +244,8 @@ confidence_intervals <- function(new_col_names = "estimated_daily_excess_deaths"
   ci_50_bot <- bootstrap_predictions[, round(ncol(bootstrap_predictions)*0.25, 0)]
   ci_90_bot <- bootstrap_predictions[, round(ncol(bootstrap_predictions)*0.05, 0)]
   ci_95_bot <- bootstrap_predictions[, round(ncol(bootstrap_predictions)*0.025, 0)]
+  rm(bootstrap_predictions)
+  gc()
   
   # Ensure model prediction (i.e. raw estimate) within confidence interval if requested
   if(include_model_prediction_in_ci){
@@ -263,8 +265,10 @@ confidence_intervals <- function(new_col_names = "estimated_daily_excess_deaths"
     ci_95_bot <- ifelse(ci_95_bot < estimate, ci_95_bot, estimate)
   }
   
+  covars <- covars[, c(group, time, population)]
+  
   # Return result neatly formatted
-  result <- cbind.data.frame(covars[, c(group, time, population)], 
+  result <- cbind.data.frame(covars, 
                              estimate, 
                              ci_95_top,
                              ci_90_top,
@@ -275,7 +279,7 @@ confidence_intervals <- function(new_col_names = "estimated_daily_excess_deaths"
                              raw_estimate,
                              known_data,
                              recorded_data)
-  colnames(result) <- c(colnames(covars[, c(group, time, population)]),
+  colnames(result) <- c(colnames(covars),
                         paste0(new_col_names),
                         paste0(new_col_names, "_ci_95_top"),
                         paste0(new_col_names, "_ci_90_top"),
@@ -748,7 +752,7 @@ ggplot(world_export,
 ggsave(filename = 'global_mortality.png', width = 6, height = 4)
                              
 rm(world_export)
-cat('- Export of updated github chart complete.')
+cat('- Export of updated github chart complete.\n')
 
 # Export equivalent histagram data: 
 export_covariates$world <- "World"
