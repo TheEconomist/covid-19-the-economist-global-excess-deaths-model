@@ -53,7 +53,7 @@ estimate <- as.numeric(pred_matrix[, 1])
 # Harmonize country names with The Economist standard, maintaining row order
 export_covariates$row_order <- 1:nrow(export_covariates)
 export_covariates <- merge(export_covariates,
-                           read_csv("source-data/economist_country_names.csv")[, c("Name", "ISOA3", "Regions", "Income group WB", "Economy IMF")],
+                           read_csv("source-data/economist_country_names.csv", show_col_types = F)[, c("Name", "ISOA3", "Regions", "Income group WB", "Economy IMF")],
                            by.x = "iso3c",
                            by.y = "ISOA3", all.x = T)
 export_covariates <- export_covariates[order(export_covariates$row_order), ]
@@ -1237,7 +1237,7 @@ sum(ssa_region_export$cumulative_estimated_daily_excess_deaths)/sum(ssa_region_e
 
 ### Results by income groups (added at the request of the World Bank):
 
-income_groups <- read_csv("source-data/world_bank_income_groups.csv")
+income_groups <- read_csv("source-data/world_bank_income_groups.csv", show_col_types = F)
 income_groups <- income_groups[income_groups$GroupCode%in% c("LIC", "LMC", "UMC", "HIC"), c("CountryCode", "GroupName")]
 colnames(income_groups) <- c("iso3c", "World_Bank_income_group")
 
@@ -1504,7 +1504,7 @@ custom_region_export(region = "wb_region",
                      name = "wb_region")
 
 # WHO regions
-who_groupings <- read_csv('source-data/who_groupings.csv')
+who_groupings <- read_csv('source-data/who_groupings.csv', show_col_types = F)
 who_groupings$iso3c <- who_groupings$iso3
 
 export_covariates$WHO_region <- NA
@@ -1519,13 +1519,13 @@ custom_region_export(region = "WHO_region",
 if(inspect){
   folder_prefix = "output-data/output-by-alternative-regions/export_regions_"
   for(name in c("un_subregion", "wb_region", 'WHO_region')){
-    pdat <- read_csv(paste0(folder_prefix, name, ".csv"))
+    pdat <- read_csv(paste0(folder_prefix, name, ".csv"), show_col_types = F)
     ggplot(pdat, aes(x=date, y=estimated_daily_excess_deaths))+geom_line()+geom_line(aes(y=estimated_daily_excess_deaths_ci_95_top))+geom_line(aes(y=estimated_daily_excess_deaths_ci_95_bot))+facet_wrap(.~region)
-    pdat <- read_csv(paste0(folder_prefix, name, "_per_100k.csv"))
+    pdat <- read_csv(paste0(folder_prefix, name, "_per_100k.csv"), show_col_types = F)
     ggplot(pdat, aes(x=date, y=estimated_daily_excess_deaths_per_100k))+geom_line(aes(y=estimated_daily_excess_deaths_ci_95_top_per_100k))+geom_line(aes(y=estimated_daily_excess_deaths_ci_95_bot_per_100k))+facet_wrap(.~region)+geom_line()
-    pdat <- read_csv(paste0(folder_prefix, name, "_cumulative.csv"))
+    pdat <- read_csv(paste0(folder_prefix, name, "_cumulative.csv"), show_col_types = F)
     ggplot(pdat, aes(x=date, y=cumulative_estimated_daily_excess_deaths))+geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_95_top))+geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_95_bot))+facet_wrap(.~region)+geom_line()
-    pdat <- read_csv(paste0(folder_prefix, name, "_per_100k_cumulative.csv"))
+    pdat <- read_csv(paste0(folder_prefix, name, "_per_100k_cumulative.csv"), show_col_types = F)
     ggplot(pdat, aes(x=date, y=cumulative_estimated_daily_excess_deaths_per_100k))+geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_95_top_per_100k))+geom_line(aes(y=cumulative_estimated_daily_excess_deaths_ci_95_bot_per_100k))+facet_wrap(.~region)+geom_line()
   }
 }
