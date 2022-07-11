@@ -184,9 +184,8 @@ update_predictions <- function(i){
   rm(gbt_model)
   cat("saving prediction --\n")
   saveRDS(preds, paste0('output-data/model-objects/model-predictions/model_', i , '_prediction.RDS'))
-  rm(preds)
   return(NULL)
-  }
+}
 
 # Loop over bootstrap iterations
 for(i in load_predictions_model_set){
