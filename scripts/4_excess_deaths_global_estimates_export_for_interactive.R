@@ -69,6 +69,11 @@ main_map <- merge(main_map, main_map_covid_data, all.x=T)
 
 # Write to file
 write_csv(main_map, "output-data/output-for-interactive/main_map.csv")
+rm(daily)
+rm(cumulative)
+rm(main_map)
+rm(main_map_covid_data)
+gc()
 
 # Step 4: World, country or region by day (data generation) ------------------------------------------------------------------------------
 cat('\n Step 4: World, country or region by day (data generation)')
@@ -374,6 +379,7 @@ for(i in unique(export_long$location)){
                 export_long$date < min(temp$date[!temp$known_excess_deaths])] <- TRUE
   }
 }
+rm(temp)
 
 # Inspect if desired:
 if(inspect){
