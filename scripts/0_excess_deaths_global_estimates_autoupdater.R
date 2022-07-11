@@ -191,7 +191,7 @@ update_predictions <- function(i){
 # Loop over bootstrap iterations
 for(i in load_predictions_model_set){
   counter <- counter + 1
-  cat(paste("\n\nStarting prediction by model:", counter, "of", ifelse(current_update_run == "A", floor(B/2), B)+main_estimate_models, "at : ", Sys.time(), "\n"))
+  cat(paste("\n\nStarting prediction by model:", counter, "of", ifelse(current_update_run == "A", floor(B/2), B)+main_estimate_models, "at :\n", Sys.time(), "\n"))
   
   # This function updates predictions for iteration i:
   update_predictions(i)
