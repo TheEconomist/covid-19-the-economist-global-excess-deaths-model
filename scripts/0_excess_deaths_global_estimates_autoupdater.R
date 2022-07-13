@@ -170,8 +170,10 @@ if(current_update_run == "A"){
   load_predictions_model_set <- c(1:main_estimate_models, main_estimate_models+(floor(B/2)+1):B)
 }
 
-# Define function to update model predictions:
-update_predictions <- function(i){
+# Loop over bootstrap iterations
+for(i in load_predictions_model_set){
+  counter <- counter + 1
+  cat(paste("\n\nStarting prediction by model:", counter, "of", ifelse(current_update_run == "A", floor(B/2), B)+main_estimate_models, "at :\n", Sys.time(), "\n"))
   
   # Load model object
   cat("\n -- loading model -- ")
@@ -184,17 +186,6 @@ update_predictions <- function(i){
   rm(gbt_model)
   cat("saving prediction --\n")
   saveRDS(preds, paste0('output-data/model-objects/model-predictions/model_', i , '_prediction.RDS'))
-  return(NULL)
-}
-
-# Loop over bootstrap iterations
-for(i in load_predictions_model_set){
-  counter <- counter + 1
-  cat(paste("\n\nStarting prediction by model:", counter, "of", ifelse(current_update_run == "A", floor(B/2), B)+main_estimate_models, "at :\n", Sys.time(), "\n"))
-  
-  # This function updates predictions for iteration i:
-  update_predictions(i)
-  
   cat(paste("\nCompleted:", counter, "at : ", Sys.time(), "\n\n"))
   gc()
 }
