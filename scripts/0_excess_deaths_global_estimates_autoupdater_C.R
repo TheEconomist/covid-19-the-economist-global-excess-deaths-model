@@ -107,4 +107,4 @@ saveRDS(Sys.Date(), 'output-data/model-objects/latest_update.RDS')
 
 end_time <- Sys.time()
 
-print(paste("Total time:", end_time - start_time))
+print(paste("Total time:", end_time - readRDS('output-data/model-objects/start.RDS')))
