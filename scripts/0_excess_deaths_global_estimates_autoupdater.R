@@ -96,6 +96,7 @@ X_latest <- X[X$date %in% max(X$date):(max(X$date)-7), ]
 
 # 2. Loop columns to compute country-week averages (by country-week):
 ids <- paste0(X$iso3c, "_", round(X$date/7, 0))
+saveRDS(ids, 'output-data/model-objects/ids.RDS')
 for(i in setdiff(colnames(X), c("iso3c"))){
   X[, i] <- ave(X[, i], ids, FUN = function(x){mean(x, na.rm = T)})
   X_latest[, i] <- ave(X_latest[, i], X_latest$iso3c, 
@@ -192,7 +193,6 @@ for(i in load_predictions_model_set){
 rm(X)
 
 # Re-import base libraries post-loop
-library(ggplot2)
 library(tidyverse)
 library(data.table)
 
@@ -246,6 +246,7 @@ pre_updated_world_total <- pre_updated_world_total[order(pre_updated_world_total
 
 # Run export script:
 # For memory efficiency, this is also executed within a temporary local environment created by the update_export_1 and update_export_2 functions)
+library(ggplot2)
 cat('\n\n Generate main exports.\n\n')
 update_export_1 <- function(){source("scripts/3_excess_deaths_global_estimates_export.R", local = TRUE)}
 update_export_1()
