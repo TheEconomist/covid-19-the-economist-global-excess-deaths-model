@@ -72,7 +72,17 @@ jobs:
 
       - name: Run R script
         run: |
-          source('scripts/0_excess_deaths_global_estimates_autoupdater.R')
+          source('scripts/0_excess_deaths_global_estimates_autoupdater_A.R')
+        shell: Rscript {0}
+
+      - name: Run R script
+        run: |
+          source('scripts/0_excess_deaths_global_estimates_autoupdater_B.R')
+        shell: Rscript {0}
+
+      - name: Run R script
+        run: |
+          source('scripts/0_excess_deaths_global_estimates_autoupdater_C.R')
         shell: Rscript {0}
 
       - name: Generate minimaps
