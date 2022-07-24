@@ -1,0 +1,56 @@
+# 5. Load models and populate prediction matrix (1/2) --------------------------------------- 
+
+# Create container matrix for predictions
+pred_matrix <- data.frame()
+
+# Load model (= estimate) and bootstrap predictions 
+
+# Load list of model predictors
+m_predictors <- readRDS("output-data/model-objects/m_predictors.RDS")
+
+# Define number of bootstrap iterations. We use 200.
+B <- 200
+counter <- 0
+
+# Define ensemble size for central estimate
+main_estimate_models <- readRDS("output-data/model-objects/main_estimate_models_n.RDS")
+
+# Select predictors and create predictor matrix
+X <- readRDS('output-data/model-objects/X_train.RDS')
+X <- as.matrix(X[, m_predictors])
+
+# Load machine learning library
+library(agtboost)
+
+# The update now happens in two runs, updating twice daily. The first loads predictions from models 1:110. The second refines these by re-calculating models 1:10, and adding 110:210. We ensure that a day of updates always start with update run A.
+current_update_run <- readRDS('output-data/model-objects/current_update_run.RDS') 
+if(readRDS('output-data/model-objects/latest_update.RDS') < Sys.Date()){
+  current_update_run <- "A"
+}
+
+if(current_update_run == "A"){
+  load_predictions_model_set <- 1:(floor(B/2)+main_estimate_models)
+} else {
+  load_predictions_model_set <- c(1:main_estimate_models, main_estimate_models+(floor(B/2)+1):B)
+}
+
+# Loop over bootstrap iterations
+for(i in load_predictions_model_set[1:floor(length(load_predictions_model_set)/2)]){
+  counter <- counter + 1
+  cat(paste("\n\nStarting prediction by model:", counter, "of", ifelse(current_update_run == "A", floor(B/2), B)+main_estimate_models, "at :\n", Sys.time(), "\n"))
+  
+  # Load model object
+  cat("\n -- loading model -- ")
+  gbt_model <- gbt.load(paste0("output-data/model-objects/gbt_model_B_", i, ".agtb"))
+  
+  # Save model predictions
+  cat("generating predictions -- ")
+  preds <- rep(NA, nrow(X))
+  preds <- predict(gbt_model, newdata = X)
+  rm(gbt_model)
+  cat("saving prediction --\n")
+  saveRDS(preds, paste0('output-data/model-objects/model-predictions/model_', i , '_prediction.RDS'))
+  cat(paste("\nCompleted:", counter, "at : ", Sys.time(), "\n\n"))
+  gc()
+}
+rm(X)
