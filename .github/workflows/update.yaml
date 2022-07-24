@@ -77,7 +77,12 @@ jobs:
 
       - name: Run R script
         run: |
-          source('scripts/0_excess_deaths_global_estimates_autoupdater_B.R')
+          source('scripts/0_excess_deaths_global_estimates_autoupdater_B_I.R')
+        shell: Rscript {0}
+      
+      - name: Run R script
+        run: |
+          source('scripts/0_excess_deaths_global_estimates_autoupdater_B_II.R')
         shell: Rscript {0}
 
       - name: Run R script
