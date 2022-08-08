@@ -725,7 +725,7 @@ mob <- mob %>%
 time_varying_data[[length(time_varying_data) + 1]] <- mob
 
 # Add polity response data (source: https://raw.githubusercontent.com/OxCGRT/covid-policy-tracker/master/data/OxCGRT_latest.csv)
-ox <- data.frame(fread("https://raw.githubusercontent.com/OxCGRT/covid-policy-tracker/master/data/OxCGRT_latest.csv"))
+ox <- data.frame(fread("https://raw.githubusercontent.com/OxCGRT/covid-policy-tracker-legacy/main/legacy_data_202207/OxCGRT_latest.csv"))
 
 # Use only national data:
 ox <- ox[ox$Jurisdiction == "NAT_TOTAL", ]
