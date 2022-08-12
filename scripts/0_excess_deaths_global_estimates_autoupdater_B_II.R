@@ -65,7 +65,7 @@ pred_matrix <- t(pred_matrix)
 
 # Combine main estimate models (with different seeds) via median
 if(main_estimate_models > 1){
-  pred_matrix[, 1] <- apply(pred_matrix[, 1:main_estimate_models], 1, median, na.rm=T)
+  pred_matrix[, 1] <- apply(pred_matrix[, 1:main_estimate_models], 1, mean, na.rm=T)
   pred_matrix <- pred_matrix[, c(1, (main_estimate_models+1):ncol(pred_matrix))]
 }
 
