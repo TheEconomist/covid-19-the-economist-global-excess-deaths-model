@@ -71,9 +71,6 @@ main_estimate_models <- readRDS("output-data/model-objects/main_estimate_models_
 
 update <- sample(setdiff(1:(B+main_estimate_models), unlist(recently_updated_models)), 1)
 
-# Temporary: prioritize re-fit of main-estimate models:
-update <- sample(setdiff(1:main_estimate_models, unlist(recently_updated_models)), 1)
-
 recently_updated_models <- c(recently_updated_models, update)
 
 # We then use this to generate one new bootstrap model, overwriting a random prior model:
