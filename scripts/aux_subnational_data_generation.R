@@ -45,6 +45,7 @@ dates$month <- month(dates$date)
 dates$year <- year(dates$date)
 
 # Add identifier to lmort observations
+lmort <- lmort[order(lmort$local_unit_name), ]
 lmort$ID <- 1:nrow(lmort)
 
 # Expand to daily dataset
@@ -212,7 +213,7 @@ mob <- mob %>%
 
 # India:
 # States/districts 
-# Source: https://api.covid19india.org/csv/latest/states.csv
+# Source: https://data.covid19india.org/csv/latest/states.csv
 ind_states <- read_csv("source-data/ind_states_ts.csv")
 
 # Select states:
@@ -228,14 +229,39 @@ ind_states <- ind_states[order(ind_states$Date), ]
 ind_states$total_cases <- ind_states$Confirmed
 ind_states$total_deaths <- ind_states$Deceased
 ind_states$total_tests <- ind_states$Tested
+
+# Deal with negative / zero values (causes unrealistic spikes in data)
+fill_na_last_max <- function(x){
+
+  temp <- x
+  not_na <- which(!is.na(temp))
+  if(length(not_na) > 0){
+  
+  # Convert to weekly median for interpolation
+  for(i in which(!is.na(x))){
+    temp[i] <- median(x[max(c(1, i-3)):min(c(length(x), i+3))], na.rm = T)
+  }
+  
+  x[is.na(x) | x < cummax(ifelse(is.na(x), 0, x))] <- cummax(ifelse(is.na(temp), 0, x))[is.na(x) | x < cummax(ifelse(is.na(x), 0, x))] 
+  x[setdiff(1:length(x), min(not_na):max(not_na))] <- NA
+  }
+  x
+}
+
+ind_states <- ind_states[order(ind_states$date), ]
+ind_states <- as.data.frame(ind_states)
+for(i in c('total_cases', 'total_deaths', 'total_tests')){
+  ind_states[, i] <- ave(ind_states[, i], ind_states$name, FUN = fill_na_last_max)
+}
+
 ind_states$new_cases <- ave(ind_states$total_cases, ind_states$name, FUN = function(x){
-  x <- x - c(0, x)[1:length(x)]
+  x <- x - c(NA, x)[1:length(x)]
 })
 ind_states$new_deaths <- ave(ind_states$total_deaths, ind_states$name, FUN = function(x){
-  x <- x - c(0, x)[1:length(x)]
+  x <- x - c(NA, x)[1:length(x)]
 })
 ind_states$new_tests <- ave(ind_states$total_tests, ind_states$name, FUN = function(x){
-  x <- x - c(0, x)[1:length(x)]
+  x <- x - c(NA, x)[1:length(x)]
 })
 
 # Subset to target columns:
@@ -248,6 +274,11 @@ ind_states <- ind_states[, c("name", "date",
                              "new_tests")]
 
 ggplot(ind_states, aes(x=date))+geom_line(aes(y=total_tests))+facet_grid(.~name)
+ggplot(ind_states, aes(x=date))+geom_line(aes(y=total_deaths))+facet_grid(.~name)
+ggplot(ind_states, aes(x=date))+geom_line(aes(y=total_cases))+facet_grid(.~name)
+ggplot(ind_states, aes(x=date))+geom_line(aes(y=new_tests))+facet_grid(.~name)
+ggplot(ind_states, aes(x=date))+geom_line(aes(y=new_deaths))+facet_grid(.~name)
+ggplot(ind_states, aes(x=date))+geom_line(aes(y=new_cases))+facet_grid(.~name)
 
 # Source: https://api.covid19india.org/csv/latest/districts.csv  
 ind_districts <- read_csv("source-data/ind_districts_ts.csv")
@@ -258,20 +289,31 @@ ind_districts$name[ind_districts$District == "Mumbai"] <- "Mumbai City"
 ind_districts$name[ind_districts$District == "Kolkata"] <- "Kolkata City"
 ind_districts <- ind_districts[!is.na(ind_districts$name), ]
 
+# Correctly indicate NA testing data for Mumbai:
+ind_districts[ind_districts$name == 'Mumbai City' & ind_districts$Date > as.Date('2021-01-30'), 'Tested'] <- NA
+
 # Generate target columns:
 ind_districts$date <- ind_districts$Date
 ind_districts <- ind_districts[order(ind_districts$Date), ]
 ind_districts$total_cases <- ind_districts$Confirmed
 ind_districts$total_deaths <- ind_districts$Deceased
 ind_districts$total_tests <- ind_districts$Tested
+
+# Deal with negative / zero values (causes unrealistic spikes in data)
+ind_districts <- ind_districts[order(ind_districts$date), ]
+ind_districts <- as.data.frame(ind_districts)
+for(i in c('total_cases', 'total_deaths', 'total_tests')){
+  ind_districts[, i] <- ave(ind_districts[, i], ind_districts$name, FUN = fill_na_last_max)
+}
+
 ind_districts$new_cases <- ave(ind_districts$total_cases, ind_districts$name, FUN = function(x){
-  x <- x - c(0, x)[1:length(x)]
+  x <- x - c(NA, x)[1:length(x)]
 })
 ind_districts$new_deaths <- ave(ind_districts$total_deaths, ind_districts$name, FUN = function(x){
-  x <- x - c(0, x)[1:length(x)]
+  x <- x - c(NA, x)[1:length(x)]
 })
 ind_districts$new_tests <- ave(ind_districts$total_tests, ind_districts$name, FUN = function(x){
-  x <- x - c(0, x)[1:length(x)]
+  x <- x - c(NA, x)[1:length(x)]
 })
 
 # Subset to target columns:
@@ -284,6 +326,8 @@ ind_districts <- ind_districts[, c("name", "date",
                                    "new_tests")]
 
 ggplot(ind_districts, aes(x=date))+geom_line(aes(y=total_cases))+facet_grid(.~name)
+ggplot(ind_districts, aes(x=date))+geom_line(aes(y=total_deaths))+facet_grid(.~name)
+ggplot(ind_districts, aes(x=date))+geom_line(aes(y=total_tests))+facet_grid(.~name)
 
 # Indonesia (Jakarta):
 # Source: https://corona.jakarta.go.id/en/data-pemantauan
@@ -294,8 +338,8 @@ jakarta$date <- as.Date(jakarta$date, format = "%d/%m/%Y")
 
 # Generate target columns:
 jakarta <- jakarta[order(jakarta$date), ]
-jakarta$new_cases <- jakarta$total_cases - c(0, jakarta$total_cases)[1:nrow(jakarta)]
-jakarta$new_deaths <- jakarta$total_deaths - c(0, jakarta$total_deaths)[1:nrow(jakarta)]
+jakarta$new_cases <- jakarta$total_cases - c(NA, jakarta$total_cases)[1:nrow(jakarta)]
+jakarta$new_deaths <- jakarta$total_deaths - c(NA, jakarta$total_deaths)[1:nrow(jakarta)]
 jakarta$total_tests <- NA
 jakarta$new_tests <- NA
 jakarta$name <- "Jakarta Province"
@@ -415,6 +459,21 @@ for(i in c("daily_covid_deaths", "daily_covid_deaths_per_100k",
         FUN = function(x) leading_zeros(x))
 }
 
+# Converting NaN to NA:
+for(i in colnames(dat)){
+  dat[is.nan(dat[,i ]), i] <- NA
+}
+
+# Removing a few columns to hard-code consistency with main dataset:
+dat$time <- NULL
+dat$ID <- NULL
+
+pdat <- dat[dat$year <= 2022, ]
+for(i in colnames(pdat)){
+  pdat$plot <- pdat[, i]
+  print(ggplot(pdat, aes(x=date, y=plot, col=name))+geom_line()+geom_point()+geom_vline(aes(xintercept = as.Date('2021-05-31')))+ggtitle(i))
+  readline(prompt="Press [enter] to continue")
+}
 
 # Step 7: Write to file ------------------------------------------------------------------------------
 saveRDS(dat, "output-data/model-objects/auxilliary_subnational_data.RDS")
