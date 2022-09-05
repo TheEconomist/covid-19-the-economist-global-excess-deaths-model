@@ -18,15 +18,16 @@ lmort <- data.frame(read_csv("source-data/local_mortality.csv"))
 # Get country iso3c code
 lmort$iso3c <- countrycode(lmort$country_name, "country.name", "iso3c")
 
-# Keep only units with at least 4 years of data:
+# Keep only units with at least 4 years of data at least 2 of which were pre 2020:
 lmort$years_of_observations <- ave(lmort$year, lmort$local_unit_name, FUN = function(x) length(unique(x)))
-lmort <- lmort[lmort$years_of_observations >= 4, ]
+lmort$first_year_of_observations <- as.numeric(ave(lmort$year, lmort$local_unit_name, FUN = function(x) min(unique(x))))
+lmort <- lmort[lmort$years_of_observations >= 4 & lmort$first_year_of_observations <= 2018, ]
 
 # Remove places where we cannot get local case and death counts over time (Yemen, Turkey, Syria, and Hyderabad municipal corporation):
 lmort <- lmort[!lmort$local_unit_name %in% c("Aden Governorate", "Damascus City", "Istanbul City", "Ankara City", "Hyderabad"), ] 
 
 # Remove Chennai city as it is within Tamil Nadu state (and we don't have a way to disentangle the two):
-lmort <- lmort[lmort$local_unit_name != "Chennai City", ]
+lmort <- lmort[!lmort$local_unit_name %in% c("Chennai City", "Hydarabad"), ]
 
 # Estimate excess deaths (no year effect unless at least 3 years of pre-pandemic data to remove possibility of random variation due to small number of years):
 lmort$expected_deaths <- NA
