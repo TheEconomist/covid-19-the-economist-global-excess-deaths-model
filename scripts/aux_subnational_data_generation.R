@@ -468,13 +468,15 @@ for(i in colnames(dat)){
 dat$time <- NULL
 dat$ID <- NULL
 
+inspect = F
+if(inspect){
 pdat <- dat[dat$year <= 2022, ]
 for(i in colnames(pdat)){
   pdat$plot <- pdat[, i]
   print(ggplot(pdat, aes(x=date, y=plot, col=name))+geom_line()+geom_point()+geom_vline(aes(xintercept = as.Date('2021-05-31')))+ggtitle(i))
   readline(prompt="Press [enter] to continue")
 }
-
+}
 # Step 7: Write to file ------------------------------------------------------------------------------
 saveRDS(dat, "output-data/model-objects/auxilliary_subnational_data.RDS")
 
