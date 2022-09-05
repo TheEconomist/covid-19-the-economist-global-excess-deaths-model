@@ -27,7 +27,7 @@ lmort <- lmort[lmort$years_of_observations >= 4 & lmort$first_year_of_observatio
 lmort <- lmort[!lmort$local_unit_name %in% c("Aden Governorate", "Damascus City", "Istanbul City", "Ankara City", "Hyderabad"), ] 
 
 # Remove Chennai city as it is within Tamil Nadu state (and we don't have a way to disentangle the two):
-lmort <- lmort[!lmort$local_unit_name %in% c("Chennai City", "Hydarabad"), ]
+lmort <- lmort[!lmort$local_unit_name %in% c("Chennai City"), ]
 
 # Estimate excess deaths (no year effect unless at least 3 years of pre-pandemic data to remove possibility of random variation due to small number of years):
 lmort$expected_deaths <- NA
