@@ -1,0 +1,709 @@
+lgd_state_id,lgd_state_name,state,deaths,month,year,pc11_state_id
+02,himachal pradesh,Himachal Pradesh,4369,1,2018,02
+02,himachal pradesh,Himachal Pradesh,3990,1,2019,02
+02,himachal pradesh,Himachal Pradesh,4089,1,2020,02
+02,himachal pradesh,Himachal Pradesh,3878,1,2021,02
+02,himachal pradesh,Himachal Pradesh,3598,2,2018,02
+02,himachal pradesh,Himachal Pradesh,3794,2,2019,02
+02,himachal pradesh,Himachal Pradesh,3542,2,2020,02
+02,himachal pradesh,Himachal Pradesh,3215,2,2021,02
+02,himachal pradesh,Himachal Pradesh,3507,3,2018,02
+02,himachal pradesh,Himachal Pradesh,3701,3,2019,02
+02,himachal pradesh,Himachal Pradesh,3175,3,2020,02
+02,himachal pradesh,Himachal Pradesh,3051,3,2021,02
+02,himachal pradesh,Himachal Pradesh,3013,4,2018,02
+02,himachal pradesh,Himachal Pradesh,3009,4,2019,02
+02,himachal pradesh,Himachal Pradesh,2904,4,2020,02
+02,himachal pradesh,Himachal Pradesh,3769,4,2021,02
+02,himachal pradesh,Himachal Pradesh,3272,5,2018,02
+02,himachal pradesh,Himachal Pradesh,3021,5,2019,02
+02,himachal pradesh,Himachal Pradesh,3096,5,2020,02
+02,himachal pradesh,Himachal Pradesh,7267,5,2021,02
+02,himachal pradesh,Himachal Pradesh,3048,6,2018,02
+02,himachal pradesh,Himachal Pradesh,3285,6,2019,02
+02,himachal pradesh,Himachal Pradesh,3053,6,2020,02
+02,himachal pradesh,Himachal Pradesh,2932,7,2018,02
+02,himachal pradesh,Himachal Pradesh,2945,7,2019,02
+02,himachal pradesh,Himachal Pradesh,2982,7,2020,02
+02,himachal pradesh,Himachal Pradesh,2988,8,2018,02
+02,himachal pradesh,Himachal Pradesh,3176,8,2019,02
+02,himachal pradesh,Himachal Pradesh,3278,8,2020,02
+02,himachal pradesh,Himachal Pradesh,3042,9,2018,02
+02,himachal pradesh,Himachal Pradesh,3174,9,2019,02
+02,himachal pradesh,Himachal Pradesh,3530,9,2020,02
+02,himachal pradesh,Himachal Pradesh,3315,10,2018,02
+02,himachal pradesh,Himachal Pradesh,3330,10,2019,02
+02,himachal pradesh,Himachal Pradesh,3665,10,2020,02
+02,himachal pradesh,Himachal Pradesh,3255,11,2018,02
+02,himachal pradesh,Himachal Pradesh,3495,11,2019,02
+02,himachal pradesh,Himachal Pradesh,4647,11,2020,02
+02,himachal pradesh,Himachal Pradesh,3794,12,2018,02
+02,himachal pradesh,Himachal Pradesh,4050,12,2019,02
+02,himachal pradesh,Himachal Pradesh,4455,12,2020,02
+06,haryana,Haryana,17818,1,2018,06
+06,haryana,Haryana,17638,1,2019,06
+06,haryana,Haryana,19066,1,2020,06
+06,haryana,Haryana,17858,1,2021,06
+06,haryana,Haryana,14614,2,2018,06
+06,haryana,Haryana,15268,2,2019,06
+06,haryana,Haryana,15757,2,2020,06
+06,haryana,Haryana,13950,2,2021,06
+06,haryana,Haryana,14567,3,2018,06
+06,haryana,Haryana,15316,3,2019,06
+06,haryana,Haryana,14787,3,2020,06
+06,haryana,Haryana,14908,3,2021,06
+06,haryana,Haryana,13580,4,2018,06
+06,haryana,Haryana,13658,4,2019,06
+06,haryana,Haryana,12965,4,2020,06
+06,haryana,Haryana,28276,4,2021,06
+06,haryana,Haryana,14335,5,2018,06
+06,haryana,Haryana,14630,5,2019,06
+06,haryana,Haryana,15455,5,2020,06
+06,haryana,Haryana,46108,5,2021,06
+06,haryana,Haryana,14772,6,2018,06
+06,haryana,Haryana,14946,6,2019,06
+06,haryana,Haryana,15496,6,2020,06
+06,haryana,Haryana,13115,7,2018,06
+06,haryana,Haryana,13486,7,2019,06
+06,haryana,Haryana,15590,7,2020,06
+06,haryana,Haryana,13648,8,2018,06
+06,haryana,Haryana,14871,8,2019,06
+06,haryana,Haryana,15581,8,2020,06
+06,haryana,Haryana,14079,9,2018,06
+06,haryana,Haryana,14861,9,2019,06
+06,haryana,Haryana,17253,9,2020,06
+06,haryana,Haryana,15564,10,2018,06
+06,haryana,Haryana,15003,10,2019,06
+06,haryana,Haryana,16611,10,2020,06
+06,haryana,Haryana,15941,11,2018,06
+06,haryana,Haryana,15527,11,2019,06
+06,haryana,Haryana,20194,11,2020,06
+06,haryana,Haryana,16601,12,2018,06
+06,haryana,Haryana,18591,12,2019,06
+06,haryana,Haryana,19468,12,2020,06
+08,rajasthan,Rajasthan,20798,1,2018,08
+08,rajasthan,Rajasthan,20239,1,2019,08
+08,rajasthan,Rajasthan,21954,1,2020,08
+08,rajasthan,Rajasthan,19622,1,2021,08
+08,rajasthan,Rajasthan,18301,2,2018,08
+08,rajasthan,Rajasthan,18089,2,2019,08
+08,rajasthan,Rajasthan,18056,2,2020,08
+08,rajasthan,Rajasthan,14860,2,2021,08
+08,rajasthan,Rajasthan,18921,3,2018,08
+08,rajasthan,Rajasthan,17784,3,2019,08
+08,rajasthan,Rajasthan,16378,3,2020,08
+08,rajasthan,Rajasthan,16084,3,2021,08
+08,rajasthan,Rajasthan,18018,4,2018,08
+08,rajasthan,Rajasthan,16651,4,2019,08
+08,rajasthan,Rajasthan,17596,4,2020,08
+08,rajasthan,Rajasthan,26251,4,2021,08
+08,rajasthan,Rajasthan,19446,5,2018,08
+08,rajasthan,Rajasthan,17603,5,2019,08
+08,rajasthan,Rajasthan,20582,5,2020,08
+08,rajasthan,Rajasthan,49046,5,2021,08
+08,rajasthan,Rajasthan,17048,6,2018,08
+08,rajasthan,Rajasthan,19766,6,2019,08
+08,rajasthan,Rajasthan,17959,6,2020,08
+08,rajasthan,Rajasthan,15640,7,2018,08
+08,rajasthan,Rajasthan,15656,7,2019,08
+08,rajasthan,Rajasthan,17151,7,2020,08
+08,rajasthan,Rajasthan,16023,8,2018,08
+08,rajasthan,Rajasthan,17569,8,2019,08
+08,rajasthan,Rajasthan,17918,8,2020,08
+08,rajasthan,Rajasthan,15812,9,2018,08
+08,rajasthan,Rajasthan,19291,9,2019,08
+08,rajasthan,Rajasthan,18719,9,2020,08
+08,rajasthan,Rajasthan,17226,10,2018,08
+08,rajasthan,Rajasthan,17924,10,2019,08
+08,rajasthan,Rajasthan,18405,10,2020,08
+08,rajasthan,Rajasthan,17489,11,2018,08
+08,rajasthan,Rajasthan,17794,11,2019,08
+08,rajasthan,Rajasthan,21265,11,2020,08
+08,rajasthan,Rajasthan,21648,12,2018,08
+08,rajasthan,Rajasthan,21448,12,2019,08
+08,rajasthan,Rajasthan,23581,12,2020,08
+09,uttar pradesh,Uttar Pradesh,68962,1,2019,09
+09,uttar pradesh,Uttar Pradesh,75773,1,2020,09
+09,uttar pradesh,Uttar Pradesh,103048,1,2021,09
+09,uttar pradesh,Uttar Pradesh,69809,2,2019,09
+09,uttar pradesh,Uttar Pradesh,50576,2,2020,09
+09,uttar pradesh,Uttar Pradesh,98047,2,2021,09
+09,uttar pradesh,Uttar Pradesh,63962,3,2019,09
+09,uttar pradesh,Uttar Pradesh,41683,3,2020,09
+09,uttar pradesh,Uttar Pradesh,70797,3,2021,09
+09,uttar pradesh,Uttar Pradesh,56583,4,2019,09
+09,uttar pradesh,Uttar Pradesh,20715,4,2020,09
+09,uttar pradesh,Uttar Pradesh,61986,4,2021,09
+09,uttar pradesh,Uttar Pradesh,55338,5,2019,09
+09,uttar pradesh,Uttar Pradesh,33543,5,2020,09
+09,uttar pradesh,Uttar Pradesh,62657,6,2019,09
+09,uttar pradesh,Uttar Pradesh,59020,6,2020,09
+09,uttar pradesh,Uttar Pradesh,63604,7,2019,09
+09,uttar pradesh,Uttar Pradesh,68382,7,2020,09
+09,uttar pradesh,Uttar Pradesh,67811,8,2019,09
+09,uttar pradesh,Uttar Pradesh,78658,8,2020,09
+09,uttar pradesh,Uttar Pradesh,69589,9,2019,09
+09,uttar pradesh,Uttar Pradesh,92947,9,2020,09
+09,uttar pradesh,Uttar Pradesh,60004,10,2019,09
+09,uttar pradesh,Uttar Pradesh,90023,10,2020,09
+09,uttar pradesh,Uttar Pradesh,66740,11,2019,09
+09,uttar pradesh,Uttar Pradesh,80981,11,2020,09
+09,uttar pradesh,Uttar Pradesh,66324,12,2019,09
+09,uttar pradesh,Uttar Pradesh,99184,12,2020,09
+10,bihar,Bihar,7289,1,2018,10
+10,bihar,Bihar,28975,1,2019,10
+10,bihar,Bihar,38238,1,2020,10
+10,bihar,Bihar,45515,1,2021,10
+10,bihar,Bihar,7872,2,2018,10
+10,bihar,Bihar,27620,2,2019,10
+10,bihar,Bihar,34015,2,2020,10
+10,bihar,Bihar,38981,2,2021,10
+10,bihar,Bihar,8196,3,2018,10
+10,bihar,Bihar,28452,3,2019,10
+10,bihar,Bihar,26682,3,2020,10
+10,bihar,Bihar,29774,3,2021,10
+10,bihar,Bihar,9635,4,2018,10
+10,bihar,Bihar,23537,4,2019,10
+10,bihar,Bihar,16865,4,2020,10
+10,bihar,Bihar,33159,4,2021,10
+10,bihar,Bihar,12495,5,2018,10
+10,bihar,Bihar,24640,5,2019,10
+10,bihar,Bihar,22893,5,2020,10
+10,bihar,Bihar,68317,5,2021,10
+10,bihar,Bihar,13898,6,2018,10
+10,bihar,Bihar,30440,6,2019,10
+10,bihar,Bihar,32656,6,2020,10
+10,bihar,Bihar,15926,7,2018,10
+10,bihar,Bihar,31533,7,2019,10
+10,bihar,Bihar,30534,7,2020,10
+10,bihar,Bihar,17933,8,2018,10
+10,bihar,Bihar,34326,8,2019,10
+10,bihar,Bihar,36355,8,2020,10
+10,bihar,Bihar,20480,9,2018,10
+10,bihar,Bihar,27897,9,2019,10
+10,bihar,Bihar,39124,9,2020,10
+10,bihar,Bihar,22413,10,2018,10
+10,bihar,Bihar,29168,10,2019,10
+10,bihar,Bihar,31860,10,2020,10
+10,bihar,Bihar,22317,11,2018,10
+10,bihar,Bihar,32088,11,2019,10
+10,bihar,Bihar,30299,11,2020,10
+10,bihar,Bihar,24467,12,2018,10
+10,bihar,Bihar,32598,12,2019,10
+10,bihar,Bihar,47908,12,2020,10
+18,assam,Assam,11999,1,2018,18
+18,assam,Assam,15394,1,2019,18
+18,assam,Assam,18112,1,2020,18
+18,assam,Assam,11972,2,2018,18
+18,assam,Assam,14550,2,2019,18
+18,assam,Assam,17535,2,2020,18
+18,assam,Assam,11968,3,2018,18
+18,assam,Assam,14029,3,2019,18
+18,assam,Assam,16576,3,2020,18
+18,assam,Assam,11646,4,2018,18
+18,assam,Assam,12925,4,2019,18
+18,assam,Assam,8769,4,2020,18
+18,assam,Assam,11557,5,2018,18
+18,assam,Assam,11969,5,2019,18
+18,assam,Assam,8384,5,2020,18
+18,assam,Assam,11460,6,2018,18
+18,assam,Assam,11142,6,2019,18
+18,assam,Assam,8025,6,2020,18
+18,assam,Assam,11265,7,2018,18
+18,assam,Assam,10889,7,2019,18
+18,assam,Assam,8878,7,2020,18
+18,assam,Assam,11184,8,2018,18
+18,assam,Assam,10699,8,2019,18
+18,assam,Assam,16467,8,2020,18
+18,assam,Assam,11411,9,2018,18
+18,assam,Assam,12890,9,2019,18
+18,assam,Assam,17904,9,2020,18
+18,assam,Assam,11567,10,2018,18
+18,assam,Assam,13768,10,2019,18
+18,assam,Assam,20383,10,2020,18
+18,assam,Assam,11338,11,2018,18
+18,assam,Assam,15353,11,2019,18
+18,assam,Assam,21325,11,2020,18
+18,assam,Assam,12811,12,2018,18
+18,assam,Assam,16309,12,2019,18
+18,assam,Assam,20286,12,2020,18
+23,madhya pradesh,Madhya Pradesh,34445,1,2018,23
+23,madhya pradesh,Madhya Pradesh,39524,1,2019,23
+23,madhya pradesh,Madhya Pradesh,41272,1,2020,23
+23,madhya pradesh,Madhya Pradesh,44131,1,2021,23
+23,madhya pradesh,Madhya Pradesh,29983,2,2018,23
+23,madhya pradesh,Madhya Pradesh,35999,2,2019,23
+23,madhya pradesh,Madhya Pradesh,34637,2,2020,23
+23,madhya pradesh,Madhya Pradesh,36534,2,2021,23
+23,madhya pradesh,Madhya Pradesh,28504,3,2018,23
+23,madhya pradesh,Madhya Pradesh,32904,3,2019,23
+23,madhya pradesh,Madhya Pradesh,29731,3,2020,23
+23,madhya pradesh,Madhya Pradesh,34564,3,2021,23
+23,madhya pradesh,Madhya Pradesh,26944,4,2018,23
+23,madhya pradesh,Madhya Pradesh,28598,4,2019,23
+23,madhya pradesh,Madhya Pradesh,24179,4,2020,23
+23,madhya pradesh,Madhya Pradesh,68532,4,2021,23
+23,madhya pradesh,Madhya Pradesh,32447,5,2018,23
+23,madhya pradesh,Madhya Pradesh,30501,5,2019,23
+23,madhya pradesh,Madhya Pradesh,34289,5,2020,23
+23,madhya pradesh,Madhya Pradesh,164834,5,2021,23
+23,madhya pradesh,Madhya Pradesh,33817,6,2018,23
+23,madhya pradesh,Madhya Pradesh,38972,6,2019,23
+23,madhya pradesh,Madhya Pradesh,37387,6,2020,23
+23,madhya pradesh,Madhya Pradesh,36510,7,2018,23
+23,madhya pradesh,Madhya Pradesh,38917,7,2019,23
+23,madhya pradesh,Madhya Pradesh,41303,7,2020,23
+23,madhya pradesh,Madhya Pradesh,38228,8,2018,23
+23,madhya pradesh,Madhya Pradesh,44140,8,2019,23
+23,madhya pradesh,Madhya Pradesh,40187,8,2020,23
+23,madhya pradesh,Madhya Pradesh,40178,9,2018,23
+23,madhya pradesh,Madhya Pradesh,43513,9,2019,23
+23,madhya pradesh,Madhya Pradesh,47264,9,2020,23
+23,madhya pradesh,Madhya Pradesh,37762,10,2018,23
+23,madhya pradesh,Madhya Pradesh,37947,10,2019,23
+23,madhya pradesh,Madhya Pradesh,45154,10,2020,23
+23,madhya pradesh,Madhya Pradesh,30348,11,2018,23
+23,madhya pradesh,Madhya Pradesh,39107,11,2019,23
+23,madhya pradesh,Madhya Pradesh,40222,11,2020,23
+23,madhya pradesh,Madhya Pradesh,37957,12,2018,23
+23,madhya pradesh,Madhya Pradesh,39618,12,2019,23
+23,madhya pradesh,Madhya Pradesh,45066,12,2020,23
+27,maharashtra,Maharashtra,40214,1,2018,27
+27,maharashtra,Maharashtra,41092,1,2019,27
+27,maharashtra,Maharashtra,42448,1,2020,27
+27,maharashtra,Maharashtra,41360,1,2021,27
+27,maharashtra,Maharashtra,34945,2,2018,27
+27,maharashtra,Maharashtra,34139,2,2019,27
+27,maharashtra,Maharashtra,37213,2,2020,27
+27,maharashtra,Maharashtra,37391,2,2021,27
+27,maharashtra,Maharashtra,34373,3,2018,27
+27,maharashtra,Maharashtra,36951,3,2019,27
+27,maharashtra,Maharashtra,35077,3,2020,27
+27,maharashtra,Maharashtra,52197,3,2021,27
+27,maharashtra,Maharashtra,32105,4,2018,27
+27,maharashtra,Maharashtra,35865,4,2019,27
+27,maharashtra,Maharashtra,34328,4,2020,27
+27,maharashtra,Maharashtra,117723,4,2021,27
+27,maharashtra,Maharashtra,35493,5,2018,27
+27,maharashtra,Maharashtra,37957,5,2019,27
+27,maharashtra,Maharashtra,48610,5,2020,27
+27,maharashtra,Maharashtra,89452,5,2021,27
+27,maharashtra,Maharashtra,30526,6,2018,27
+27,maharashtra,Maharashtra,35405,6,2019,27
+27,maharashtra,Maharashtra,46496,6,2020,27
+27,maharashtra,Maharashtra,34736,7,2018,27
+27,maharashtra,Maharashtra,37508,7,2019,27
+27,maharashtra,Maharashtra,52137,7,2020,27
+27,maharashtra,Maharashtra,35996,8,2018,27
+27,maharashtra,Maharashtra,42983,8,2019,27
+27,maharashtra,Maharashtra,60220,8,2020,27
+27,maharashtra,Maharashtra,38162,9,2018,27
+27,maharashtra,Maharashtra,41847,9,2019,27
+27,maharashtra,Maharashtra,66453,9,2020,27
+27,maharashtra,Maharashtra,37942,10,2018,27
+27,maharashtra,Maharashtra,40028,10,2019,27
+27,maharashtra,Maharashtra,52260,10,2020,27
+27,maharashtra,Maharashtra,34632,11,2018,27
+27,maharashtra,Maharashtra,38191,11,2019,27
+27,maharashtra,Maharashtra,45077,11,2020,27
+27,maharashtra,Maharashtra,37365,12,2018,27
+27,maharashtra,Maharashtra,40062,12,2019,27
+27,maharashtra,Maharashtra,44866,12,2020,27
+28,andhra pradesh,Andhra Pradesh,33640,1,2018,28
+28,andhra pradesh,Andhra Pradesh,32304,1,2019,28
+28,andhra pradesh,Andhra Pradesh,31993,1,2020,28
+28,andhra pradesh,Andhra Pradesh,37963,1,2021,28
+28,andhra pradesh,Andhra Pradesh,28788,2,2018,28
+28,andhra pradesh,Andhra Pradesh,31172,2,2019,28
+28,andhra pradesh,Andhra Pradesh,26807,2,2020,28
+28,andhra pradesh,Andhra Pradesh,31920,2,2021,28
+28,andhra pradesh,Andhra Pradesh,27342,3,2018,28
+28,andhra pradesh,Andhra Pradesh,27974,3,2019,28
+28,andhra pradesh,Andhra Pradesh,25415,3,2020,28
+28,andhra pradesh,Andhra Pradesh,33367,3,2021,28
+28,andhra pradesh,Andhra Pradesh,25982,4,2018,28
+28,andhra pradesh,Andhra Pradesh,26291,4,2019,28
+28,andhra pradesh,Andhra Pradesh,22364,4,2020,28
+28,andhra pradesh,Andhra Pradesh,39102,4,2021,28
+28,andhra pradesh,Andhra Pradesh,24359,5,2018,28
+28,andhra pradesh,Andhra Pradesh,29931,5,2019,28
+28,andhra pradesh,Andhra Pradesh,28067,5,2020,28
+28,andhra pradesh,Andhra Pradesh,134041,5,2021,28
+28,andhra pradesh,Andhra Pradesh,27011,6,2018,28
+28,andhra pradesh,Andhra Pradesh,30202,6,2019,28
+28,andhra pradesh,Andhra Pradesh,28437,6,2020,28
+28,andhra pradesh,Andhra Pradesh,43296,6,2021,28
+28,andhra pradesh,Andhra Pradesh,26459,7,2018,28
+28,andhra pradesh,Andhra Pradesh,28468,7,2019,28
+28,andhra pradesh,Andhra Pradesh,34750,7,2020,28
+28,andhra pradesh,Andhra Pradesh,27930,8,2018,28
+28,andhra pradesh,Andhra Pradesh,28667,8,2019,28
+28,andhra pradesh,Andhra Pradesh,54925,8,2020,28
+28,andhra pradesh,Andhra Pradesh,26626,9,2018,28
+28,andhra pradesh,Andhra Pradesh,30449,9,2019,28
+28,andhra pradesh,Andhra Pradesh,55865,9,2020,28
+28,andhra pradesh,Andhra Pradesh,28481,10,2018,28
+28,andhra pradesh,Andhra Pradesh,33636,10,2019,28
+28,andhra pradesh,Andhra Pradesh,42090,10,2020,28
+28,andhra pradesh,Andhra Pradesh,26785,11,2018,28
+28,andhra pradesh,Andhra Pradesh,33203,11,2019,28
+28,andhra pradesh,Andhra Pradesh,38674,11,2020,28
+28,andhra pradesh,Andhra Pradesh,29896,12,2018,28
+28,andhra pradesh,Andhra Pradesh,31145,12,2019,28
+28,andhra pradesh,Andhra Pradesh,39498,12,2020,28
+03,punjab,Punjab,17813,8,2016,03
+03,punjab,Punjab,18482,2,2020,03
+03,punjab,Punjab,16753,5,2020,03
+03,punjab,Punjab,23028,12,2020,03
+03,punjab,Punjab,22195,1,2018,03
+03,punjab,Punjab,15707,4,2018,03
+03,punjab,Punjab,37292,5,2021,03
+03,punjab,Punjab,18193,1,2016,03
+03,punjab,Punjab,16338,7,2018,03
+03,punjab,Punjab,20123,11,2016,03
+03,punjab,Punjab,19624,1,2015,03
+03,punjab,Punjab,19506,2,2018,03
+03,punjab,Punjab,16119,3,2016,03
+03,punjab,Punjab,15845,4,2019,03
+03,punjab,Punjab,16185,3,2020,03
+03,punjab,Punjab,21096,10,2020,03
+03,punjab,Punjab,16406,3,2015,03
+03,punjab,Punjab,15454,5,2015,03
+03,punjab,Punjab,16784,3,2017,03
+03,punjab,Punjab,21393,9,2020,03
+03,punjab,Punjab,16131,9,2018,03
+03,punjab,Punjab,17019,8,2018,03
+03,punjab,Punjab,18972,11,2019,03
+03,punjab,Punjab,15619,8,2015,03
+03,punjab,Punjab,16331,5,2016,03
+03,punjab,Punjab,15880,4,2016,03
+03,punjab,Punjab,15902,6,2016,03
+03,punjab,Punjab,15576,4,2015,03
+03,punjab,Punjab,18031,9,2019,03
+03,punjab,Punjab,20624,12,2017,03
+03,punjab,Punjab,19598,12,2019,03
+03,punjab,Punjab,15661,5,2019,03
+03,punjab,Punjab,15986,9,2015,03
+03,punjab,Punjab,17981,10,2018,03
+03,punjab,Punjab,15614,6,2015,03
+03,punjab,Punjab,17634,2,2017,03
+03,punjab,Punjab,18861,11,2017,03
+03,punjab,Punjab,16407,9,2017,03
+03,punjab,Punjab,19904,2,2019,03
+03,punjab,Punjab,19039,12,2018,03
+03,punjab,Punjab,17411,7,2020,03
+03,punjab,Punjab,16884,10,2017,03
+03,punjab,Punjab,16089,7,2017,03
+03,punjab,Punjab,17442,3,2019,03
+03,punjab,Punjab,19707,12,2015,03
+03,punjab,Punjab,15975,5,2018,03
+03,punjab,Punjab,24983,4,2021,03
+03,punjab,Punjab,16916,10,2019,03
+03,punjab,Punjab,26656,6,2021,03
+03,punjab,Punjab,15544,4,2017,03
+03,punjab,Punjab,16515,6,2019,03
+03,punjab,Punjab,17089,11,2015,03
+03,punjab,Punjab,16005,3,2018,03
+03,punjab,Punjab,14475,4,2020,03
+03,punjab,Punjab,20823,11,2020,03
+03,punjab,Punjab,16011,8,2019,03
+03,punjab,Punjab,22870,1,2020,03
+03,punjab,Punjab,15975,10,2015,03
+03,punjab,Punjab,17451,9,2016,03
+03,punjab,Punjab,16624,10,2016,03
+03,punjab,Punjab,18676,2,2021,03
+03,punjab,Punjab,16566,7,2016,03
+03,punjab,Punjab,19079,2,2016,03
+03,punjab,Punjab,16468,6,2018,03
+03,punjab,Punjab,18014,8,2020,03
+03,punjab,Punjab,19081,1,2017,03
+03,punjab,Punjab,19100,3,2021,03
+03,punjab,Punjab,15095,7,2015,03
+03,punjab,Punjab,17316,2,2015,03
+03,punjab,Punjab,20682,1,2021,03
+03,punjab,Punjab,22456,1,2019,03
+03,punjab,Punjab,16204,5,2017,03
+03,punjab,Punjab,18849,11,2018,03
+03,punjab,Punjab,17086,8,2017,03
+03,punjab,Punjab,15771,7,2019,03
+03,punjab,Punjab,16441,6,2017,03
+03,punjab,Punjab,17606,6,2020,03
+03,punjab,Punjab,20386,12,2016,03
+04,chandigarh,Chandigarh,1613,12,2020,04
+04,chandigarh,Chandigarh,2392,1,2019,04
+04,chandigarh,Chandigarh,2006,3,2019,04
+04,chandigarh,Chandigarh,1527,3,2020,04
+04,chandigarh,Chandigarh,1757,5,2019,04
+04,chandigarh,Chandigarh,2002,4,2021,04
+04,chandigarh,Chandigarh,1777,5,2018,04
+04,chandigarh,Chandigarh,1535,4,2019,04
+04,chandigarh,Chandigarh,1267,5,2020,04
+04,chandigarh,Chandigarh,1602,6,2018,04
+04,chandigarh,Chandigarh,2322,1,2018,04
+04,chandigarh,Chandigarh,1811,7,2018,04
+04,chandigarh,Chandigarh,2086,12,2018,04
+04,chandigarh,Chandigarh,2228,10,2018,04
+04,chandigarh,Chandigarh,1764,3,2018,04
+04,chandigarh,Chandigarh,1632,1,2021,04
+04,chandigarh,Chandigarh,2058,2,2019,04
+04,chandigarh,Chandigarh,1564,4,2018,04
+04,chandigarh,Chandigarh,1809,7,2019,04
+04,chandigarh,Chandigarh,1940,2,2018,04
+04,chandigarh,Chandigarh,2414,5,2021,04
+04,chandigarh,Chandigarh,1547,3,2021,04
+04,chandigarh,Chandigarh,1994,10,2019,04
+04,chandigarh,Chandigarh,2082,11,2019,04
+04,chandigarh,Chandigarh,2034,8,2019,04
+04,chandigarh,Chandigarh,2069,9,2018,04
+04,chandigarh,Chandigarh,1961,9,2019,04
+04,chandigarh,Chandigarh,1242,6,2020,04
+04,chandigarh,Chandigarh,1605,9,2020,04
+04,chandigarh,Chandigarh,1465,8,2020,04
+04,chandigarh,Chandigarh,1389,7,2020,04
+04,chandigarh,Chandigarh,2108,11,2018,04
+04,chandigarh,Chandigarh,1431,2,2021,04
+04,chandigarh,Chandigarh,1802,2,2020,04
+04,chandigarh,Chandigarh,1601,10,2020,04
+04,chandigarh,Chandigarh,2064,12,2019,04
+04,chandigarh,Chandigarh,1660,6,2019,04
+04,chandigarh,Chandigarh,1975,1,2020,04
+04,chandigarh,Chandigarh,1659,11,2020,04
+04,chandigarh,Chandigarh,1957,8,2018,04
+04,chandigarh,Chandigarh,1070,4,2020,04
+22,chhattisgarh,Chhattisgarh,44883,5,2021,22
+22,chhattisgarh,Chhattisgarh,26259,4,2021,22
+22,chhattisgarh,Chhattisgarh,1218,11,2018,22
+22,chhattisgarh,Chhattisgarh,1199,7,2018,22
+22,chhattisgarh,Chhattisgarh,10396,1,2021,22
+22,chhattisgarh,Chhattisgarh,3953,4,2020,22
+22,chhattisgarh,Chhattisgarh,1053,4,2019,22
+22,chhattisgarh,Chhattisgarh,12878,3,2021,22
+22,chhattisgarh,Chhattisgarh,4366,6,2020,22
+22,chhattisgarh,Chhattisgarh,3953,5,2020,22
+22,chhattisgarh,Chhattisgarh,6963,9,2020,22
+22,chhattisgarh,Chhattisgarh,8907,10,2020,22
+22,chhattisgarh,Chhattisgarh,1308,5,2018,22
+22,chhattisgarh,Chhattisgarh,1191,2,2019,22
+22,chhattisgarh,Chhattisgarh,1471,8,2019,22
+22,chhattisgarh,Chhattisgarh,1364,2,2018,22
+22,chhattisgarh,Chhattisgarh,4924,8,2020,22
+22,chhattisgarh,Chhattisgarh,1261,8,2018,22
+22,chhattisgarh,Chhattisgarh,1218,10,2018,22
+22,chhattisgarh,Chhattisgarh,1553,10,2019,22
+22,chhattisgarh,Chhattisgarh,1367,9,2019,22
+22,chhattisgarh,Chhattisgarh,1334,3,2018,22
+22,chhattisgarh,Chhattisgarh,1518,9,2018,22
+22,chhattisgarh,Chhattisgarh,1203,6,2019,22
+22,chhattisgarh,Chhattisgarh,4827,7,2020,22
+22,chhattisgarh,Chhattisgarh,1101,3,2019,22
+22,chhattisgarh,Chhattisgarh,1466,12,2019,22
+22,chhattisgarh,Chhattisgarh,3228,3,2020,22
+22,chhattisgarh,Chhattisgarh,1547,1,2018,22
+22,chhattisgarh,Chhattisgarh,12416,2,2021,22
+22,chhattisgarh,Chhattisgarh,1243,12,2018,22
+22,chhattisgarh,Chhattisgarh,7330,11,2020,22
+22,chhattisgarh,Chhattisgarh,1326,7,2019,22
+22,chhattisgarh,Chhattisgarh,1598,11,2019,22
+22,chhattisgarh,Chhattisgarh,1231,6,2018,22
+22,chhattisgarh,Chhattisgarh,3299,2,2020,22
+22,chhattisgarh,Chhattisgarh,1148,1,2019,22
+22,chhattisgarh,Chhattisgarh,8423,12,2020,22
+22,chhattisgarh,Chhattisgarh,3064,1,2020,22
+22,chhattisgarh,Chhattisgarh,1249,4,2018,22
+22,chhattisgarh,Chhattisgarh,1130,5,2019,22
+29,karnataka,Karnataka,77000,5,2021,29
+29,karnataka,Karnataka,42201,3,2018,29
+29,karnataka,Karnataka,41862,5,2019,29
+29,karnataka,Karnataka,35780,9,2016,29
+29,karnataka,Karnataka,34855,3,2016,29
+29,karnataka,Karnataka,39238,7,2017,29
+29,karnataka,Karnataka,32206,2,2016,29
+29,karnataka,Karnataka,44189,11,2017,29
+29,karnataka,Karnataka,40343,9,2018,29
+29,karnataka,Karnataka,33092,6,2015,29
+29,karnataka,Karnataka,35486,4,2017,29
+29,karnataka,Karnataka,67444,9,2020,29
+29,karnataka,Karnataka,43725,7,2020,29
+29,karnataka,Karnataka,42645,1,2019,29
+29,karnataka,Karnataka,36047,4,2018,29
+29,karnataka,Karnataka,39502,5,2020,29
+29,karnataka,Karnataka,42960,12,2017,29
+29,karnataka,Karnataka,36769,11,2016,29
+29,karnataka,Karnataka,35307,6,2016,29
+29,karnataka,Karnataka,45471,12,2019,29
+29,karnataka,Karnataka,33045,7,2015,29
+29,karnataka,Karnataka,41135,1,2017,29
+29,karnataka,Karnataka,35940,2,2017,29
+29,karnataka,Karnataka,39544,8,2018,29
+29,karnataka,Karnataka,32954,4,2019,29
+29,karnataka,Karnataka,45884,2,2021,29
+29,karnataka,Karnataka,40529,11,2018,29
+29,karnataka,Karnataka,40082,6,2018,29
+29,karnataka,Karnataka,32928,3,2015,29
+29,karnataka,Karnataka,39904,2,2018,29
+29,karnataka,Karnataka,39751,12,2018,29
+29,karnataka,Karnataka,44696,8,2019,29
+29,karnataka,Karnataka,19629,4,2020,29
+29,karnataka,Karnataka,37890,6,2017,29
+29,karnataka,Karnataka,43905,6,2020,29
+29,karnataka,Karnataka,48488,11,2019,29
+29,karnataka,Karnataka,43644,10,2017,29
+29,karnataka,Karnataka,39998,3,2017,29
+29,karnataka,Karnataka,30338,5,2015,29
+29,karnataka,Karnataka,31974,2,2015,29
+29,karnataka,Karnataka,36982,1,2015,29
+29,karnataka,Karnataka,29152,4,2015,29
+29,karnataka,Karnataka,50319,1,2021,29
+29,karnataka,Karnataka,41644,3,2019,29
+29,karnataka,Karnataka,39860,10,2018,29
+29,karnataka,Karnataka,36314,12,2016,29
+29,karnataka,Karnataka,33002,8,2015,29
+29,karnataka,Karnataka,35526,7,2016,29
+29,karnataka,Karnataka,59508,10,2020,29
+29,karnataka,Karnataka,33008,10,2015,29
+29,karnataka,Karnataka,38918,5,2017,29
+29,karnataka,Karnataka,45987,3,2021,29
+29,karnataka,Karnataka,39085,7,2018,29
+29,karnataka,Karnataka,33560,10,2016,29
+29,karnataka,Karnataka,44905,10,2019,29
+29,karnataka,Karnataka,47440,1,2020,29
+29,karnataka,Karnataka,39293,8,2016,29
+29,karnataka,Karnataka,33200,11,2015,29
+29,karnataka,Karnataka,45189,9,2019,29
+29,karnataka,Karnataka,41390,8,2017,29
+29,karnataka,Karnataka,58888,8,2020,29
+29,karnataka,Karnataka,32794,3,2020,29
+29,karnataka,Karnataka,40959,9,2017,29
+29,karnataka,Karnataka,34598,1,2016,29
+29,karnataka,Karnataka,44684,7,2019,29
+29,karnataka,Karnataka,32274,4,2016,29
+29,karnataka,Karnataka,42034,2,2020,29
+29,karnataka,Karnataka,53335,11,2020,29
+29,karnataka,Karnataka,34292,5,2016,29
+29,karnataka,Karnataka,31873,9,2015,29
+29,karnataka,Karnataka,35038,5,2018,29
+29,karnataka,Karnataka,35137,12,2015,29
+29,karnataka,Karnataka,51127,1,2018,29
+29,karnataka,Karnataka,43604,12,2020,29
+29,karnataka,Karnataka,46000,4,2021,29
+29,karnataka,Karnataka,37403,6,2019,29
+29,karnataka,Karnataka,38643,2,2019,29
+32,kerala,Kerala,20813,11,2015,32
+32,kerala,Kerala,19843,3,2018,32
+32,kerala,Kerala,27957,5,2021,32
+32,kerala,Kerala,17808,4,2015,32
+32,kerala,Kerala,21075,10,2018,32
+32,kerala,Kerala,23372,7,2018,32
+32,kerala,Kerala,19047,5,2015,32
+32,kerala,Kerala,24318,9,2019,32
+32,kerala,Kerala,20884,8,2015,32
+32,kerala,Kerala,19983,4,2019,32
+32,kerala,Kerala,19013,3,2017,32
+32,kerala,Kerala,19354,2,2018,32
+32,kerala,Kerala,21379,1,2015,32
+32,kerala,Kerala,21314,9,2016,32
+32,kerala,Kerala,20435,6,2018,32
+32,kerala,Kerala,21236,12,2015,32
+32,kerala,Kerala,20337,6,2016,32
+32,kerala,Kerala,18856,11,2016,32
+32,kerala,Kerala,5908,6,2021,32
+32,kerala,Kerala,25683,8,2018,32
+32,kerala,Kerala,20083,11,2017,32
+32,kerala,Kerala,23432,7,2016,32
+32,kerala,Kerala,24567,7,2019,32
+32,kerala,Kerala,17970,2,2015,32
+32,kerala,Kerala,20640,3,2019,32
+32,kerala,Kerala,19370,5,2018,32
+32,kerala,Kerala,22844,9,2018,32
+32,kerala,Kerala,19714,2,2020,32
+32,kerala,Kerala,17680,5,2020,32
+32,kerala,Kerala,23676,1,2019,32
+32,kerala,Kerala,21292,12,2017,32
+32,kerala,Kerala,22577,8,2016,32
+32,kerala,Kerala,19346,6,2020,32
+32,kerala,Kerala,22597,6,2017,32
+32,kerala,Kerala,20169,4,2016,32
+32,kerala,Kerala,21152,2,2021,32
+32,kerala,Kerala,20053,5,2017,32
+32,kerala,Kerala,20326,1,2017,32
+32,kerala,Kerala,19892,2,2019,32
+32,kerala,Kerala,22704,9,2020,32
+32,kerala,Kerala,20945,12,2019,32
+32,kerala,Kerala,19581,3,2020,32
+32,kerala,Kerala,20958,7,2015,32
+32,kerala,Kerala,23406,12,2020,32
+32,kerala,Kerala,22081,1,2018,32
+32,kerala,Kerala,21031,11,2018,32
+32,kerala,Kerala,26302,7,2017,32
+32,kerala,Kerala,21145,1,2016,32
+32,kerala,Kerala,18360,6,2015,32
+32,kerala,Kerala,19886,10,2016,32
+32,kerala,Kerala,18128,2,2017,32
+32,kerala,Kerala,24949,10,2020,32
+32,kerala,Kerala,21681,12,2018,32
+32,kerala,Kerala,25475,8,2019,32
+32,kerala,Kerala,20681,10,2017,32
+32,kerala,Kerala,19142,3,2016,32
+32,kerala,Kerala,21626,11,2019,32
+32,kerala,Kerala,19098,5,2016,32
+32,kerala,Kerala,20509,6,2019,32
+32,kerala,Kerala,23328,1,2021,32
+32,kerala,Kerala,19014,4,2017,32
+32,kerala,Kerala,19552,10,2015,32
+32,kerala,Kerala,22115,11,2020,32
+32,kerala,Kerala,20706,3,2021,32
+32,kerala,Kerala,22005,10,2019,32
+32,kerala,Kerala,18825,4,2018,32
+32,kerala,Kerala,21513,9,2017,32
+32,kerala,Kerala,23394,8,2020,32
+32,kerala,Kerala,20229,4,2021,32
+32,kerala,Kerala,21357,1,2020,32
+32,kerala,Kerala,23101,8,2017,32
+32,kerala,Kerala,20963,7,2020,32
+32,kerala,Kerala,19077,3,2015,32
+32,kerala,Kerala,20514,5,2019,32
+32,kerala,Kerala,18898,9,2015,32
+32,kerala,Kerala,18641,2,2016,32
+32,kerala,Kerala,17212,4,2020,32
+32,kerala,Kerala,20303,12,2016,32
+33,tamil nadu,Tamil Nadu,62273,1,2021,33
+33,tamil nadu,Tamil Nadu,60096,10,2020,33
+33,tamil nadu,Tamil Nadu,43928,5,2018,33
+33,tamil nadu,Tamil Nadu,46560,2,2019,33
+33,tamil nadu,Tamil Nadu,50687,6,2020,33
+33,tamil nadu,Tamil Nadu,51602,11,2018,33
+33,tamil nadu,Tamil Nadu,46703,3,2018,33
+33,tamil nadu,Tamil Nadu,60052,7,2020,33
+33,tamil nadu,Tamil Nadu,34025,12,2018,33
+33,tamil nadu,Tamil Nadu,53028,10,2019,33
+33,tamil nadu,Tamil Nadu,45913,4,2019,33
+33,tamil nadu,Tamil Nadu,45987,3,2020,33
+33,tamil nadu,Tamil Nadu,58775,4,2021,33
+33,tamil nadu,Tamil Nadu,47772,3,2019,33
+33,tamil nadu,Tamil Nadu,43222,6,2018,33
+33,tamil nadu,Tamil Nadu,70033,8,2020,33
+33,tamil nadu,Tamil Nadu,58405,1,2019,33
+33,tamil nadu,Tamil Nadu,42633,7,2018,33
+33,tamil nadu,Tamil Nadu,50959,3,2021,33
+33,tamil nadu,Tamil Nadu,48868,6,2019,33
+33,tamil nadu,Tamil Nadu,52231,11,2020,33
+33,tamil nadu,Tamil Nadu,41482,4,2020,33
+33,tamil nadu,Tamil Nadu,48893,2,2020,33
+33,tamil nadu,Tamil Nadu,45762,7,2019,33
+33,tamil nadu,Tamil Nadu,46337,10,2018,33
+33,tamil nadu,Tamil Nadu,93573,5,2021,33
+33,tamil nadu,Tamil Nadu,51639,5,2019,33
+33,tamil nadu,Tamil Nadu,55390,1,2018,33
+33,tamil nadu,Tamil Nadu,55658,11,2019,33
+33,tamil nadu,Tamil Nadu,38610,12,2019,33
+33,tamil nadu,Tamil Nadu,43586,4,2018,33
+33,tamil nadu,Tamil Nadu,65447,9,2020,33
+33,tamil nadu,Tamil Nadu,47231,2,2018,33
+33,tamil nadu,Tamil Nadu,58132,1,2020,33
+33,tamil nadu,Tamil Nadu,41051,8,2018,33
+33,tamil nadu,Tamil Nadu,52845,2,2021,33
+33,tamil nadu,Tamil Nadu,40484,9,2018,33
+33,tamil nadu,Tamil Nadu,40417,12,2020,33
+33,tamil nadu,Tamil Nadu,50834,5,2020,33
+33,tamil nadu,Tamil Nadu,48621,9,2019,33
+33,tamil nadu,Tamil Nadu,47385,8,2019,33
