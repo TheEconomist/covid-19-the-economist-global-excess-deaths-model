@@ -80,7 +80,7 @@ generate_model_loop(
   Y_full = Y[!is.na(Y)],   # Defines outcome variable
   B = 1, 
   include_main_estimate = T,
-  main_estimate_learning_rate = 0.0003,
+  main_estimate_learning_rate = 0.0005,
   bootstrap_learning_rate = 0.003,
   custom_model_index = update,
   new_predictor_set = F
