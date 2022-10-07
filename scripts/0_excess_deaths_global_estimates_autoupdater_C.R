@@ -71,6 +71,8 @@ main_estimate_models <- readRDS("output-data/model-objects/main_estimate_models_
 
 update <- sample(setdiff(1:(B+main_estimate_models), unlist(recently_updated_models)), 1)
 
+# Skip update if in main update run (rather than separate retrain run) and requested update is main estimate model to avoid running into github actions time limitations:
+if(readRDS('output-data/model-objects/start.RDS') != 0 & !update %in% 1:main_estimate_models){
 recently_updated_models <- c(recently_updated_models, update)
 
 # We then use this to generate one new bootstrap model, overwriting a random prior model:
@@ -97,6 +99,7 @@ if(length(recently_updated_models) < B+main_estimate_models){
 } else {
   saveRDS(c(), 'output-data/model-objects/recently_updated_models.RDS')
 }
+}
 
 # Update output run:
 if(readRDS('output-data/model-objects/current_update_run.RDS') == "A"){ 
@@ -109,3 +112,4 @@ saveRDS(Sys.Date(), 'output-data/model-objects/latest_update.RDS')
 end_time <- Sys.time()
 
 print(paste("Total time:", end_time - readRDS('output-data/model-objects/start.RDS')))
+saveRDS(0, 'output-data/model-objects/start.RDS')
