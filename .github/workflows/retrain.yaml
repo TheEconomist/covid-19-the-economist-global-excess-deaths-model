@@ -70,10 +70,10 @@ jobs:
           devtools::install_github('sondreus/agtboost/R-package')
         shell: Rscript {0}
 
-      - name: Run R script
-        run: |
-          source('scripts/0_excess_deaths_global_estimates_autoupdater_A.R')
-        shell: Rscript {0}
+      #- name: Run R script
+      #  run: |
+      #    source('scripts/0_excess_deaths_global_estimates_autoupdater_A.R')
+      #  shell: Rscript {0}
 
       - name: Run R script
         run: |
