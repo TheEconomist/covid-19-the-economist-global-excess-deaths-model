@@ -81,7 +81,7 @@ if(prioritize_main){
 # Check if in main update runs. If so, skip re-training of main estimate models if selected, to avoid reaching github update limits:
 if(update %in% 1:main_estimate_models & readRDS('output-data/model-objects/start.RDS') != 0){
   cat('\n\n Model update skipped to avoid Github time-out limits.')
-}
+} else {
 
 # We then use this to generate one new bootstrap model, overwriting a random prior model:
 cat('\n\n Re-training and replacing 1 model based on latest data.\n\n')
@@ -103,7 +103,8 @@ if(length(recently_updated_models) < B+main_estimate_models){
 } else {
   saveRDS(c(), 'output-data/model-objects/recently_updated_models.RDS')
 }
-
+}
+  
 # Update output run:
 if(readRDS('output-data/model-objects/current_update_run.RDS') == "A"){ 
   saveRDS('B', 'output-data/model-objects/current_update_run.RDS')
