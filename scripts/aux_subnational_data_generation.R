@@ -420,8 +420,7 @@ dat <- dat %>%
          lat_capital = lat_largest_city,
          lng_capital = lng_largest_city)
 
-# To check which data we are missing at the sub-regional level:
-#
+# Add population density
 dat$population_density <- NA
 dat$population_density[dat$local_unit_name == "Jakarta Province" ] <- 15906.5
 dat$population_density[dat$local_unit_name == "Kolkata City"] <- 22000
@@ -430,6 +429,10 @@ dat$population_density[dat$local_unit_name == "Mumbai City"] <- 21000
 dat$population_density[dat$local_unit_name == "Andhra Pradesh State"] <- 308
 dat$population_density[dat$local_unit_name == "Madhya Pradesh State"] <- 240
 
+# Remove weekly mean temperature as we do not have that sub-nationally
+dat$weekly_mean_temperature_in_major_cities_2015_2019 <- NA
+
+# To check which data we are missing at the sub-regional level:
 # setdiff(colnames(country_daily_excess_deaths)[1:93], colnames(dat))
 
 # Removing a few columns to hard-code consistency with main dataset:
