@@ -69,8 +69,19 @@ recently_updated_models <- readRDS('output-data/model-objects/recently_updated_m
 B <- readRDS("output-data/model-objects/B.RDS")
 main_estimate_models <- readRDS("output-data/model-objects/main_estimate_models_n.RDS")
 
-update <- sample(setdiff(1:(B+main_estimate_models), unlist(recently_updated_models)), 1)
-recently_updated_models <- c(recently_updated_models, update)
+# Set priority level for main estimate models for re-training v any random model:
+prioritize_main <- sample(c(T, F), prob = c(0.5, 0.5), 1) 
+if(prioritize_main){
+  update <- sample(1:main_estimate_models)
+  } else {
+  update <- sample(setdiff(1:(B+main_estimate_models), unlist(recently_updated_models)), 1)
+  recently_updated_models <- c(recently_updated_models, update)
+}
+
+# Check if in main update runs. If so, skip re-training of main estimate models if selected, to avoid reaching github update limits:
+if(update %in% 1:main_estimate_models & readRDS('output-data/model-objects/start.RDS') != 0){
+  cat('\n\n Model update skipped to avoid Github time-out limits.')
+}
 
 # We then use this to generate one new bootstrap model, overwriting a random prior model:
 cat('\n\n Re-training and replacing 1 model based on latest data.\n\n')
@@ -86,11 +97,7 @@ generate_model_loop(
 )
 cat('\n\n One of 210 models successfully re-trained.\n\n')
 
-# If desired, uncomment line below to force additional update of main estimate models:
-# recently_updated_models <- setdiff(recently_updated_models, 1:10)
-
 # Save list of updated models, resetting to null if all updated:
-
 if(length(recently_updated_models) < B+main_estimate_models){
   saveRDS(recently_updated_models, 'output-data/model-objects/recently_updated_models.RDS')
 } else {

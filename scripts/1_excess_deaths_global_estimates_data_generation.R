@@ -1127,7 +1127,6 @@ subnational <- readRDS("output-data/model-objects/auxilliary_subnational_data.RD
 
 subnational$lat_largest_city <- subnational$lat_capital
 subnational$lng_largest_city <- subnational$lng_capital
-subnational$daily_vaccinations <- NA
 
 # Merge in missing columns from big dataset:
 subnational <- merge(subnational, country_daily_excess_deaths[, c("date", "iso3c", setdiff(colnames(country_daily_excess_deaths), colnames(subnational)))], by = c("iso3c", "date"))
@@ -1135,7 +1134,6 @@ subnational <- merge(subnational, country_daily_excess_deaths[, c("date", "iso3c
 # Restrict applicable seroprevalence estimates to national ones:
 subnational$sero_nat_or_reg_delta <- subnational$sero_nat_delta
 subnational$sero_reg_or_nat_30d_wma_interpolated <- subnational$sero_nat_30d_wma_interpolated
-
 
 # Make iso3c reflect subnational status
 subnational$iso3c <- paste0(subnational$iso3c, "_", gsub(" ", "_", subnational$name))

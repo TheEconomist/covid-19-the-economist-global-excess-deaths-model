@@ -412,7 +412,9 @@ dat <- dat %>%
     daily_covid_cases_per_100k = (daily_covid_cases / population) * 100000,
     daily_tests = new_tests_smoothed,
     daily_tests_per_100k = (daily_tests / population) * 100000,
-    daily_positive_rate = (daily_covid_cases / daily_tests) * 100) %>%
+    daily_positive_rate = (daily_covid_cases / daily_tests) * 100,
+    daily_covid_cases_raw = new_cases, 
+    daily_covid_deaths_raw = new_deaths) %>%
   rename(centroid_latitude = centroid_lat,
          centroid_longitude = centroid_long,
          lat_capital = lat_largest_city,
@@ -429,41 +431,6 @@ dat$population_density[dat$local_unit_name == "Andhra Pradesh State"] <- 308
 dat$population_density[dat$local_unit_name == "Madhya Pradesh State"] <- 240
 
 # setdiff(colnames(country_daily_excess_deaths)[1:93], colnames(dat))
-
-# Fix for NA testing data
-dat$daily_positive_rate[dat$daily_positive_rate > 100] <- NA
-
-# Restrict to 2020 +
-dat <- dat[dat$date >= as.Date("2020-01-01"), ]
-
-# Fill in leading 0s for covid data:
-# Sort
-dat <- dat[order(dat$date), ]
-
-# Define function
-leading_zeros <- function(x){
-  if(is.na(x[1]) & sum(is.na(x)) != length(x)){
-    x[1:min(which(!is.na(x))-1)] <- 0
-  }
-  x
-}
-
-# Cycle through relevant columns an impute leading zeroes
-dat <- dat[order(dat$date), ]
-for(i in c("daily_covid_deaths", "daily_covid_deaths_per_100k",
-           "daily_covid_cases", "daily_covid_cases_per_100k",
-           "daily_total_deaths",
-           "daily_total_deaths_per_100k")){
-  dat[, i] <-
-    ave(dat[, i],
-        dat$name,
-        FUN = function(x) leading_zeros(x))
-}
-
-# Converting NaN to NA:
-for(i in colnames(dat)){
-  dat[is.nan(dat[,i ]), i] <- NA
-}
 
 # Removing a few columns to hard-code consistency with main dataset:
 dat$time <- NULL
@@ -497,7 +464,7 @@ colnames(china) <- c('year', 'month', 'percent', 'deaths', 'population')
 # Generate expected deaths
 china$expected_deaths <- predict(newdata = china,
                                  lm(deaths ~ as.factor(month)+year,
-                                    data = china[china$year <= 2019, ]))
+                                    data = china[china$year %in% 2015:2019, ]))
 
 # Convert to daily deaths
 dates <- data.frame(date = as.Date((-365*20+Sys.Date()):Sys.Date(), origin = origin))
@@ -537,8 +504,9 @@ china$daily_covid_deaths <- china$daily_covid_deaths * (china$population / 14020
 china$daily_covid_cases <- china$daily_covid_cases * (china$population / 1402000000)
 china$daily_tests <- china$daily_tests * (china$population / 1402000000)
 
-# Rename to reflect this is subsample of entire country:
-china$iso3c <- 'CHN_CDC_DCSD'
+# Specify source country:
+china$iso3c <- 'CHN'
+china$name <- 'CDC_DCSD'
 
 # Remove dates for which data for entire country is available from separate source: 
 china <- china[china$date > full_china_data_ends, ]
@@ -549,7 +517,65 @@ ggplot(china, aes(x=as.Date(date), y=deaths))+geom_line()+geom_line(aes(y=expect
 # Merge into rest of subnational data
 china[, setdiff(colnames(dat), colnames(china))] <- NA
 china <- china[china$date >= as.Date('2020-01-01', origin = origin), colnames(dat)]
-dat <- rbind(dat, china)
+dat <- rbind(dat, china) 
+dat_bc <- dat
 
-# Step 8: Write to file ------------------------------------------------------------------------------
+# Step 8: Impute leading zeroes and vaccination data if applicable------------------------------------------------------------------------------
+
+# Fix for NA testing data
+dat$daily_positive_rate[dat$daily_positive_rate > 100] <- NA
+
+# Restrict to 2020 +
+dat <- dat[dat$date >= as.Date("2020-01-01"), ]
+
+# Fill in leading 0s for covid data:
+# Sort
+dat <- dat[order(dat$date), ]
+
+# Define function
+leading_zeros <- function(x){
+  if(is.na(x[1]) & sum(is.na(x)) != length(x)){
+    x[1:min(which(!is.na(x))-1)] <- 0
+  }
+  x
+}
+
+# Cycle through relevant columns an impute leading zeroes
+dat <- dat[order(dat$date), ]
+for(i in c("daily_covid_deaths", "daily_covid_deaths_per_100k",
+           "daily_covid_cases", "daily_covid_cases_per_100k",
+           "daily_total_deaths",
+           "daily_total_deaths_per_100k")){
+  dat[, i] <-
+    ave(dat[, i],
+        dat$name,
+        FUN = function(x) leading_zeros(x))
+}
+
+# Converting NaN to NA:
+for(i in colnames(dat)){
+  dat[is.nan(dat[,i ]), i] <- NA
+}
+
+# Impute zero vaccinations if applicable:
+vacc_covars <- readRDS("output-data/country_daily_excess_deaths_with_covariates.RDS")
+vacc_covars <- vacc_covars[vacc_covars$iso3c %in% unique(dat$iso3c), ]
+
+# Add leading zeroes to variables related to vaccinations - as by definition no subunit of a country can start vaccinations before the country they are part of:
+vaccination_variables <- c("daily_vaccinations_per_100k",
+                           "daily_vaccinations",
+                           "vaccinated_pct",
+                           "fully_vaccinated_pct",
+                           "cumulative_daily_vaccinations_per_100k")
+
+for(i in vaccination_variables){
+  dat[, i] <- NA
+  for(j in unique(dat$iso3c)){
+    if(sum(!is.na(vacc_covars[vacc_covars$iso3c == j, i])) > 0){
+      dat[dat$iso3c == j & dat$date < min(vacc_covars$date[vacc_covars$iso3c == j & !is.na(vacc_covars[, i])])] <- 0
+    }
+  }
+}
+
+# Step 9: Write to file ------------------------------------------------------------------------------
 saveRDS(dat, "output-data/model-objects/auxilliary_subnational_data.RDS")
