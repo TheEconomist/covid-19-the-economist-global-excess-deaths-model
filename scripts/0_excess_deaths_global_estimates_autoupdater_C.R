@@ -78,8 +78,8 @@ if(prioritize_main){
   recently_updated_models <- c(recently_updated_models, update)
 }
 
-# Check if in main update runs. If so, skip re-training of main estimate models if selected, to avoid reaching github update limits:
-if(update %in% 1:main_estimate_models & readRDS('output-data/model-objects/start.RDS') != 0){
+# Check if in main update runs. If so, skip re-training of models to avoid reaching github update limits:
+if(readRDS('output-data/model-objects/start.RDS') != 0){
   cat('\n\n Model update skipped to avoid Github time-out limits.')
 } else {
 
