@@ -50,7 +50,10 @@ daily <- read_csv("output-data/export_country_per_100k.csv", show_col_types = F)
 cumulative <- read_csv("output-data/export_country_per_100k_cumulative.csv", show_col_types = F)
 
 # Reshape the OWD data to prepare for merging with our estimates (create per 100k, etc)
-main_map_covid_data <- country_daily_data %>%
+main_map_covid_data <- country_daily_data[country_daily_data$date > max(country_daily_data$date)-7, ]
+main_map_covid_data$sum_obs <- as.numeric(ave(main_map_covid_data$new_deaths_smoothed, main_map_covid_data$date, FUN = function(x) sum(!is.na(x))))
+main_map_covid_data <- main_map_covid_data[main_map_covid_data$date == max(main_map_covid_data$date[main_map_covid_data$sum_obs > 50]), ]
+main_map_covid_data <- main_map_covid_data %>%
   mutate(date = as.Date(date),
          iso3c = iso_code,
          daily_covid_deaths_per_100k = (new_deaths_smoothed / population) * 100000,
