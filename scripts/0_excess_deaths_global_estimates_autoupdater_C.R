@@ -72,7 +72,7 @@ main_estimate_models <- readRDS("output-data/model-objects/main_estimate_models_
 # Set priority level for main estimate models for re-training v any random model:
 prioritize_main <- sample(c(T, F), prob = c(0.5, 0.5), 1) 
 if(prioritize_main){
-  update <- sample(1:main_estimate_models)
+  update <- sample(1:main_estimate_models, 1)
   } else {
   update <- sample(setdiff(1:(B+main_estimate_models), unlist(recently_updated_models)), 1)
   recently_updated_models <- c(recently_updated_models, update)
