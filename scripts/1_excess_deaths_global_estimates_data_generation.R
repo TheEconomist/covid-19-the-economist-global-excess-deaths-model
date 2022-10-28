@@ -695,9 +695,10 @@ if(manually_inspect){
 # Step 5: import other data sources (country-level, time-varying) ---------------------------------------
 time_varying_data <- list()
 
-# Google mobility reports:
+# Google mobility reports (no longer updating as of 2022-10-15):
 mob <- fread("https://www.gstatic.com/covid19/mobility/Global_Mobility_Report.csv")
-
+saveRDS(mob, "source-data/mobility_cache.RDS") 
+                       
 # Restrict to country-level data
 mob <- unique(mob[mob$sub_region_1 == "" & mob$sub_region_2 == "" & mob$metro_area == "", ])
 
