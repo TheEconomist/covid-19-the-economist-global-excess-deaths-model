@@ -47,7 +47,7 @@ if(abs(post_updated_world_total[1] - pre_updated_world_total[1]) > 350000 |
   print(pre_updated_world_total)
   print("post_updated_world_total")
   print(post_updated_world_total)
- # stop("Large change in cumulative world total, please inspect manually.")
+  stop("Large change in cumulative world total, please inspect manually.")
 }
 
 # 7. Train a new bootstrap model ---------------------------------------
@@ -70,7 +70,7 @@ B <- readRDS("output-data/model-objects/B.RDS")
 main_estimate_models <- readRDS("output-data/model-objects/main_estimate_models_n.RDS")
 
 # Set priority level for main estimate models for re-training v any random model:
-prioritize_main <- sample(c(T, F), prob = c(0.5, 0.5), 1) 
+prioritize_main <- sample(c(T, F), prob = c(1/20, 19/20), 1) 
 if(prioritize_main){
   update <- sample(1:main_estimate_models, 1)
   } else {
