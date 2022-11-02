@@ -11,6 +11,7 @@ m_predictors <- readRDS("output-data/model-objects/m_predictors.RDS")
 # Define number of bootstrap iterations. We use 200.
 B <- 200
 counter <- 0
+counter_flag <- FALSE
 
 # Define ensemble size for central estimate
 main_estimate_models <- readRDS("output-data/model-objects/main_estimate_models_n.RDS")
@@ -50,6 +51,10 @@ for(i in load_predictions_model_set[1:floor(length(load_predictions_model_set)/2
   rm(gbt_model)
   cat("saving prediction --\n")
   saveRDS(preds, paste0('output-data/model-objects/model-predictions/model_', i , '_prediction.RDS'))
+  if(counter > main_estimate_models & current_update_run == "B" & !counter_flag){
+    counter <- counter +(floor(B/2)+1)
+    counter_flag <- TRUE
+  }
   cat(paste("\nCompleted:", counter, "at : ", Sys.time(), "\n\n"))
   gc()
 }
