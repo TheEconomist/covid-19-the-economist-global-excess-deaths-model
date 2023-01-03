@@ -96,6 +96,19 @@ country_daily_data <- fread("https://raw.githubusercontent.com/owid/covid-19-dat
                 daily_covid_cases_raw,
                 daily_covid_deaths_raw)
 
+# OWID notes that death and case statistics from China are missing starting December 25th, 2022. Note: data in the preceeding month also affected by large changes in reporting practicies. 
+for(i in c("daily_covid_deaths",
+           "daily_covid_deaths_per_100k", 
+           "daily_covid_cases", 
+           "daily_covid_cases_per_100k", 
+           "daily_tests", 
+           "daily_tests_per_100k", 
+           "daily_positive_rate", 
+           "daily_covid_cases_raw", 
+           "daily_covid_deaths_raw")){
+  country_daily_data[country_daily_data$date >= as.Date('2022-12-25') & country_daily_data$iso3c == 'CHN', i] <- NA
+}  
+
 # OWID data sometimes lacks the 7-day rolling average, which we here calculate and add manually when missing:
 country_daily_data <- data.frame(country_daily_data[order(country_daily_data$date), ])
 seven_day_average <- function(x){
