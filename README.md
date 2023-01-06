@@ -47,7 +47,7 @@ A special thanks to all our sources and to those who have made the data to creat
 
 Calculating excess deaths for the entire world over multiple years is both complex and imprecise. We welcome any suggestions on how to improve the model, be it data, algorithm, or  logic. If you have one, please open an issue.
 
-*The Economist* would also like to acknowledge the many people who have helped us refine the model so far, be it through discussions, facilitating data access, or offering coding assistance. A special thanks to Ariel Karlinsky, Philip Schellekens, Oliver Watson, Lukas Appelhans, Berent Å. S. Lunde, Gideon Wakefield, Johannes Hunger, Carol D'Souza, Yun Wei, Mehran Hosseini, Samantha Dolan, Mollie Van Gordon, Rahul Arora, Austin Teda Atmaja, and Dirk Eddelbuettel.
+*The Economist* would also like to acknowledge the many people who have helped us refine the model so far, be it through discussions, facilitating data access, or offering coding assistance. A special thanks to Ariel Karlinsky, Philip Schellekens, Oliver Watson, Lukas Appelhans, Berent Å. S. Lunde, Gideon Wakefield, Johannes Hunger, Carol D'Souza, Yun Wei, Mehran Hosseini, Samantha Dolan, Mollie Van Gordon, Rahul Arora, Austin Teda Atmaja, Dirk Eddelbuettel and Tom Wenseleers.
 
 All coding and data collection to construct these models (and make them update dynamically) was done by Sondre Ulvund Solstad. Should you have any questions about them after reading the methodology, please open an issue or contact him at sondresolstad@economist.com.
 
