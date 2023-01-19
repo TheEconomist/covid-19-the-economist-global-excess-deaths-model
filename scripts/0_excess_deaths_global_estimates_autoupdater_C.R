@@ -118,4 +118,5 @@ end_time <- Sys.time()
 print(paste("Total time:", end_time - readRDS('output-data/model-objects/start.RDS')))
 
 saveRDS(NA, "output-data/model-objects/dat.RDS")
+saveRDS(NA, "output-data/model-objects/pred_matrix.RDS")
 saveRDS(0, 'output-data/model-objects/start.RDS')
