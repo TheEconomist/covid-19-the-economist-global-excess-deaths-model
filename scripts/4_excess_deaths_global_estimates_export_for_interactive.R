@@ -460,7 +460,11 @@ columns_to_include <- c("location", "date", "type", "estimate",
 columns_to_export <- setdiff(columns_to_include, "type")
 
 # By country:
-write_csv(export_long[!export_long$location %in% c("Africa", "Oceania", "Americas", "Asia", "Asia & Oceania", "Europe",  "Latin America and Caribbean", "North America", "World"), ], "output-data/output-for-interactive/by_location_full_data.csv")
+
+# This file is updated once a week to conserve space on github:
+if(max(read_csv("output-data/output-for-interactive/by_location_full_data.csv")$date) <= Sys.Date()-7){
+  write_csv(export_long[!export_long$location %in% c("Africa", "Oceania", "Americas", "Asia", "Asia & Oceania", "Europe",  "Latin America and Caribbean", "North America", "World"), ], "output-data/output-for-interactive/by_location_full_data.csv")
+  }
 
 write_csv(export_long[!export_long$location %in% c("Africa", "Oceania", "Americas", "Asia", "Asia & Oceania", "Europe",  "Latin America and Caribbean", "North America", "World") & export_long$type == "daily_excess_deaths", columns_to_export], 
           "output-data/output-for-interactive/by_location.csv")

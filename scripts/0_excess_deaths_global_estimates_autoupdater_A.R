@@ -15,6 +15,15 @@ saveRDS(start_time, 'output-data/model-objects/start.RDS')
 
 # 1. Update data ---------------------------------------
 
+#
+if(max(readRDS("output-data/country_daily_excess_deaths_with_covariates.RDS")$date, na.rm = T) == Sys.Date()){
+  saveRDS(readRDS("output-data/country_daily_excess_deaths_with_covariates.RDS"), 
+          "output-data/country_daily_excess_deaths_with_covariates_cache.RDS") 
+} else {
+  saveRDS("no up-to-date cache", 
+          "output-data/country_daily_excess_deaths_with_covariates_cache.RDS")
+}
+
 # For memory efficiency, this is executed within a temporary local environment created by the update_data function:
 update_data <- function(){source("scripts/1_excess_deaths_global_estimates_data_generation.R", local = TRUE)}
 update_data()  
