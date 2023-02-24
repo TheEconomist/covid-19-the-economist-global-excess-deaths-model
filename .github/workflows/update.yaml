@@ -51,7 +51,7 @@ jobs:
             ${{ runner.os }}-
 
       - name: Install packages
-        if: steps.cache.outputs.cache-hit != 'true'
+       # if: steps.cache.outputs.cache-hit != 'true'
         run: |
           install.packages(c(
             "devtools",
