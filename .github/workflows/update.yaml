@@ -28,7 +28,8 @@ jobs:
 
       - name: Set up Ubuntu packages
        # run: sudo apt-get install build-essential libcurl4-gnutls-dev libxml2-dev libssl-dev
-        run: sudo apt-get install build-essential libcurl4-gnutls-dev libxml2-dev libssl-dev libgit2-dev libcurl4-openssl-dev
+       # run: sudo apt-get install build-essential libcurl4-gnutls-dev libxml2-dev libssl-dev libgit2-dev libcurl4-openssl-dev
+        run: apt-get install libcurl4-openssl-dev libssl-dev libfontconfig1-dev libxml2-dev libharfbuzz-dev libfribidi-dev libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev
        # run: sudo apt install build-essential libcurl4-gnutls-dev libxml2-dev libssl-dev libgit2-dev libcurl4-openssl-dev
        #  run: sudo apt-get build-essential libcurl4-gnutls-dev libxml2-dev libssl-dev libgit2-dev libcurl4-openssl-dev
          
