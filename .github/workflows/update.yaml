@@ -27,7 +27,8 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
 
       - name: Set up Ubuntu packages
-        run: sudo apt-get install build-essential libcurl4-gnutls-dev libxml2-dev libssl-dev
+       # run: sudo apt-get install build-essential libcurl4-gnutls-dev libxml2-dev libssl-dev
+        run: sudo apt install build-essential libcurl4-gnutls-dev libxml2-dev libssl-dev
 
       - name: Cache R packages
         id: cache
