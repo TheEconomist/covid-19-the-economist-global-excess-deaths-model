@@ -28,8 +28,9 @@ jobs:
 
       - name: Set up Ubuntu packages
        # run: sudo apt-get install build-essential libcurl4-gnutls-dev libxml2-dev libssl-dev
+        run: sudo apt-get install build-essential libcurl4-gnutls-dev libxml2-dev libssl-dev libgit2-dev libcurl4-openssl-dev
        # run: sudo apt install build-essential libcurl4-gnutls-dev libxml2-dev libssl-dev libgit2-dev libcurl4-openssl-dev
-         run: sudo apt-get build-essential libcurl4-gnutls-dev libxml2-dev libssl-dev libgit2-dev libcurl4-openssl-dev
+       #  run: sudo apt-get build-essential libcurl4-gnutls-dev libxml2-dev libssl-dev libgit2-dev libcurl4-openssl-dev
          
       - name: Cache R packages
         id: cache
