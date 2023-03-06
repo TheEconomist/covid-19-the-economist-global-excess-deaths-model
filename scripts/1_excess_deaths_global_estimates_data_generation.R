@@ -50,6 +50,11 @@ daily_excess_deaths <- daily_excess_deaths[!(daily_excess_deaths$iso3c == "MYS" 
 daily_excess_deaths <- daily_excess_deaths[!(daily_excess_deaths$iso3c == "RUS" & daily_excess_deaths$date >= as.Date("2022-02-24")), ]
 daily_excess_deaths <- daily_excess_deaths[!(daily_excess_deaths$iso3c == "UKR" & daily_excess_deaths$date >= as.Date("2022-02-24")), ]
 
+# Removing data from Syria and Turkey during the earthquake:
+daily_excess_deaths <- daily_excess_deaths[!(daily_excess_deaths$iso3c == "TUR" & daily_excess_deaths$date >= as.Date("2023-02-01") & daily_excess_deaths$date >= as.Date("2023-04-01")), ]
+daily_excess_deaths <- daily_excess_deaths[!(daily_excess_deaths$iso3c == "SYR" & daily_excess_deaths$date >= as.Date("2023-02-01") & daily_excess_deaths$date >= as.Date("2023-04-01")), ]
+
+
 # Check to ensure and remove any duplicated country-dates
 daily_excess_deaths <- daily_excess_deaths[!duplicated(paste0(daily_excess_deaths$iso3c, "_", daily_excess_deaths$date)), ]
 
