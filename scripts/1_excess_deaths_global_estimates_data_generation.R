@@ -101,41 +101,6 @@ country_daily_data <- fread("https://raw.githubusercontent.com/owid/covid-19-dat
                 daily_covid_cases_raw,
                 daily_covid_deaths_raw)
 
-# OWID notes that death and case statistics from China are missing starting December 25th, 2022. Note: data in the preceeding month also affected by large changes in reporting practicies. 
-for(i in c("daily_covid_deaths",
-           "daily_covid_deaths_per_100k", 
-           "daily_covid_cases", 
-           "daily_covid_cases_per_100k", 
-           "daily_tests", 
-           "daily_tests_per_100k", 
-           "daily_positive_rate", 
-           "daily_covid_cases_raw", 
-           "daily_covid_deaths_raw")){
-  country_daily_data[country_daily_data$date >= as.Date('2022-12-25') & country_daily_data$iso3c == 'CHN', i] <- NA
-}  
-# On January 14th 2023, the Bureau of Medical Administration announced that there had been 59,938 covid deaths between 8th of December and 12th of January.
-# Source: https://www.theguardian.com/world/2023/jan/14/nearly-60000-people-have-died-of-covid-in-china-in-past-five-weeks
-
-country_daily_data[country_daily_data$date %in% as.Date('2022-12-08'):as.Date('2023-01-11') & country_daily_data$iso3c == 'CHN', 'daily_covid_deaths'] <- 59938/length(as.Date('2022-12-08'):as.Date('2023-01-11'))
-country_daily_data[country_daily_data$date %in% as.Date('2022-12-08'):as.Date('2023-01-11') & country_daily_data$iso3c == 'CHN', 'daily_covid_deaths_per_100k'] <- (59938/length(as.Date('2022-12-08'):as.Date('2023-01-11')))*100000/1420000000
-
-# And on January 23rd 2023, the Chinese CDC announced 12658 deaths deaths between Jan 12 and Jan 19
-# Source: https://www.theguardian.com/world/2023/jan/23/80-of-people-in-china-caught-covid-since-early-december-say-officials
-country_daily_data[country_daily_data$date %in% as.Date('2023-01-12'):as.Date('2023-01-19') & country_daily_data$iso3c == 'CHN', 'daily_covid_deaths'] <- 12658/length(as.Date('2023-01-12'):as.Date('2023-01-19'))
-country_daily_data[country_daily_data$date %in% as.Date('2023-01-12'):as.Date('2023-01-19') & country_daily_data$iso3c == 'CHN', 'daily_covid_deaths_per_100k'] <- (12658/length(as.Date('2023-01-12'):as.Date('2023-01-19')))*100000/1420000000
-
-# And on January 29rd 2023, the Chinese CDC announced 6364 deaths deaths between Jan 20 and Jan 26
-# Source: https://www.scmp.com/news/china/science/article/3208357/china-reports-sharp-drop-covid-deaths-during-lunar-new-year-holiday
-country_daily_data[country_daily_data$date %in% as.Date('2023-01-20'):as.Date('2023-01-26') & country_daily_data$iso3c == 'CHN', 'daily_covid_deaths'] <- 6364/length(as.Date('2023-01-20'):as.Date('2023-01-26'))
-country_daily_data[country_daily_data$date %in% as.Date('2023-01-20'):as.Date('2023-01-26') & country_daily_data$iso3c == 'CHN', 'daily_covid_deaths_per_100k'] <- (6364/length(as.Date('2023-01-20'):as.Date('2023-01-26')))*100000/1420000000
-
-# And on February 4th 2023, the Chinese CDC announced 3278 deaths deaths between Jan 27 and Feb 2
-# Source: https://www.reuters.com/world/china/china-records-3278-covid-related-deaths-between-jan-27-feb-2-2023-02-04/
-country_daily_data[country_daily_data$date %in% as.Date('2023-01-27'):as.Date('2023-02-02') & country_daily_data$iso3c == 'CHN', 'daily_covid_deaths'] <- 3278/length(as.Date('2023-01-27'):as.Date('2023-02-02'))
-country_daily_data[country_daily_data$date %in% as.Date('2023-01-27'):as.Date('2023-02-02') & country_daily_data$iso3c == 'CHN', 'daily_covid_deaths_per_100k'] <- (3278/length(as.Date('2023-01-27'):as.Date('2023-02-02')))*100000/1420000000
-
-# Note: All are distributed evenly in the absence of any information on distribution within these intervals. 
-
 # OWID data sometimes lacks the 7-day rolling average, which we here calculate and add manually when missing:
 country_daily_data <- data.frame(country_daily_data[order(country_daily_data$date), ])
 seven_day_average <- function(x){
