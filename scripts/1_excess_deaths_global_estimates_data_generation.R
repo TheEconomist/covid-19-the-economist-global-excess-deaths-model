@@ -84,7 +84,8 @@ country_daily_data <- fread("https://raw.githubusercontent.com/owid/covid-19-dat
   mutate(region = ifelse(country == 'Kosovo', 'Europe', region)) %>%
   mutate(subregion = ifelse(country == 'Kosovo', 'Southern Europe', subregion)) %>%
   filter(date >= as.Date("2020-01-01"),
-         !str_detect(iso3c,"OWID")) %>%
+         !str_detect(iso3c,"OWID"),
+         !str_detect(iso3c,"BLM")) %>%
   group_by(iso3c) %>%
   fill(daily_tests_per_100k,daily_positive_rate)  %>%
   dplyr::select(date,country,iso3c,region,subregion,population,
