@@ -460,7 +460,7 @@ columns_to_include <- c("location", "date", "type", "estimate",
 columns_to_export <- setdiff(columns_to_include, "type")
 
 # By country:
-
+cat('\n - Step 5.1')
 # This file is updated once a week to conserve space on github:
 if(max(read_csv("output-data/output-for-interactive/by_location_full_data.csv")$date) <= Sys.Date()-7){
   write_csv(export_long[!export_long$location %in% c("Africa", "Oceania", "Americas", "Asia", "Asia & Oceania", "Europe",  "Latin America and Caribbean", "North America", "World"), ], "output-data/output-for-interactive/by_location_full_data.csv")
@@ -477,6 +477,7 @@ write_csv(export_long[!export_long$location %in% c("Africa", "Oceania", "America
 write_csv(export_long[!export_long$location %in% c("Africa", "Oceania", "Americas", "Asia", "Asia & Oceania", "Europe",  "Latin America and Caribbean", "North America", "World") & export_long$type == "daily_excess_deaths_per_100k_cumulative", columns_to_export], "output-data/output-for-interactive/by_location_per_100k_cumulative.csv")
 
 # By region:
+cat('\n - Step 5.2')
 # Select regions
 regions_line_chart <- export_long[export_long$location %in% c("Africa", "Asia", "Oceania", "Europe",  "Latin America and Caribbean", "North America"), columns_to_include]
 
@@ -508,6 +509,7 @@ write_csv(regions_line_chart[regions_line_chart$type == "daily_excess_deaths_per
 write_csv(regions_line_chart[regions_line_chart$type == "daily_excess_deaths_per_100k_cumulative", columns_to_export], "output-data/output-for-interactive/regions_line_chart_per_100k_cumulative.csv")
 
 # For the world:
+cat('\n - Step 5.3')
 world_line_chart <- export_long[export_long$location == "World", columns_to_include]
 
 # Inspect if desired
@@ -538,6 +540,7 @@ write_csv(world_line_chart[world_line_chart$type == "daily_excess_deaths_per_100
 write_csv(world_line_chart[world_line_chart$type == "daily_excess_deaths_per_100k_cumulative", columns_to_export], "output-data/output-for-interactive/world_line_chart_per_100k_cumulative.csv")
 
 # World top-line chart:
+cat('\n - Step 5.4')
 world_top_line_chart <- world_line_chart[world_line_chart$type == "daily_excess_deaths_cumulative" & world_line_chart$date == max(world_line_chart$date, na.rm = T), columns_to_export]
 
 # Sometimes the world total for confirmed deaths is not updated by the time we update our estimates. If so, we default to the previous day (within the last week):                 
