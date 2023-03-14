@@ -111,6 +111,22 @@ rm(X_latest)
 # Impute missing data (using min-impute coupled with one-hot encoding of NA locations) 
 
 # 1. Impute missing:
+                                 
+# As the pandemic progresses, some data which was previously always reported regularly for at least one country in a region has started missing for very recent dates. This imputes those values based on the last known values:
+for(i in c('daily_covid_cases_per_100k_sub_region_average',
+           'daily_covid_cases_per_100k_econ_region_average')){
+  if(any(is.na(X[, i]))){
+    temp <- X[X$date == max(X$date[X$date != max(X$date)]), c('iso3c', 'date', i)]
+    if(temp$date[1] - max(X$date) < 14){
+      for(j in unique(X$iso3c[X$date == max(X$date)])){
+        if(is.na(X[X$iso3c == j & X$date == max(X$date), i])){
+          X[X$iso3c == j & X$date == max(X$date), i] <- temp[temp$iso3c == j, i]
+        }
+      }
+    }
+  }
+}
+
 source("scripts/shared-functions/impute_missing.R")
 X <- impute_missing(X[order(X$date), c(predictors, "iso3c")], cached_NA_cols = T)
 
