@@ -541,7 +541,8 @@ write_csv(world_line_chart[world_line_chart$type == "daily_excess_deaths_per_100
 
 # World top-line chart:
 cat('\n - Step 5.4')
-world_top_line_chart <- world_line_chart[world_line_chart$type == "daily_excess_deaths_cumulative" & world_line_chart$date == max(world_line_chart$date, na.rm = T), columns_to_export]
+cat(world_line_chart)
+world_top_line_chart <- world_line_chart[world_line_chart$type == "daily_excess_deaths_cumulative" & world_line_chart$date == max(world_line_chart$date[world_line_chart$type == "daily_excess_deaths_cumulative"], na.rm = T), columns_to_export]
 
 # Sometimes the world total for confirmed deaths is not updated by the time we update our estimates. If so, we default to the previous day (within the last 3 weeks):                 
 if(nrow(na.omit(world_top_line_chart)) != 1){
