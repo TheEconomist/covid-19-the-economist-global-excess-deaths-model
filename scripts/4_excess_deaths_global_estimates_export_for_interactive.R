@@ -35,6 +35,36 @@ country_daily_data <- country_daily_data[order(country_daily_data$date),
                                            "aged_70_older")]
 country_data <- unique(country_daily_data[, c('location', 'iso_code', 'aged_65_older', 'aged_70_older')]) 
 
+## Use last known value for total deaths and vaccinations (if known within the last month):
+country_daily_data <- country_daily_data[order(country_daily_data$date), ]
+
+fill_if_known_in_last_30 <- function(x){
+  temp <- x
+  for(i in 1:length(x)){
+    if(is.na(x[i])){
+      x[i] <- rev(c(NA, na.omit(temp[max(c(1, i-30)):(i-1)])))[1]
+    }
+  }
+  x
+}
+country_daily_data$total_deaths <- as.numeric(ave(country_daily_data$total_deaths, country_daily_data$location, FUN = fill_if_known_in_last_30))
+country_daily_data$total_vaccinations <- as.numeric(ave(country_daily_data$total_vaccinations, country_daily_data$location, FUN = fill_if_known_in_last_30))
+
+## Use last known value for new deaths (if known within the last 15 days):
+country_daily_data <- country_daily_data[order(country_daily_data$date), ]
+
+fill_if_known_in_last_10 <- function(x){
+  temp <- x
+  for(i in 1:length(x)){
+    if(is.na(x[i])){
+      x[i] <- rev(c(NA, na.omit(temp[max(c(1, i-15)):(i-1)])))[1]
+    }
+  }
+  x
+}
+country_daily_data$new_deaths <- as.numeric(ave(country_daily_data$new_deaths, country_daily_data$location, FUN = fill_if_known_in_last_30))
+
+
 # Create 7-day average of deaths for use in graphics (replacing the OWD version)
 country_daily_data$new_deaths_smoothed <- ave(country_daily_data$new_deaths, country_daily_data$location, FUN = function(x){
   unlist(lapply(1:length(x), FUN = function(i){
