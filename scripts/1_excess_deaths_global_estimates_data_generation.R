@@ -102,6 +102,29 @@ country_daily_data <- fread("https://raw.githubusercontent.com/owid/covid-19-dat
                 daily_covid_cases_raw,
                 daily_covid_deaths_raw)
 
+# After the switch from JHU to WHO data, OWID sometimes misses country-days. We ensure all country-days are present here:
+unique_dates <- unique(country_daily_data$date)
+cat('\nAdding missing OWID country-dates: ')
+country_daily_data <- country_daily_data[order(country_daily_data$date), ]
+for(i in setdiff(unique(country_daily_data$iso3c), 'ESH')){
+  for(j in (Sys.Date()-10):Sys.Date()){
+    if(!any(country_daily_data$date == j & country_daily_data$iso3c == i)){
+      temp <- country_daily_data[country_daily_data$date == max(country_daily_data$date[country_daily_data$date < j]) & country_daily_data$iso3c == i, ]
+      if(nrow(temp) == 0){
+        stop(paste0('Data missing for more than 10 days for ', i))
+      }
+      temp[, c("daily_covid_deaths", "daily_covid_deaths_per_100k", "daily_covid_cases", "daily_covid_cases_per_100k",
+               "daily_tests", "daily_tests_per_100k", "daily_positive_rate", "daily_vaccinations",
+               "daily_vaccinations_per_100k")] <- NA
+      temp$date <- as.Date(j, origin = '1970-01-01')
+      
+      country_daily_data <- rbind(country_daily_data, temp)
+      cat(paste0(j, '-', i, '..'))
+    }
+  }
+}
+cat('\nAdding missing OWID country-dates - completed.')
+
 # OWID data sometimes lacks the 7-day rolling average, which we here calculate and add manually when missing:
 country_daily_data <- data.frame(country_daily_data[order(country_daily_data$date), ])
 seven_day_average <- function(x){
