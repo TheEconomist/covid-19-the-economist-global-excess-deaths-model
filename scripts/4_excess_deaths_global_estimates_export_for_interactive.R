@@ -35,6 +35,28 @@ country_daily_data <- country_daily_data[order(country_daily_data$date),
                                            "aged_70_older")]
 country_data <- unique(country_daily_data[, c('location', 'iso_code', 'aged_65_older', 'aged_70_older')]) 
 
+# After the switch from JHU to WHO data, OWID sometimes misses country-days. We ensure all country-days are present here:
+unique_dates <- unique(country_daily_data$date)
+cat('\nAdding missing OWID country-dates: ')
+country_daily_data <- country_daily_data[order(country_daily_data$date), ]
+for(i in setdiff(unique(country_daily_data$location), c('Northern Cyprus', 'Wales', 'Western Sahara'))){
+  for(j in (Sys.Date()-10):Sys.Date()){
+    if(!any(country_daily_data$date == j & country_daily_data$location == i)){
+      temp <- country_daily_data[country_daily_data$date == max(country_daily_data$date[country_daily_data$date < j]) & country_daily_data$location == i, ]
+      if(nrow(temp) == 0){
+        stop(paste0('Data missing for more than 10 days for ', i))
+      }
+      temp[, c("new_deaths",
+               "new_deaths_smoothed")] <- NA
+      temp$date <- as.IDate(j, origin = '1970-01-01')
+      
+      country_daily_data <- rbind(country_daily_data, temp)
+      cat(paste0(j, '-', i, '..'))
+    }
+  }
+}
+cat('\nAdding missing OWID country-dates - completed.')
+
 ## Use last known value for total deaths and vaccinations (if known within the last month):
 country_daily_data <- country_daily_data[order(country_daily_data$date), ]
 
