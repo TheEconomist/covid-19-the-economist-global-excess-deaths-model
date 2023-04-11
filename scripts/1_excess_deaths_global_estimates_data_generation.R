@@ -106,7 +106,7 @@ country_daily_data <- fread("https://raw.githubusercontent.com/owid/covid-19-dat
 unique_dates <- unique(country_daily_data$date)
 cat('\nAdding missing OWID country-dates: ')
 country_daily_data <- country_daily_data[order(country_daily_data$date), ]
-for(i in setdiff(unique(country_daily_data$iso3c), 'ESH')){
+for(i in setdiff(unique(country_daily_data$iso3c), 'ESH', "TWN")){
   for(j in (Sys.Date()-10):Sys.Date()){
     if(!any(country_daily_data$date == j & country_daily_data$iso3c == i)){
       temp <- country_daily_data[country_daily_data$date == max(country_daily_data$date[country_daily_data$date < j]) & country_daily_data$iso3c == i, ]
