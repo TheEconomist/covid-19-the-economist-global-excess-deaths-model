@@ -12,7 +12,7 @@ library(data.table)
 
 # Get additional subnational units from the World Mortality Project:
 # Source: https://raw.githubusercontent.com/akarlinsky/world_mortality/main/local_mortality/local_mortality.csv
-
+# write_csv(fread('https://raw.githubusercontent.com/akarlinsky/world_mortality/main/local_mortality/local_mortality.csv'), 'source-data/local_mortality.csv')
 lmort <- data.frame(read_csv("source-data/local_mortality.csv"))
 
 # Get country iso3c code
@@ -104,6 +104,8 @@ lmort$population <- NA
 lmort$population[lmort$local_unit_name == "Tamil Nadu State"] <- 82722262 # https://www.indiaonlinepages.com/population/tamil-nadu-population.html
 lmort$population[lmort$local_unit_name == "Madhya Pradesh State"] <- 86044251 # https://www.indiaonlinepages.com/population/madhya-pradesh-population.html
 lmort$population[lmort$local_unit_name == "Andhra Pradesh State"] <- 53206421 # https://www.indiaonlinepages.com/population/andhra-pradesh-population.html
+lmort$population[lmort$local_unit_name == "Chhattisgarh State"] <- 29436231 # https://uidai.gov.in/images/state-wise-aadhaar-saturation.pdf
+lmort$population[lmort$local_unit_name == "Goa State"] <- 1586250 # https://uidai.gov.in/images/state-wise-aadhaar-saturation.pdf
 #lmort$population[lmort$local_unit_name == "Chennai City"] <- 7553790 # https://github.com/elseasama/covid19chennai/blob/gh-pages/chennai_data/demographics.csv
 lmort$population[lmort$local_unit_name == "Mumbai City"] <- 13047654 # midpoint between 2019 and 2021 estimate: https://www.indiaonlinepages.com/population/mumbai-population.html
 lmort$population[lmort$local_unit_name == "Kolkata City"] <- 15634592 # https://www.indiaonlinepages.com/population/kolkata-population.html
@@ -114,12 +116,15 @@ lmort$population[lmort$local_unit_name == "Jakarta Province"] <- 10800000 # http
 
 # Add coordinates of largest city and approximate centroid (source: google maps / wikipedia):
 coordinates <- rbind.data.frame(
-  c("Tamil Nadu State", 13.0836939, 80.270186, "10°45'N", "78°34'E"),
+  c("Tamil Nadu State", 13.0836939, 80.270186, "10°45′N", "78°34′E"),
   c("Mumbai City", 19.0759899, 72.8773928, 19.0759899, 72.8773928),
   c("Jakarta Province", "-6°12′N", "106°49′E", "-6°12′N", "106°49′E"),
   c("Kolkata City", "22°34′N", "88°22′E", "22°34′N", "88°22′E"),
   c("Madhya Pradesh State", "22°43′N", "75°50′E", "23°48′N", "78°28′E"),
-  c("Andhra Pradesh State", "17°42′N", "83°17′E", 16.50, 80.64))
+  c("Andhra Pradesh State", "17°42′N", "83°17′E", 16.50, 80.64),
+  c("Goa State", '15°23′N', "73°48′E", 15.348162, 74.039598),
+  c("Chhattisgarh State", 21.25, 81.63, 21.487101, 82.078290))
+
 # Convert these to decimal:
 library(measurements)
 colnames(coordinates) <- c("name",
@@ -156,10 +161,10 @@ if(inspect){
       data = world, map = world,
       aes(map_id = region),
       color = "black", size = 0.1)+
-    geom_point(data = coordinates,
+    geom_point(data = coordinates[, ],
                aes(x= lng_largest_city,
                    y= lat_largest_city, col = name))+
-    geom_point(data = coordinates,
+    geom_point(data = coordinates[, ],
                aes(x= centroid_long,
                    y= centroid_lat, col = name),
                alpha = 0.3)+theme_minimal()
@@ -178,6 +183,8 @@ mob$name[mob$sub_region_1 == "Jakarta"] <- "Jakarta Province"
 mob$name[mob$sub_region_1 == "Andhra Pradesh" & mob$sub_region_2 == ""] <- "Andhra Pradesh State"
 mob$name[mob$sub_region_1 == "Madhya Pradesh" & mob$sub_region_2 == ""] <- "Madhya Pradesh State"
 mob$name[mob$sub_region_1 == "Tamil Nadu" & mob$sub_region_2 == ""] <- "Tamil Nadu State"
+mob$name[mob$sub_region_1 == "Chhattisgarh" & mob$sub_region_2 == ""] <- "Chhattisgarh State"
+mob$name[mob$sub_region_1 == "Goa" & mob$sub_region_2 == ""] <- "Goa State"
 mob$name[mob$sub_region_2 == "Kolkata"] <- "Kolkata City"
 mob$name[mob$sub_region_2 == "Mumbai"] <- "Mumbai City"
 mob <- mob[!is.na(mob$name), ]
@@ -222,6 +229,8 @@ ind_states$name <- NA
 ind_states$name[ind_states$State == "Tamil Nadu"] <- "Tamil Nadu State"
 ind_states$name[ind_states$State == "Madhya Pradesh"] <- "Madhya Pradesh State"
 ind_states$name[ind_states$State == "Andhra Pradesh"] <- "Andhra Pradesh State"
+ind_states$name[ind_states$State == "Chhattisgarh"] <- "Chhattisgarh State"
+ind_states$name[ind_states$State == "Goa"] <- "Goa State"
 ind_states <- ind_states[!is.na(ind_states$name), ]
 
 # Generate target columns:
@@ -428,6 +437,8 @@ dat$population_density[dat$local_unit_name == "Tamil Nadu State"] <- 550
 dat$population_density[dat$local_unit_name == "Mumbai City"] <- 21000
 dat$population_density[dat$local_unit_name == "Andhra Pradesh State"] <- 308
 dat$population_density[dat$local_unit_name == "Madhya Pradesh State"] <- 240
+dat$population_density[dat$local_unit_name == "Chhattisgarh State"] <- 220
+dat$population_density[dat$local_unit_name == "Goa State"] <- 380
 
 # Remove weekly mean temperature as we do not have that sub-nationally
 dat$weekly_mean_temperature_in_major_cities_2015_2019 <- NA
@@ -582,3 +593,7 @@ for(i in vaccination_variables){
 
 # Step 9: Write to file ------------------------------------------------------------------------------
 saveRDS(dat, "output-data/model-objects/auxilliary_subnational_data.RDS")
+
+if(inspect){
+  ggplot(dat, aes(x=date))+geom_line(aes(y=daily_expected_deaths_per_100k, col = 'expected'))+geom_line(aes(y=daily_total_deaths_per_100k, col = 'observed'))+geom_line(aes(y=daily_excess_deaths_per_100k, col = 'excess'))+facet_wrap(.~local_unit_name)
+}

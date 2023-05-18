@@ -1,446 +1,331 @@
-﻿country_name,local_unit_name,year,time,deaths,time_unit
-China,Wuhan City,2020,1,339,weekly
-China,Wuhan City,0,1,321,weekly
-China,Wuhan City,2020,2,341,weekly
-China,Wuhan City,0,2,305,weekly
-China,Wuhan City,2020,3,372,weekly
-China,Wuhan City,0,3,321,weekly
-China,Wuhan City,2020,4,614,weekly
-China,Wuhan City,0,4,310,weekly
-China,Wuhan City,2020,5,879,weekly
-China,Wuhan City,0,5,302,weekly
-China,Wuhan City,2020,6,892,weekly
-China,Wuhan City,0,6,332,weekly
-China,Wuhan City,2020,7,666,weekly
-China,Wuhan City,0,7,308,weekly
-China,Wuhan City,2020,8,509,weekly
-China,Wuhan City,0,8,305,weekly
-China,Wuhan City,2020,9,400,weekly
-China,Wuhan City,0,9,284,weekly
-China,Wuhan City,2020,10,370,weekly
-China,Wuhan City,0,10,272,weekly
-China,Wuhan City,2020,11,324,weekly
-China,Wuhan City,0,11,252,weekly
-China,Wuhan City,2020,12,293,weekly
-China,Wuhan City,0,12,261,weekly
-China,Wuhan City,2020,13,278,weekly
-China,Wuhan City,0,13,228,weekly
-Belarus,Mogilev City,2020,1,88,weekly
+country_name,local_unit_name,year,time,deaths,time_unit
+Argentina,Buenos Aires Province,0,1,10023,monthly
+Argentina,Buenos Aires Province,0,2,8947,monthly
+Argentina,Buenos Aires Province,0,3,9752,monthly
+Argentina,Buenos Aires Province,0,4,9766,monthly
+Argentina,Buenos Aires Province,0,5,11316,monthly
+Argentina,Buenos Aires Province,0,6,12826,monthly
+Argentina,Buenos Aires Province,0,7,13253,monthly
+Argentina,Buenos Aires Province,0,8,12167,monthly
+Argentina,Buenos Aires Province,0,9,11197,monthly
+Argentina,Buenos Aires Province,0,10,10828,monthly
+Argentina,Buenos Aires Province,0,11,9615,monthly
+Argentina,Buenos Aires Province,0,12,10260,monthly
+Argentina,Buenos Aires Province,2020,1,9646,monthly
+Argentina,Buenos Aires Province,2020,2,9083,monthly
+Argentina,Buenos Aires Province,2020,3,9778,monthly
+Argentina,Buenos Aires Province,2020,4,9584,monthly
+Argentina,Buenos Aires Province,2020,5,10553,monthly
+Argentina,Buenos Aires Province,2020,6,11340,monthly
+Argentina,Buenos Aires Province,2020,7,15269,monthly
+Argentina,Buenos Aires Province,2020,8,15996,monthly
+Argentina,Buenos Aires Province,2020,9,15759,monthly
+Argentina,Buenos Aires Province,2020,10,14318,monthly
+Argentina,Buenos Aires Province,2020,11,12142,monthly
+Argentina,Buenos Aires Province,2020,12,12142,monthly
+Argentina,Cordoba Province,2019,1,2138,monthly
+Argentina,Cordoba Province,2019,2,2076,monthly
+Argentina,Cordoba Province,2019,3,2238,monthly
+Argentina,Cordoba Province,2019,4,2177,monthly
+Argentina,Cordoba Province,2019,5,2567,monthly
+Argentina,Cordoba Province,2019,6,2671,monthly
+Argentina,Cordoba Province,2019,7,3174,monthly
+Argentina,Cordoba Province,2019,8,3174,monthly
+Argentina,Cordoba Province,2019,9,2999,monthly
+Argentina,Cordoba Province,2019,10,2608,monthly
+Argentina,Cordoba Province,2019,11,2328,monthly
+Argentina,Cordoba Province,2019,12,2554,monthly
+Argentina,Cordoba Province,2020,1,2352,monthly
+Argentina,Cordoba Province,2020,2,2245,monthly
+Argentina,Cordoba Province,2020,3,2337,monthly
+Argentina,Cordoba Province,2020,4,2257,monthly
+Argentina,Cordoba Province,2020,5,2453,monthly
+Argentina,Cordoba Province,2020,6,2612,monthly
+Argentina,Cordoba Province,2020,7,3124,monthly
+Argentina,Cordoba Province,2020,8,2862,monthly
+Argentina,Cordoba Province,2020,9,3225,monthly
+Argentina,Cordoba Province,2020,10,4412,monthly
+Argentina,Cordoba Province,2020,11,3536,monthly
+Argentina,Cordoba Province,2020,12,2852,monthly
+Argentina,Cordoba Province,2021,1,2807,monthly
+Argentina,Cordoba Province,2021,2,2528,monthly
+Argentina,Cordoba Province,2021,3,2714,monthly
+Argentina,Cordoba Province,2021,4,3171,monthly
+Argentina,Cordoba Province,2021,5,4068,monthly
+Argentina,Cordoba Province,2021,6,5012,monthly
+Argentina,Cordoba Province,2021,7,4159,monthly
+Argentina,Cordoba Province,2021,8,3640,monthly
+Argentina,Cordoba Province,2021,9,2733,monthly
+Argentina,Cordoba Province,2021,10,2639,monthly
+Argentina,Cordoba Province,2021,11,2542,monthly
+Argentina,Cordoba Province,2021,12,2836,monthly
+Argentina,Cordoba Province,2022,1,5083,monthly
+Argentina,Cordoba Province,2022,2,2870,monthly
+Argentina,Cordoba Province,2022,3,2690,monthly
+Argentina,Cordoba Province,2022,4,2682,monthly
+Argentina,Cordoba Province,2022,5,2987,monthly
+Argentina,Cordoba Province,2022,6,3278,monthly
+Argentina,Cordoba Province,2022,7,3294,monthly
+Argentina,Cordoba Province,2022,8,3012,monthly
+Argentina,Cordoba Province,2022,9,2959,monthly
+Argentina,Cordoba Province,2022,10,2820,monthly
+Argentina,Cordoba Province,2022,11,2446,monthly
+Argentina,Cordoba Province,2022,12,2560,monthly
+Belarus,Minsk City,2019,1,1519,monthly
+Belarus,Minsk City,2019,2,1519,monthly
+Belarus,Minsk City,2019,3,1519,monthly
+Belarus,Minsk City,2019,4,1444,monthly
+Belarus,Minsk City,2019,5,1444,monthly
+Belarus,Minsk City,2019,6,1444,monthly
+Belarus,Minsk City,2019,7,1389,monthly
+Belarus,Minsk City,2019,8,1389,monthly
+Belarus,Minsk City,2019,9,1389,monthly
+Belarus,Minsk City,2019,10,1456,monthly
+Belarus,Minsk City,2019,11,1456,monthly
+Belarus,Minsk City,2019,12,1456,monthly
+Belarus,Minsk City,2020,1,1579,monthly
+Belarus,Minsk City,2020,2,1496,monthly
+Belarus,Minsk City,2020,3,1617,monthly
+Belarus,Minsk City,2020,4,1769,monthly
+Belarus,Minsk City,2020,5,2061,monthly
+Belarus,Minsk City,2020,6,1999,monthly
+Belarus,Minsk City,2020,7,1630,monthly
+Belarus,Minsk City,2020,8,1623,monthly
+Belarus,Minsk City,2020,9,1716,monthly
+Belarus,Minsk City,2020,10,1948,monthly
+Belarus,Minsk City,2020,11,2333,monthly
+Belarus,Minsk City,2020,12,2683,monthly
 Belarus,Mogilev City,2019,1,70,weekly
-Belarus,Mogilev City,2020,2,93,weekly
 Belarus,Mogilev City,2019,2,99,weekly
-Belarus,Mogilev City,2020,3,76,weekly
 Belarus,Mogilev City,2019,3,87,weekly
-Belarus,Mogilev City,2020,4,86,weekly
 Belarus,Mogilev City,2019,4,91,weekly
-Belarus,Mogilev City,2020,5,79,weekly
 Belarus,Mogilev City,2019,5,99,weekly
-Belarus,Mogilev City,2020,6,79,weekly
 Belarus,Mogilev City,2019,6,78,weekly
-Belarus,Mogilev City,2020,7,87,weekly
 Belarus,Mogilev City,2019,7,93,weekly
-Belarus,Mogilev City,2020,8,88,weekly
 Belarus,Mogilev City,2019,8,86,weekly
-Belarus,Mogilev City,2020,9,90,weekly
 Belarus,Mogilev City,2019,9,71,weekly
-Belarus,Mogilev City,2020,10,86,weekly
 Belarus,Mogilev City,2019,10,113,weekly
-Belarus,Mogilev City,2020,11,73,weekly
 Belarus,Mogilev City,2019,11,73,weekly
-Belarus,Mogilev City,2020,12,74,weekly
 Belarus,Mogilev City,2019,12,73,weekly
-Belarus,Mogilev City,2020,13,83,weekly
 Belarus,Mogilev City,2019,13,89,weekly
-Belarus,Mogilev City,2020,14,96,weekly
 Belarus,Mogilev City,2019,14,73,weekly
-Belarus,Mogilev City,2020,15,62,weekly
 Belarus,Mogilev City,2019,15,70,weekly
-Belarus,Mogilev City,2020,16,79,weekly
 Belarus,Mogilev City,2019,16,86,weekly
-Belarus,Mogilev City,2020,17,114,weekly
 Belarus,Mogilev City,2019,17,93,weekly
-Belarus,Mogilev City,2020,18,73,weekly
 Belarus,Mogilev City,2019,18,74,weekly
-Belarus,Mogilev City,2020,19,81,weekly
 Belarus,Mogilev City,2019,19,92,weekly
-Belarus,Mogilev City,2020,20,92,weekly
 Belarus,Mogilev City,2019,20,83,weekly
-Belarus,Mogilev City,2020,21,134,weekly
 Belarus,Mogilev City,2019,21,74,weekly
-Belarus,Mogilev City,2020,22,134,weekly
 Belarus,Mogilev City,2019,22,81,weekly
-Belarus,Mogilev City,2020,23,114,weekly
 Belarus,Mogilev City,2019,23,75,weekly
-Belarus,Mogilev City,2020,24,104,weekly
 Belarus,Mogilev City,2019,24,82,weekly
-Belarus,Mogilev City,2020,25,92,weekly
 Belarus,Mogilev City,2019,25,78,weekly
-Belarus,Mogilev City,2020,26,95,weekly
 Belarus,Mogilev City,2019,26,88,weekly
-Belarus,Mogilev City,2020,27,85,weekly
 Belarus,Mogilev City,2019,27,72,weekly
-Belarus,Mogilev City,2020,28,100,weekly
 Belarus,Mogilev City,2019,28,77,weekly
-Belarus,Mogilev City,2020,29,70,weekly
 Belarus,Mogilev City,2019,29,70,weekly
-Belarus,Mogilev City,2020,30,88,weekly
 Belarus,Mogilev City,2019,30,81,weekly
-Belarus,Mogilev City,2020,31,99,weekly
 Belarus,Mogilev City,2019,31,63,weekly
-Belarus,Mogilev City,2020,32,74,weekly
 Belarus,Mogilev City,2019,32,79,weekly
-Belarus,Mogilev City,2020,33,96,weekly
 Belarus,Mogilev City,2019,33,82,weekly
-Belarus,Mogilev City,2020,34,116,weekly
 Belarus,Mogilev City,2019,34,85,weekly
-Belarus,Mogilev City,2020,35,96,weekly
 Belarus,Mogilev City,2019,35,87,weekly
-Belarus,Mogilev City,2020,36,82,weekly
 Belarus,Mogilev City,2019,36,98,weekly
-Belarus,Mogilev City,2020,37,100,weekly
 Belarus,Mogilev City,2019,37,68,weekly
-Belarus,Mogilev City,2020,38,117,weekly
 Belarus,Mogilev City,2019,38,73,weekly
-Belarus,Mogilev City,2020,39,107,weekly
 Belarus,Mogilev City,2019,39,77,weekly
-Belarus,Mogilev City,2020,40,140,weekly
 Belarus,Mogilev City,2019,40,75,weekly
-Belarus,Mogilev City,2020,41,122,weekly
 Belarus,Mogilev City,2019,41,87,weekly
-Belarus,Mogilev City,2020,42,148,weekly
 Belarus,Mogilev City,2019,42,80,weekly
-Belarus,Mogilev City,2020,43,163,weekly
 Belarus,Mogilev City,2019,43,78,weekly
-Belarus,Mogilev City,2020,44,144,weekly
 Belarus,Mogilev City,2019,44,75,weekly
 Belarus,Mogilev City,2019,45,87,weekly
 Belarus,Mogilev City,2019,46,90,weekly
 Belarus,Mogilev City,2019,47,88,weekly
 Belarus,Mogilev City,2019,48,87,weekly
-Turkey,Istanbul City,2015,1,1400,weekly
-Turkey,Istanbul City,2015,2,1489,weekly
-Turkey,Istanbul City,2015,3,1440,weekly
-Turkey,Istanbul City,2015,4,1408,weekly
-Turkey,Istanbul City,2015,5,1456,weekly
-Turkey,Istanbul City,2015,6,1391,weekly
-Turkey,Istanbul City,2015,7,1426,weekly
-Turkey,Istanbul City,2015,8,1554,weekly
-Turkey,Istanbul City,2015,9,1511,weekly
-Turkey,Istanbul City,2015,10,1522,weekly
-Turkey,Istanbul City,2015,11,1526,weekly
-Turkey,Istanbul City,2015,12,1586,weekly
-Turkey,Istanbul City,2015,13,1547,weekly
-Turkey,Istanbul City,2015,14,1529,weekly
-Turkey,Istanbul City,2015,15,1452,weekly
-Turkey,Istanbul City,2015,16,1378,weekly
-Turkey,Istanbul City,2015,17,1463,weekly
-Turkey,Istanbul City,2015,18,1392,weekly
-Turkey,Istanbul City,2015,19,1368,weekly
-Turkey,Istanbul City,2015,20,1279,weekly
-Turkey,Istanbul City,2015,21,1262,weekly
-Turkey,Istanbul City,2015,22,1265,weekly
-Turkey,Istanbul City,2015,23,1163,weekly
-Turkey,Istanbul City,2015,24,1235,weekly
-Turkey,Istanbul City,2015,25,1245,weekly
-Turkey,Istanbul City,2015,26,1157,weekly
-Turkey,Istanbul City,2015,27,1240,weekly
-Turkey,Istanbul City,2015,28,1249,weekly
-Turkey,Istanbul City,2015,29,1217,weekly
-Turkey,Istanbul City,2015,30,1236,weekly
-Turkey,Istanbul City,2015,31,1379,weekly
-Turkey,Istanbul City,2015,32,1308,weekly
-Turkey,Istanbul City,2015,33,1323,weekly
-Turkey,Istanbul City,2015,34,1302,weekly
-Turkey,Istanbul City,2015,35,1218,weekly
-Turkey,Istanbul City,2015,36,1253,weekly
-Turkey,Istanbul City,2015,37,1176,weekly
-Turkey,Istanbul City,2015,38,1192,weekly
-Turkey,Istanbul City,2015,39,1188,weekly
-Turkey,Istanbul City,2015,40,1179,weekly
-Turkey,Istanbul City,2015,41,1275,weekly
-Turkey,Istanbul City,2015,42,1205,weekly
-Turkey,Istanbul City,2015,43,1335,weekly
-Turkey,Istanbul City,2015,44,1377,weekly
-Turkey,Istanbul City,2015,45,1388,weekly
-Turkey,Istanbul City,2015,46,1319,weekly
-Turkey,Istanbul City,2015,47,1372,weekly
-Turkey,Istanbul City,2015,48,1327,weekly
-Turkey,Istanbul City,2015,49,1361,weekly
-Turkey,Istanbul City,2015,50,1410,weekly
-Turkey,Istanbul City,2015,51,1507,weekly
-Turkey,Istanbul City,2015,52,1407,weekly
-Turkey,Istanbul City,2015,53,1545,weekly
-Turkey,Istanbul City,2016,1,1637,weekly
-Turkey,Istanbul City,2016,2,1698,weekly
-Turkey,Istanbul City,2016,3,1682,weekly
-Turkey,Istanbul City,2016,4,1828,weekly
-Turkey,Istanbul City,2016,5,1727,weekly
-Turkey,Istanbul City,2016,6,1575,weekly
-Turkey,Istanbul City,2016,7,1531,weekly
-Turkey,Istanbul City,2016,8,1473,weekly
-Turkey,Istanbul City,2016,9,1359,weekly
-Turkey,Istanbul City,2016,10,1392,weekly
-Turkey,Istanbul City,2016,11,1424,weekly
-Turkey,Istanbul City,2016,12,1455,weekly
-Turkey,Istanbul City,2016,13,1419,weekly
-Turkey,Istanbul City,2016,14,1404,weekly
-Turkey,Istanbul City,2016,15,1359,weekly
-Turkey,Istanbul City,2016,16,1362,weekly
-Turkey,Istanbul City,2016,17,1240,weekly
-Turkey,Istanbul City,2016,18,1324,weekly
-Turkey,Istanbul City,2016,19,1411,weekly
-Turkey,Istanbul City,2016,20,1283,weekly
-Turkey,Istanbul City,2016,21,1360,weekly
-Turkey,Istanbul City,2016,22,1334,weekly
-Turkey,Istanbul City,2016,23,1242,weekly
-Turkey,Istanbul City,2016,24,1315,weekly
-Turkey,Istanbul City,2016,25,1364,weekly
-Turkey,Istanbul City,2016,26,1406,weekly
-Turkey,Istanbul City,2016,27,1174,weekly
-Turkey,Istanbul City,2016,28,1460,weekly
-Turkey,Istanbul City,2016,29,1309,weekly
-Turkey,Istanbul City,2016,30,1367,weekly
-Turkey,Istanbul City,2016,31,1321,weekly
-Turkey,Istanbul City,2016,32,1336,weekly
-Turkey,Istanbul City,2016,33,1342,weekly
-Turkey,Istanbul City,2016,34,1249,weekly
-Turkey,Istanbul City,2016,35,1164,weekly
-Turkey,Istanbul City,2016,36,1272,weekly
-Turkey,Istanbul City,2016,37,1280,weekly
-Turkey,Istanbul City,2016,38,1254,weekly
-Turkey,Istanbul City,2016,39,1306,weekly
-Turkey,Istanbul City,2016,40,1355,weekly
-Turkey,Istanbul City,2016,41,1357,weekly
-Turkey,Istanbul City,2016,42,1420,weekly
-Turkey,Istanbul City,2016,43,1353,weekly
-Turkey,Istanbul City,2016,44,1511,weekly
-Turkey,Istanbul City,2016,45,1436,weekly
-Turkey,Istanbul City,2016,46,1460,weekly
-Turkey,Istanbul City,2016,47,1474,weekly
-Turkey,Istanbul City,2016,48,1429,weekly
-Turkey,Istanbul City,2016,49,1501,weekly
-Turkey,Istanbul City,2016,50,1474,weekly
-Turkey,Istanbul City,2016,51,1631,weekly
-Turkey,Istanbul City,2016,52,1764,weekly
-Turkey,Istanbul City,2017,1,1940,weekly
-Turkey,Istanbul City,2017,2,1937,weekly
-Turkey,Istanbul City,2017,3,1827,weekly
-Turkey,Istanbul City,2017,4,1767,weekly
-Turkey,Istanbul City,2017,5,1594,weekly
-Turkey,Istanbul City,2017,6,1566,weekly
-Turkey,Istanbul City,2017,7,1552,weekly
-Turkey,Istanbul City,2017,8,1497,weekly
-Turkey,Istanbul City,2017,9,1473,weekly
-Turkey,Istanbul City,2017,10,1469,weekly
-Turkey,Istanbul City,2017,11,1460,weekly
-Turkey,Istanbul City,2017,12,1488,weekly
-Turkey,Istanbul City,2017,13,1431,weekly
-Turkey,Istanbul City,2017,14,1418,weekly
-Turkey,Istanbul City,2017,15,1489,weekly
-Turkey,Istanbul City,2017,16,1399,weekly
-Turkey,Istanbul City,2017,17,1429,weekly
-Turkey,Istanbul City,2017,18,1360,weekly
-Turkey,Istanbul City,2017,19,1341,weekly
-Turkey,Istanbul City,2017,20,1354,weekly
-Turkey,Istanbul City,2017,21,1403,weekly
-Turkey,Istanbul City,2017,22,1352,weekly
-Turkey,Istanbul City,2017,23,1266,weekly
-Turkey,Istanbul City,2017,24,1294,weekly
-Turkey,Istanbul City,2017,25,1324,weekly
-Turkey,Istanbul City,2017,26,1442,weekly
-Turkey,Istanbul City,2017,27,1436,weekly
-Turkey,Istanbul City,2017,28,1380,weekly
-Turkey,Istanbul City,2017,29,1219,weekly
-Turkey,Istanbul City,2017,30,1304,weekly
-Turkey,Istanbul City,2017,31,1267,weekly
-Turkey,Istanbul City,2017,32,1296,weekly
-Turkey,Istanbul City,2017,33,1266,weekly
-Turkey,Istanbul City,2017,34,1274,weekly
-Turkey,Istanbul City,2017,35,1204,weekly
-Turkey,Istanbul City,2017,36,1308,weekly
-Turkey,Istanbul City,2017,37,1367,weekly
-Turkey,Istanbul City,2017,38,1266,weekly
-Turkey,Istanbul City,2017,39,1292,weekly
-Turkey,Istanbul City,2017,40,1268,weekly
-Turkey,Istanbul City,2017,41,1360,weekly
-Turkey,Istanbul City,2017,42,1391,weekly
-Turkey,Istanbul City,2017,43,1419,weekly
-Turkey,Istanbul City,2017,44,1486,weekly
-Turkey,Istanbul City,2017,45,1434,weekly
-Turkey,Istanbul City,2017,46,1480,weekly
-Turkey,Istanbul City,2017,47,1493,weekly
-Turkey,Istanbul City,2017,48,1558,weekly
-Turkey,Istanbul City,2017,49,1470,weekly
-Turkey,Istanbul City,2017,50,1502,weekly
-Turkey,Istanbul City,2017,51,1545,weekly
-Turkey,Istanbul City,2017,52,1621,weekly
-Turkey,Istanbul City,2018,1,1552,weekly
-Turkey,Istanbul City,2018,2,1517,weekly
-Turkey,Istanbul City,2018,3,1643,weekly
-Turkey,Istanbul City,2018,4,1633,weekly
-Turkey,Istanbul City,2018,5,1618,weekly
-Turkey,Istanbul City,2018,6,1539,weekly
-Turkey,Istanbul City,2018,7,1458,weekly
-Turkey,Istanbul City,2018,8,1511,weekly
-Turkey,Istanbul City,2018,9,1610,weekly
-Turkey,Istanbul City,2018,10,1493,weekly
-Turkey,Istanbul City,2018,11,1454,weekly
-Turkey,Istanbul City,2018,12,1467,weekly
-Turkey,Istanbul City,2018,13,1404,weekly
-Turkey,Istanbul City,2018,14,1472,weekly
-Turkey,Istanbul City,2018,15,1442,weekly
-Turkey,Istanbul City,2018,16,1417,weekly
-Turkey,Istanbul City,2018,17,1462,weekly
-Turkey,Istanbul City,2018,18,1374,weekly
-Turkey,Istanbul City,2018,19,1403,weekly
-Turkey,Istanbul City,2018,20,1398,weekly
-Turkey,Istanbul City,2018,21,1401,weekly
-Turkey,Istanbul City,2018,22,1266,weekly
-Turkey,Istanbul City,2018,23,1412,weekly
-Turkey,Istanbul City,2018,24,1295,weekly
-Turkey,Istanbul City,2018,25,1416,weekly
-Turkey,Istanbul City,2018,26,1314,weekly
-Turkey,Istanbul City,2018,27,1390,weekly
-Turkey,Istanbul City,2018,28,1367,weekly
-Turkey,Istanbul City,2018,29,1395,weekly
-Turkey,Istanbul City,2018,30,1301,weekly
-Turkey,Istanbul City,2018,31,1347,weekly
-Turkey,Istanbul City,2018,32,1419,weekly
-Turkey,Istanbul City,2018,33,1374,weekly
-Turkey,Istanbul City,2018,34,1325,weekly
-Turkey,Istanbul City,2018,35,1291,weekly
-Turkey,Istanbul City,2018,36,1323,weekly
-Turkey,Istanbul City,2018,37,1266,weekly
-Turkey,Istanbul City,2018,38,1319,weekly
-Turkey,Istanbul City,2018,39,1323,weekly
-Turkey,Istanbul City,2018,40,1354,weekly
-Turkey,Istanbul City,2018,41,1353,weekly
-Turkey,Istanbul City,2018,42,1365,weekly
-Turkey,Istanbul City,2018,43,1385,weekly
-Turkey,Istanbul City,2018,44,1466,weekly
-Turkey,Istanbul City,2018,45,1403,weekly
-Turkey,Istanbul City,2018,46,1461,weekly
-Turkey,Istanbul City,2018,47,1469,weekly
-Turkey,Istanbul City,2018,48,1528,weekly
-Turkey,Istanbul City,2018,49,1459,weekly
-Turkey,Istanbul City,2018,50,1532,weekly
-Turkey,Istanbul City,2018,51,1554,weekly
-Turkey,Istanbul City,2018,52,1606,weekly
-Turkey,Istanbul City,2019,1,1764,weekly
-Turkey,Istanbul City,2019,2,1907,weekly
-Turkey,Istanbul City,2019,3,1981,weekly
-Turkey,Istanbul City,2019,4,1956,weekly
-Turkey,Istanbul City,2019,5,1867,weekly
-Turkey,Istanbul City,2019,6,1731,weekly
-Turkey,Istanbul City,2019,7,1569,weekly
-Turkey,Istanbul City,2019,8,1615,weekly
-Turkey,Istanbul City,2019,9,1576,weekly
-Turkey,Istanbul City,2019,10,1528,weekly
-Turkey,Istanbul City,2019,11,1454,weekly
-Turkey,Istanbul City,2019,12,1500,weekly
-Turkey,Istanbul City,2019,13,1501,weekly
-Turkey,Istanbul City,2019,14,1431,weekly
-Turkey,Istanbul City,2019,15,1416,weekly
-Turkey,Istanbul City,2019,16,1398,weekly
-Turkey,Istanbul City,2019,17,1411,weekly
-Turkey,Istanbul City,2019,18,1488,weekly
-Turkey,Istanbul City,2019,19,1416,weekly
-Turkey,Istanbul City,2019,20,1391,weekly
-Turkey,Istanbul City,2019,21,1377,weekly
-Turkey,Istanbul City,2019,22,1420,weekly
-Turkey,Istanbul City,2019,23,1351,weekly
-Turkey,Istanbul City,2019,24,1371,weekly
-Turkey,Istanbul City,2019,25,1389,weekly
-Turkey,Istanbul City,2019,26,1363,weekly
-Turkey,Istanbul City,2019,27,1348,weekly
-Turkey,Istanbul City,2019,28,1263,weekly
-Turkey,Istanbul City,2019,29,1298,weekly
-Turkey,Istanbul City,2019,30,1310,weekly
-Turkey,Istanbul City,2019,31,1390,weekly
-Turkey,Istanbul City,2019,32,1277,weekly
-Turkey,Istanbul City,2019,33,1279,weekly
-Turkey,Istanbul City,2019,34,1286,weekly
-Turkey,Istanbul City,2019,35,1334,weekly
-Turkey,Istanbul City,2019,36,1334,weekly
-Turkey,Istanbul City,2019,37,1293,weekly
-Turkey,Istanbul City,2019,38,1284,weekly
-Turkey,Istanbul City,2019,39,1390,weekly
-Turkey,Istanbul City,2019,40,1393,weekly
-Turkey,Istanbul City,2019,41,1336,weekly
-Turkey,Istanbul City,2019,42,1375,weekly
-Turkey,Istanbul City,2019,43,1385,weekly
-Turkey,Istanbul City,2019,44,1426,weekly
-Turkey,Istanbul City,2019,45,1460,weekly
-Turkey,Istanbul City,2019,46,1377,weekly
-Turkey,Istanbul City,2019,47,1407,weekly
-Turkey,Istanbul City,2019,48,1462,weekly
-Turkey,Istanbul City,2019,49,1407,weekly
-Turkey,Istanbul City,2019,50,1454,weekly
-Turkey,Istanbul City,2019,51,1581,weekly
-Turkey,Istanbul City,2019,52,1540,weekly
-Turkey,Istanbul City,2020,1,1696,weekly
-Turkey,Istanbul City,2020,2,1767,weekly
-Turkey,Istanbul City,2020,3,1815,weekly
-Turkey,Istanbul City,2020,4,1805,weekly
-Turkey,Istanbul City,2020,5,1741,weekly
-Turkey,Istanbul City,2020,6,1603,weekly
-Turkey,Istanbul City,2020,7,1595,weekly
-Turkey,Istanbul City,2020,8,1455,weekly
-Turkey,Istanbul City,2020,9,1507,weekly
-Turkey,Istanbul City,2020,10,1496,weekly
-Turkey,Istanbul City,2020,11,1489,weekly
-Turkey,Istanbul City,2020,12,1755,weekly
-Turkey,Istanbul City,2020,13,1792,weekly
-Turkey,Istanbul City,2020,14,2220,weekly
-Turkey,Istanbul City,2020,15,2258,weekly
-Turkey,Istanbul City,2020,16,2121,weekly
-Turkey,Istanbul City,2020,17,1962,weekly
-Turkey,Istanbul City,2020,18,1829,weekly
-Turkey,Istanbul City,2020,19,1694,weekly
-Turkey,Istanbul City,2020,20,1580,weekly
-Turkey,Istanbul City,2020,21,1474,weekly
-Turkey,Istanbul City,2020,22,1394,weekly
-Turkey,Istanbul City,2020,23,1433,weekly
-Turkey,Istanbul City,2020,24,1481,weekly
-Turkey,Istanbul City,2020,25,1432,weekly
-Turkey,Istanbul City,2020,26,1355,weekly
-Turkey,Istanbul City,2020,27,1401,weekly
-Turkey,Istanbul City,2020,28,1412,weekly
-Turkey,Istanbul City,2020,29,1323,weekly
-Turkey,Istanbul City,2020,30,1339,weekly
-Turkey,Istanbul City,2020,31,1380,weekly
-Turkey,Istanbul City,2020,32,1469,weekly
-Turkey,Istanbul City,2020,33,1457,weekly
-Turkey,Istanbul City,2020,34,1355,weekly
-Turkey,Istanbul City,2020,35,1455,weekly
-Turkey,Istanbul City,2020,36,1445,weekly
-Turkey,Istanbul City,2020,37,1442,weekly
-Turkey,Istanbul City,2020,38,1464,weekly
-Turkey,Istanbul City,2020,39,1495,weekly
-Turkey,Istanbul City,2020,40,1464,weekly
-Turkey,Istanbul City,2020,41,1457,weekly
-Turkey,Istanbul City,2020,42,1606,weekly
-Turkey,Istanbul City,2020,43,1783,weekly
-Turkey,Istanbul City,2020,44,2012,weekly
-Turkey,Istanbul City,2020,45,2251,weekly
-Turkey,Istanbul City,2020,46,2652,weekly
-Turkey,Istanbul City,2020,47,2899,weekly
-Turkey,Istanbul City,2020,48,2985,weekly
-Turkey,Istanbul City,2020,49,3012,weekly
-Turkey,Istanbul City,2020,50,2854,weekly
-Turkey,Istanbul City,2020,51,2574,weekly
-Turkey,Istanbul City,2020,52,2313,weekly
-Turkey,Istanbul City,2020,53,2021,weekly
-Turkey,Istanbul City,2021,1,1876,weekly
-Turkey,Istanbul City,2021,2,1770,weekly
-Turkey,Istanbul City,2021,3,1746,weekly
-Turkey,Istanbul City,2021,4,1645,weekly
-Turkey,Istanbul City,2021,5,1559,weekly
-Turkey,Istanbul City,2021,6,1533,weekly
-Turkey,Istanbul City,2021,7,1573,weekly
-Turkey,Istanbul City,2021,8,1617,weekly
-Turkey,Istanbul City,2021,9,1596,weekly
-Turkey,Istanbul City,2021,10,1672,weekly
+Belarus,Mogilev City,2020,1,88,weekly
+Belarus,Mogilev City,2020,2,93,weekly
+Belarus,Mogilev City,2020,3,76,weekly
+Belarus,Mogilev City,2020,4,86,weekly
+Belarus,Mogilev City,2020,5,79,weekly
+Belarus,Mogilev City,2020,6,79,weekly
+Belarus,Mogilev City,2020,7,87,weekly
+Belarus,Mogilev City,2020,8,88,weekly
+Belarus,Mogilev City,2020,9,90,weekly
+Belarus,Mogilev City,2020,10,86,weekly
+Belarus,Mogilev City,2020,11,73,weekly
+Belarus,Mogilev City,2020,12,74,weekly
+Belarus,Mogilev City,2020,13,83,weekly
+Belarus,Mogilev City,2020,14,96,weekly
+Belarus,Mogilev City,2020,15,62,weekly
+Belarus,Mogilev City,2020,16,79,weekly
+Belarus,Mogilev City,2020,17,114,weekly
+Belarus,Mogilev City,2020,18,73,weekly
+Belarus,Mogilev City,2020,19,81,weekly
+Belarus,Mogilev City,2020,20,92,weekly
+Belarus,Mogilev City,2020,21,134,weekly
+Belarus,Mogilev City,2020,22,134,weekly
+Belarus,Mogilev City,2020,23,114,weekly
+Belarus,Mogilev City,2020,24,104,weekly
+Belarus,Mogilev City,2020,25,92,weekly
+Belarus,Mogilev City,2020,26,95,weekly
+Belarus,Mogilev City,2020,27,85,weekly
+Belarus,Mogilev City,2020,28,100,weekly
+Belarus,Mogilev City,2020,29,70,weekly
+Belarus,Mogilev City,2020,30,88,weekly
+Belarus,Mogilev City,2020,31,99,weekly
+Belarus,Mogilev City,2020,32,74,weekly
+Belarus,Mogilev City,2020,33,96,weekly
+Belarus,Mogilev City,2020,34,116,weekly
+Belarus,Mogilev City,2020,35,96,weekly
+Belarus,Mogilev City,2020,36,82,weekly
+Belarus,Mogilev City,2020,37,100,weekly
+Belarus,Mogilev City,2020,38,117,weekly
+Belarus,Mogilev City,2020,39,107,weekly
+Belarus,Mogilev City,2020,40,140,weekly
+Belarus,Mogilev City,2020,41,122,weekly
+Belarus,Mogilev City,2020,42,148,weekly
+Belarus,Mogilev City,2020,43,163,weekly
+Belarus,Mogilev City,2020,44,144,weekly
+China,Wuhan City,0,1,321,weekly
+China,Wuhan City,0,2,305,weekly
+China,Wuhan City,0,3,321,weekly
+China,Wuhan City,0,4,310,weekly
+China,Wuhan City,0,5,302,weekly
+China,Wuhan City,0,6,332,weekly
+China,Wuhan City,0,7,308,weekly
+China,Wuhan City,0,8,305,weekly
+China,Wuhan City,0,9,284,weekly
+China,Wuhan City,0,10,272,weekly
+China,Wuhan City,0,11,252,weekly
+China,Wuhan City,0,12,261,weekly
+China,Wuhan City,0,13,228,weekly
+China,Wuhan City,2020,1,339,weekly
+China,Wuhan City,2020,2,341,weekly
+China,Wuhan City,2020,3,372,weekly
+China,Wuhan City,2020,4,614,weekly
+China,Wuhan City,2020,5,879,weekly
+China,Wuhan City,2020,6,892,weekly
+China,Wuhan City,2020,7,666,weekly
+China,Wuhan City,2020,8,509,weekly
+China,Wuhan City,2020,9,400,weekly
+China,Wuhan City,2020,10,370,weekly
+China,Wuhan City,2020,11,324,weekly
+China,Wuhan City,2020,12,293,weekly
+China,Wuhan City,2020,13,278,weekly
+India,Ahmedabad City,2019,4,2784,monthly
+India,Ahmedabad City,2019,5,2706,monthly
+India,Ahmedabad City,2020,1,4601,monthly
+India,Ahmedabad City,2020,2,4822,monthly
+India,Ahmedabad City,2020,3,3968,monthly
+India,Ahmedabad City,2020,4,3051,monthly
+India,Ahmedabad City,2020,5,5108,monthly
+India,Ahmedabad City,2020,6,9722,monthly
+India,Ahmedabad City,2020,7,6434,monthly
+India,Ahmedabad City,2020,8,4578,monthly
+India,Ahmedabad City,2020,9,5388,monthly
+India,Ahmedabad City,2020,10,5437,monthly
+India,Ahmedabad City,2020,11,5909,monthly
+India,Ahmedabad City,2020,12,8559,monthly
+India,Ahmedabad City,2021,1,5101,monthly
+India,Ahmedabad City,2021,2,4214,monthly
+India,Ahmedabad City,2021,3,4601,monthly
+India,Ahmedabad City,2021,4,9240,monthly
+India,Ahmedabad City,2021,5,21187,monthly
+India,Ahmedabad City,2021,6,3969,monthly
+India,Andhra Pradesh State,2018,1,33457,monthly
+India,Andhra Pradesh State,2018,2,28635,monthly
+India,Andhra Pradesh State,2018,3,27174,monthly
+India,Andhra Pradesh State,2018,4,25831,monthly
+India,Andhra Pradesh State,2018,5,24226,monthly
+India,Andhra Pradesh State,2018,6,26848,monthly
+India,Andhra Pradesh State,2018,7,26293,monthly
+India,Andhra Pradesh State,2018,8,27761,monthly
+India,Andhra Pradesh State,2018,9,26483,monthly
+India,Andhra Pradesh State,2018,10,28348,monthly
+India,Andhra Pradesh State,2018,11,26645,monthly
+India,Andhra Pradesh State,2018,12,29798,monthly
+India,Andhra Pradesh State,2019,1,32149,monthly
+India,Andhra Pradesh State,2019,2,31050,monthly
+India,Andhra Pradesh State,2019,3,27865,monthly
+India,Andhra Pradesh State,2019,4,26212,monthly
+India,Andhra Pradesh State,2019,5,29813,monthly
+India,Andhra Pradesh State,2019,6,30099,monthly
+India,Andhra Pradesh State,2019,7,28360,monthly
+India,Andhra Pradesh State,2019,8,28563,monthly
+India,Andhra Pradesh State,2019,9,30341,monthly
+India,Andhra Pradesh State,2019,10,33559,monthly
+India,Andhra Pradesh State,2019,11,33095,monthly
+India,Andhra Pradesh State,2019,12,31115,monthly
+India,Andhra Pradesh State,2020,1,31890,monthly
+India,Andhra Pradesh State,2020,2,26731,monthly
+India,Andhra Pradesh State,2020,3,25332,monthly
+India,Andhra Pradesh State,2020,4,22340,monthly
+India,Andhra Pradesh State,2020,5,27987,monthly
+India,Andhra Pradesh State,2020,6,28275,monthly
+India,Andhra Pradesh State,2020,7,34583,monthly
+India,Andhra Pradesh State,2020,8,54757,monthly
+India,Andhra Pradesh State,2020,9,55556,monthly
+India,Andhra Pradesh State,2020,10,41913,monthly
+India,Andhra Pradesh State,2020,11,38472,monthly
+India,Andhra Pradesh State,2020,12,39375,monthly
+India,Andhra Pradesh State,2021,1,38170,monthly
+India,Andhra Pradesh State,2021,2,32160,monthly
+India,Andhra Pradesh State,2021,3,33868,monthly
+India,Andhra Pradesh State,2021,4,39908,monthly
+India,Andhra Pradesh State,2021,5,136548,monthly
+India,Andhra Pradesh State,2021,6,67576,monthly
+India,Andhra Pradesh State,2021,7,39491,monthly
+India,Andhra Pradesh State,2021,8,35804,monthly
+India,Andhra Pradesh State,2021,9,38772,monthly
+India,Andhra Pradesh State,2021,10,35496,monthly
+India,Andhra Pradesh State,2021,11,35414,monthly
+India,Andhra Pradesh State,2021,12,37707,monthly
+India,Andhra Pradesh State,2022,1,37729,monthly
+India,Andhra Pradesh State,2022,2,37433,monthly
+India,Andhra Pradesh State,2022,3,32102,monthly
+India,Andhra Pradesh State,2022,4,28649,monthly
+India,Andhra Pradesh State,2022,5,29898,monthly
+India,Andhra Pradesh State,2022,6,32060,monthly
+India,Andhra Pradesh State,2022,7,32122,monthly
+India,Andhra Pradesh State,2022,8,35476,monthly
+India,Andhra Pradesh State,2022,9,35204,monthly
+India,Assam State,2018,1,12204,monthly
+India,Assam State,2018,2,12193,monthly
+India,Assam State,2018,3,12155,monthly
+India,Assam State,2018,4,11826,monthly
+India,Assam State,2018,5,11761,monthly
+India,Assam State,2018,6,11656,monthly
+India,Assam State,2018,7,11456,monthly
+India,Assam State,2018,8,11378,monthly
+India,Assam State,2018,9,11593,monthly
+India,Assam State,2018,10,11755,monthly
+India,Assam State,2018,11,11515,monthly
+India,Assam State,2018,12,13113,monthly
+India,Assam State,2019,1,15680,monthly
+India,Assam State,2019,2,14806,monthly
+India,Assam State,2019,3,14266,monthly
+India,Assam State,2019,4,13147,monthly
+India,Assam State,2019,5,12169,monthly
+India,Assam State,2019,6,11303,monthly
+India,Assam State,2019,7,11065,monthly
+India,Assam State,2019,8,10925,monthly
+India,Assam State,2019,9,13177,monthly
+India,Assam State,2019,10,14117,monthly
+India,Assam State,2019,11,15700,monthly
+India,Assam State,2019,12,16702,monthly
+India,Assam State,2020,1,18556,monthly
+India,Assam State,2020,2,17971,monthly
+India,Assam State,2020,3,16975,monthly
+India,Assam State,2020,4,9003,monthly
+India,Assam State,2020,5,8655,monthly
+India,Assam State,2020,6,8305,monthly
+India,Assam State,2020,7,9118,monthly
+India,Assam State,2020,8,16887,monthly
+India,Assam State,2020,9,18364,monthly
+India,Assam State,2020,10,20814,monthly
+India,Assam State,2020,11,21780,monthly
+India,Assam State,2020,12,20657,monthly
 India,Chennai City,2015,1,1268,weekly
 India,Chennai City,2015,2,1202,weekly
 India,Chennai City,2015,3,1182,weekly
@@ -832,6 +717,239 @@ India,Chennai City,2022,22,1247,weekly
 India,Chennai City,2022,23,1260,weekly
 India,Chennai City,2022,24,1118,weekly
 India,Chennai City,2022,25,1001,weekly
+India,Chhattisgarh State,2015,1,15138,monthly
+India,Chhattisgarh State,2015,2,11676,monthly
+India,Chhattisgarh State,2015,3,13278,monthly
+India,Chhattisgarh State,2015,4,13034,monthly
+India,Chhattisgarh State,2015,5,15215,monthly
+India,Chhattisgarh State,2015,6,12672,monthly
+India,Chhattisgarh State,2015,7,13753,monthly
+India,Chhattisgarh State,2015,8,14519,monthly
+India,Chhattisgarh State,2015,9,14224,monthly
+India,Chhattisgarh State,2015,10,14790,monthly
+India,Chhattisgarh State,2015,11,14586,monthly
+India,Chhattisgarh State,2015,12,15149,monthly
+India,Chhattisgarh State,2016,1,17508,monthly
+India,Chhattisgarh State,2016,2,13626,monthly
+India,Chhattisgarh State,2016,3,13105,monthly
+India,Chhattisgarh State,2016,4,13030,monthly
+India,Chhattisgarh State,2016,5,13997,monthly
+India,Chhattisgarh State,2016,6,13540,monthly
+India,Chhattisgarh State,2016,7,15971,monthly
+India,Chhattisgarh State,2016,8,19136,monthly
+India,Chhattisgarh State,2016,9,16238,monthly
+India,Chhattisgarh State,2016,10,16076,monthly
+India,Chhattisgarh State,2016,11,15064,monthly
+India,Chhattisgarh State,2016,12,15694,monthly
+India,Chhattisgarh State,2017,1,17410,monthly
+India,Chhattisgarh State,2017,2,13238,monthly
+India,Chhattisgarh State,2017,3,13134,monthly
+India,Chhattisgarh State,2017,4,13045,monthly
+India,Chhattisgarh State,2017,5,14949,monthly
+India,Chhattisgarh State,2017,6,12897,monthly
+India,Chhattisgarh State,2017,7,14887,monthly
+India,Chhattisgarh State,2017,8,15789,monthly
+India,Chhattisgarh State,2017,9,14743,monthly
+India,Chhattisgarh State,2017,10,15200,monthly
+India,Chhattisgarh State,2017,11,14559,monthly
+India,Chhattisgarh State,2017,12,15183,monthly
+India,Chhattisgarh State,2018,1,16973,monthly
+India,Chhattisgarh State,2018,2,13913,monthly
+India,Chhattisgarh State,2018,3,13975,monthly
+India,Chhattisgarh State,2018,4,13365,monthly
+India,Chhattisgarh State,2018,5,14279,monthly
+India,Chhattisgarh State,2018,6,13296,monthly
+India,Chhattisgarh State,2018,7,14164,monthly
+India,Chhattisgarh State,2018,8,15458,monthly
+India,Chhattisgarh State,2018,9,15317,monthly
+India,Chhattisgarh State,2018,10,15255,monthly
+India,Chhattisgarh State,2018,11,14920,monthly
+India,Chhattisgarh State,2018,12,16634,monthly
+India,Chhattisgarh State,2019,1,18392,monthly
+India,Chhattisgarh State,2019,2,14530,monthly
+India,Chhattisgarh State,2019,3,14001,monthly
+India,Chhattisgarh State,2019,4,13401,monthly
+India,Chhattisgarh State,2019,5,15961,monthly
+India,Chhattisgarh State,2019,6,15274,monthly
+India,Chhattisgarh State,2019,7,14981,monthly
+India,Chhattisgarh State,2019,8,17266,monthly
+India,Chhattisgarh State,2019,9,17525,monthly
+India,Chhattisgarh State,2019,10,16212,monthly
+India,Chhattisgarh State,2019,11,15240,monthly
+India,Chhattisgarh State,2019,12,15428,monthly
+India,Chhattisgarh State,2020,1,17597,monthly
+India,Chhattisgarh State,2020,2,15641,monthly
+India,Chhattisgarh State,2020,3,13455,monthly
+India,Chhattisgarh State,2020,4,12257,monthly
+India,Chhattisgarh State,2020,5,14626,monthly
+India,Chhattisgarh State,2020,6,13434,monthly
+India,Chhattisgarh State,2020,7,14957,monthly
+India,Chhattisgarh State,2020,8,16682,monthly
+India,Chhattisgarh State,2020,9,19036,monthly
+India,Chhattisgarh State,2020,10,18302,monthly
+India,Chhattisgarh State,2020,11,19063,monthly
+India,Chhattisgarh State,2020,12,16888,monthly
+India,Chhattisgarh State,2021,1,20162,monthly
+India,Chhattisgarh State,2021,2,17164,monthly
+India,Chhattisgarh State,2021,3,17333,monthly
+India,Chhattisgarh State,2021,4,43981,monthly
+India,Chhattisgarh State,2021,5,37151,monthly
+India,Chhattisgarh State,2021,6,18107,monthly
+India,Chhattisgarh State,2021,7,19099,monthly
+India,Chhattisgarh State,2021,8,20310,monthly
+India,Chhattisgarh State,2021,9,18914,monthly
+India,Chhattisgarh State,2021,10,18111,monthly
+India,Chhattisgarh State,2021,11,18138,monthly
+India,Chhattisgarh State,2021,12,16320,monthly
+India,Goa State,2015,1,1228,monthly
+India,Goa State,2015,2,1065,monthly
+India,Goa State,2015,3,1101,monthly
+India,Goa State,2015,4,961,monthly
+India,Goa State,2015,5,989,monthly
+India,Goa State,2015,6,1020,monthly
+India,Goa State,2015,7,1083,monthly
+India,Goa State,2015,8,1062,monthly
+India,Goa State,2015,9,1078,monthly
+India,Goa State,2015,10,1112,monthly
+India,Goa State,2015,11,1025,monthly
+India,Goa State,2015,12,1014,monthly
+India,Goa State,2016,1,863,monthly
+India,Goa State,2016,2,1041,monthly
+India,Goa State,2016,3,1017,monthly
+India,Goa State,2016,4,996,monthly
+India,Goa State,2016,5,1064,monthly
+India,Goa State,2016,6,1110,monthly
+India,Goa State,2016,7,1089,monthly
+India,Goa State,2016,8,1286,monthly
+India,Goa State,2016,9,1126,monthly
+India,Goa State,2016,10,1084,monthly
+India,Goa State,2016,11,1181,monthly
+India,Goa State,2016,12,1273,monthly
+India,Goa State,2017,1,1225,monthly
+India,Goa State,2017,2,1072,monthly
+India,Goa State,2017,3,1128,monthly
+India,Goa State,2017,4,986,monthly
+India,Goa State,2017,5,1028,monthly
+India,Goa State,2017,6,948,monthly
+India,Goa State,2017,7,1107,monthly
+India,Goa State,2017,8,1099,monthly
+India,Goa State,2017,9,1245,monthly
+India,Goa State,2017,10,1049,monthly
+India,Goa State,2017,11,1122,monthly
+India,Goa State,2017,12,1011,monthly
+India,Goa State,2018,1,1388,monthly
+India,Goa State,2018,2,1067,monthly
+India,Goa State,2018,3,1112,monthly
+India,Goa State,2018,4,1111,monthly
+India,Goa State,2018,5,1044,monthly
+India,Goa State,2018,6,935,monthly
+India,Goa State,2018,7,1100,monthly
+India,Goa State,2018,8,1072,monthly
+India,Goa State,2018,9,1072,monthly
+India,Goa State,2018,10,1169,monthly
+India,Goa State,2018,11,1076,monthly
+India,Goa State,2018,12,926,monthly
+India,Goa State,2019,1,1373,monthly
+India,Goa State,2019,2,1129,monthly
+India,Goa State,2019,3,1013,monthly
+India,Goa State,2019,4,1098,monthly
+India,Goa State,2019,5,1063,monthly
+India,Goa State,2019,6,896,monthly
+India,Goa State,2019,7,1149,monthly
+India,Goa State,2019,8,1410,monthly
+India,Goa State,2019,9,1170,monthly
+India,Goa State,2019,10,1271,monthly
+India,Goa State,2019,11,1084,monthly
+India,Goa State,2019,12,1195,monthly
+India,Goa State,2020,1,1259,monthly
+India,Goa State,2020,2,1099,monthly
+India,Goa State,2020,3,905,monthly
+India,Goa State,2020,4,1056,monthly
+India,Goa State,2020,5,1155,monthly
+India,Goa State,2020,6,1006,monthly
+India,Goa State,2020,7,1097,monthly
+India,Goa State,2020,8,1217,monthly
+India,Goa State,2020,9,1670,monthly
+India,Goa State,2020,10,1538,monthly
+India,Goa State,2020,11,1297,monthly
+India,Goa State,2020,12,1302,monthly
+India,Goa State,2021,1,1166,monthly
+India,Goa State,2021,2,1121,monthly
+India,Goa State,2021,3,1115,monthly
+India,Goa State,2021,4,1428,monthly
+India,Goa State,2021,5,3440,monthly
+India,Goa State,2021,6,2320,monthly
+India,Goa State,2021,7,1404,monthly
+India,Goa State,2021,8,1317,monthly
+India,Goa State,2021,9,1313,monthly
+India,Goa State,2021,10,1354,monthly
+India,Goa State,2021,11,1201,monthly
+India,Goa State,2021,12,1158,monthly
+India,Hyderabad,2016,1,4033,monthly
+India,Hyderabad,2016,2,3319,monthly
+India,Hyderabad,2016,3,3664,monthly
+India,Hyderabad,2016,4,3979,monthly
+India,Hyderabad,2016,5,3844,monthly
+India,Hyderabad,2016,6,3567,monthly
+India,Hyderabad,2016,7,4152,monthly
+India,Hyderabad,2016,8,4525,monthly
+India,Hyderabad,2016,9,3961,monthly
+India,Hyderabad,2016,10,4255,monthly
+India,Hyderabad,2016,11,4087,monthly
+India,Hyderabad,2016,12,4121,monthly
+India,Hyderabad,2017,1,4455,monthly
+India,Hyderabad,2017,2,3613,monthly
+India,Hyderabad,2017,3,4035,monthly
+India,Hyderabad,2017,4,4016,monthly
+India,Hyderabad,2017,5,4526,monthly
+India,Hyderabad,2017,6,3669,monthly
+India,Hyderabad,2017,7,3954,monthly
+India,Hyderabad,2017,8,4220,monthly
+India,Hyderabad,2017,9,4525,monthly
+India,Hyderabad,2017,10,4650,monthly
+India,Hyderabad,2017,11,4427,monthly
+India,Hyderabad,2017,12,4603,monthly
+India,Hyderabad,2018,1,4841,monthly
+India,Hyderabad,2018,2,4354,monthly
+India,Hyderabad,2018,3,4277,monthly
+India,Hyderabad,2018,4,4002,monthly
+India,Hyderabad,2018,5,4222,monthly
+India,Hyderabad,2018,6,3746,monthly
+India,Hyderabad,2018,7,4103,monthly
+India,Hyderabad,2018,8,4271,monthly
+India,Hyderabad,2018,9,4615,monthly
+India,Hyderabad,2018,10,4925,monthly
+India,Hyderabad,2018,11,4700,monthly
+India,Hyderabad,2018,12,4952,monthly
+India,Hyderabad,2019,1,5470,monthly
+India,Hyderabad,2019,2,4628,monthly
+India,Hyderabad,2019,3,4851,monthly
+India,Hyderabad,2019,4,4708,monthly
+India,Hyderabad,2019,5,6000,monthly
+India,Hyderabad,2019,6,4707,monthly
+India,Hyderabad,2019,7,4808,monthly
+India,Hyderabad,2019,8,5620,monthly
+India,Hyderabad,2019,9,6048,monthly
+India,Hyderabad,2019,10,6117,monthly
+India,Hyderabad,2019,11,5466,monthly
+India,Hyderabad,2019,12,5689,monthly
+India,Hyderabad,2020,1,5763,monthly
+India,Hyderabad,2020,2,5199,monthly
+India,Hyderabad,2020,3,4894,monthly
+India,Hyderabad,2020,4,3967,monthly
+India,Hyderabad,2020,5,5061,monthly
+India,Hyderabad,2020,6,7011,monthly
+India,Hyderabad,2020,7,10423,monthly
+India,Hyderabad,2020,8,7974,monthly
+India,Hyderabad,2020,9,7013,monthly
+India,Hyderabad,2020,10,6212,monthly
+India,Hyderabad,2020,11,5708,monthly
+India,Hyderabad,2020,12,5996,monthly
+India,Hyderabad,2021,1,5879,monthly
+India,Hyderabad,2021,2,4749,monthly
+India,Hyderabad,2021,3,5090,monthly
+India,Hyderabad,2021,4,9465,monthly
+India,Hyderabad,2021,5,10858,monthly
 India,Kolkata City,2015,1,1572,weekly
 India,Kolkata City,2015,2,1333,weekly
 India,Kolkata City,2015,3,1407,weekly
@@ -1166,579 +1284,656 @@ India,Kolkata City,2021,17,3209,weekly
 India,Kolkata City,2021,18,3384,weekly
 India,Kolkata City,2021,19,2868,weekly
 India,Kolkata City,2021,20,2781,weekly
-Argentina,Buenos Aires Province,2020,1,9646,monthly
-Argentina,Buenos Aires Province,0,1,10023,monthly
-Argentina,Buenos Aires Province,2020,2,9083,monthly
-Argentina,Buenos Aires Province,0,2,8947,monthly
-Argentina,Buenos Aires Province,2020,3,9778,monthly
-Argentina,Buenos Aires Province,0,3,9752,monthly
-Argentina,Buenos Aires Province,2020,4,9584,monthly
-Argentina,Buenos Aires Province,0,4,9766,monthly
-Argentina,Buenos Aires Province,2020,5,10553,monthly
-Argentina,Buenos Aires Province,0,5,11316,monthly
-Argentina,Buenos Aires Province,2020,6,11340,monthly
-Argentina,Buenos Aires Province,0,6,12826,monthly
-Argentina,Buenos Aires Province,2020,7,15269,monthly
-Argentina,Buenos Aires Province,0,7,13253,monthly
-Argentina,Buenos Aires Province,2020,8,15996,monthly
-Argentina,Buenos Aires Province,0,8,12167,monthly
-Argentina,Buenos Aires Province,2020,9,15759,monthly
-Argentina,Buenos Aires Province,0,9,11197,monthly
-Argentina,Buenos Aires Province,2020,10,14318,monthly
-Argentina,Buenos Aires Province,0,10,10828,monthly
-Argentina,Buenos Aires Province,2020,11,12142,monthly
-Argentina,Buenos Aires Province,0,11,9615,monthly
-Argentina,Buenos Aires Province,2020,12,12142,monthly
-Argentina,Buenos Aires Province,0,12,10260,monthly
-Argentina,Cordoba Province,2020,1,2327,monthly
-Argentina,Cordoba Province,2022,1,5064,monthly
-Argentina,Cordoba Province,2021,1,2801,monthly
-Argentina,Cordoba Province,2019,1,2129,monthly
-Argentina,Cordoba Province,2020,2,2245,monthly
-Argentina,Cordoba Province,2022,2,2868,monthly
-Argentina,Cordoba Province,2021,2,2526,monthly
-Argentina,Cordoba Province,2019,2,2069,monthly
-Argentina,Cordoba Province,2020,3,2331,monthly
-Argentina,Cordoba Province,2022,3,2708,monthly
-Argentina,Cordoba Province,2021,3,2711,monthly
-Argentina,Cordoba Province,2019,3,2236,monthly
-Argentina,Cordoba Province,2020,4,2253,monthly
-Argentina,Cordoba Province,2022,4,2669,monthly
-Argentina,Cordoba Province,2021,4,3161,monthly
-Argentina,Cordoba Province,2019,4,2174,monthly
-Argentina,Cordoba Province,2020,5,2452,monthly
-Argentina,Cordoba Province,2022,5,2965,monthly
-Argentina,Cordoba Province,2021,5,4061,monthly
-Argentina,Cordoba Province,2019,5,2568,monthly
-Argentina,Cordoba Province,2020,6,2609,monthly
-Argentina,Cordoba Province,2022,6,3143,monthly
-Argentina,Cordoba Province,2021,6,5006,monthly
-Argentina,Cordoba Province,2019,6,2656,monthly
-Argentina,Cordoba Province,2020,7,3122,monthly
-Argentina,Cordoba Province,2021,7,4151,monthly
-Argentina,Cordoba Province,2019,7,3143,monthly
-Argentina,Cordoba Province,2020,8,2862,monthly
-Argentina,Cordoba Province,2021,8,3631,monthly
-Argentina,Cordoba Province,2019,8,3109,monthly
-Argentina,Cordoba Province,2020,9,3223,monthly
-Argentina,Cordoba Province,2021,9,2730,monthly
-Argentina,Cordoba Province,2019,9,2931,monthly
-Argentina,Cordoba Province,2020,10,4411,monthly
-Argentina,Cordoba Province,2021,10,2632,monthly
-Argentina,Cordoba Province,2019,10,2564,monthly
-Argentina,Cordoba Province,2020,11,3533,monthly
-Argentina,Cordoba Province,2021,11,2538,monthly
-Argentina,Cordoba Province,2019,11,2292,monthly
-Argentina,Cordoba Province,2020,12,2850,monthly
-Argentina,Cordoba Province,2021,12,2832,monthly
-Argentina,Cordoba Province,2019,12,2497,monthly
-India,Nagpur City,2020,3,1415,monthly
-India,Nagpur City,2021,3,3168,monthly
-India,Nagpur City,2020,4,1311,monthly
-India,Nagpur City,2019,4,1583,monthly
-India,Nagpur City,2020,5,1624,monthly
-India,Nagpur City,2019,5,1900,monthly
-India,Nagpur City,2020,6,1512,monthly
-India,Nagpur City,2019,6,1678,monthly
-India,Nagpur City,2020,7,1808,monthly
-India,Nagpur City,2019,7,1590,monthly
-India,Nagpur City,2020,8,3385,monthly
-India,Nagpur City,2019,8,1787,monthly
-India,Nagpur City,2020,9,4096,monthly
-India,Nagpur City,2019,9,1958,monthly
-India,Nagpur City,2020,10,2387,monthly
-India,Nagpur City,2019,10,1801,monthly
-India,Nagpur City,2020,11,2325,monthly
-India,Nagpur City,2019,11,1775,monthly
-India,Nagpur City,2020,12,1934,monthly
-India,Nagpur City,2019,12,2166,monthly
-India,Mumbai City,2020,1,8387,monthly
-India,Mumbai City,2021,1,6958,monthly
-India,Mumbai City,2019,1,8324,monthly
-India,Mumbai City,2018,1,8306,monthly
-India,Mumbai City,2017,1,8004,monthly
-India,Mumbai City,2020,2,7109,monthly
-India,Mumbai City,2021,2,8602,monthly
-India,Mumbai City,2019,2,7797,monthly
-India,Mumbai City,2018,2,7305,monthly
-India,Mumbai City,2017,2,7158,monthly
-India,Mumbai City,2020,3,5701,monthly
-India,Mumbai City,2021,3,7554,monthly
-India,Mumbai City,2019,3,7155,monthly
-India,Mumbai City,2018,3,7436,monthly
-India,Mumbai City,2017,3,7810,monthly
-India,Mumbai City,2020,4,5537,monthly
-India,Mumbai City,2021,4,13796,monthly
-India,Mumbai City,2019,4,6752,monthly
-India,Mumbai City,2018,4,6719,monthly
-India,Mumbai City,2017,4,6234,monthly
-India,Mumbai City,2020,5,9161,monthly
-India,Mumbai City,2021,5,12685,monthly
-India,Mumbai City,2019,5,7335,monthly
-India,Mumbai City,2018,5,7407,monthly
-India,Mumbai City,2017,5,6960,monthly
-India,Mumbai City,2020,6,15756,monthly
-India,Mumbai City,2021,6,10265,monthly
-India,Mumbai City,2019,6,6732,monthly
-India,Mumbai City,2018,6,6874,monthly
-India,Mumbai City,2017,6,7068,monthly
-India,Mumbai City,2020,7,11770,monthly
-India,Mumbai City,2021,7,8881,monthly
-India,Mumbai City,2019,7,7931,monthly
-India,Mumbai City,2018,7,7336,monthly
-India,Mumbai City,2017,7,7675,monthly
-India,Mumbai City,2020,8,10215,monthly
-India,Mumbai City,2021,8,8274,monthly
-India,Mumbai City,2019,8,8164,monthly
-India,Mumbai City,2018,8,7372,monthly
-India,Mumbai City,2017,8,7247,monthly
-India,Mumbai City,2020,9,10405,monthly
-India,Mumbai City,2021,9,8624,monthly
-India,Mumbai City,2019,9,7953,monthly
-India,Mumbai City,2018,9,7231,monthly
-India,Mumbai City,2017,9,8250,monthly
-India,Mumbai City,2020,10,10457,monthly
-India,Mumbai City,2021,10,7562,monthly
-India,Mumbai City,2019,10,7390,monthly
-India,Mumbai City,2018,10,8755,monthly
-India,Mumbai City,2017,10,7700,monthly
-India,Mumbai City,2020,11,8454,monthly
-India,Mumbai City,2021,11,7450,monthly
-India,Mumbai City,2019,11,8320,monthly
-India,Mumbai City,2018,11,7235,monthly
-India,Mumbai City,2017,11,7943,monthly
-India,Mumbai City,2020,12,8990,monthly
-India,Mumbai City,2021,12,7462,monthly
-India,Mumbai City,2019,12,7370,monthly
-India,Mumbai City,2018,12,6876,monthly
-India,Mumbai City,2017,12,6988,monthly
-India,Ahmedabad City,2020,1,4601,monthly
-India,Ahmedabad City,2021,1,5101,monthly
-India,Ahmedabad City,2020,2,4822,monthly
-India,Ahmedabad City,2021,2,4214,monthly
-India,Ahmedabad City,2020,3,3968,monthly
-India,Ahmedabad City,2021,3,4601,monthly
-India,Ahmedabad City,2020,4,3051,monthly
-India,Ahmedabad City,2021,4,9240,monthly
-India,Ahmedabad City,2019,4,2784,monthly
-India,Ahmedabad City,2020,5,5108,monthly
-India,Ahmedabad City,2021,5,21187,monthly
-India,Ahmedabad City,2019,5,2706,monthly
-India,Ahmedabad City,2020,6,9722,monthly
-India,Ahmedabad City,2021,6,3969,monthly
-India,Ahmedabad City,2020,7,6434,monthly
-India,Ahmedabad City,2020,8,4578,monthly
-India,Ahmedabad City,2020,9,5388,monthly
-India,Ahmedabad City,2020,10,5437,monthly
-India,Ahmedabad City,2020,11,5909,monthly
-India,Ahmedabad City,2020,12,8559,monthly
-India,Madhya Pradesh State,2020,1,41281,monthly
-India,Madhya Pradesh State,2021,1,44133,monthly
-India,Madhya Pradesh State,2019,1,39528,monthly
 India,Madhya Pradesh State,2018,1,34451,monthly
-India,Madhya Pradesh State,2020,2,34645,monthly
-India,Madhya Pradesh State,2021,2,36535,monthly
-India,Madhya Pradesh State,2019,2,36005,monthly
 India,Madhya Pradesh State,2018,2,29986,monthly
-India,Madhya Pradesh State,2020,3,29747,monthly
-India,Madhya Pradesh State,2021,3,34667,monthly
-India,Madhya Pradesh State,2019,3,32911,monthly
 India,Madhya Pradesh State,2018,3,28504,monthly
-India,Madhya Pradesh State,2020,4,24198,monthly
-India,Madhya Pradesh State,2021,4,68535,monthly
-India,Madhya Pradesh State,2019,4,28599,monthly
 India,Madhya Pradesh State,2018,4,26949,monthly
-India,Madhya Pradesh State,2020,5,34320,monthly
-India,Madhya Pradesh State,2021,5,164838,monthly
-India,Madhya Pradesh State,2019,5,30506,monthly
 India,Madhya Pradesh State,2018,5,32456,monthly
-India,Madhya Pradesh State,2020,6,37399,monthly
-India,Madhya Pradesh State,2019,6,38978,monthly
 India,Madhya Pradesh State,2018,6,33818,monthly
-India,Madhya Pradesh State,2020,7,41303,monthly
-India,Madhya Pradesh State,2019,7,38922,monthly
 India,Madhya Pradesh State,2018,7,36523,monthly
-India,Madhya Pradesh State,2020,8,40213,monthly
-India,Madhya Pradesh State,2019,8,44151,monthly
 India,Madhya Pradesh State,2018,8,38230,monthly
-India,Madhya Pradesh State,2020,9,47315,monthly
-India,Madhya Pradesh State,2019,9,43517,monthly
 India,Madhya Pradesh State,2018,9,40180,monthly
-India,Madhya Pradesh State,2020,10,45208,monthly
-India,Madhya Pradesh State,2019,10,37953,monthly
 India,Madhya Pradesh State,2018,10,37766,monthly
-India,Madhya Pradesh State,2020,11,40283,monthly
-India,Madhya Pradesh State,2019,11,39124,monthly
 India,Madhya Pradesh State,2018,11,30349,monthly
-India,Madhya Pradesh State,2020,12,45145,monthly
-India,Madhya Pradesh State,2019,12,39625,monthly
 India,Madhya Pradesh State,2018,12,37960,monthly
-India,Andhra Pradesh State,2020,1,32019,monthly
-India,Andhra Pradesh State,2021,1,38179,monthly
-India,Andhra Pradesh State,2019,1,32321,monthly
-India,Andhra Pradesh State,2018,1,33655,monthly
-India,Andhra Pradesh State,2020,2,26841,monthly
-India,Andhra Pradesh State,2021,2,32177,monthly
-India,Andhra Pradesh State,2019,2,31185,monthly
-India,Andhra Pradesh State,2018,2,28799,monthly
-India,Andhra Pradesh State,2020,3,25440,monthly
-India,Andhra Pradesh State,2021,3,33782,monthly
-India,Andhra Pradesh State,2019,3,27990,monthly
-India,Andhra Pradesh State,2018,3,27363,monthly
-India,Andhra Pradesh State,2020,4,22379,monthly
-India,Andhra Pradesh State,2021,4,39899,monthly
-India,Andhra Pradesh State,2019,4,26302,monthly
-India,Andhra Pradesh State,2018,4,26000,monthly
-India,Andhra Pradesh State,2020,5,28092,monthly
-India,Andhra Pradesh State,2021,5,137258,monthly
-India,Andhra Pradesh State,2019,5,29944,monthly
-India,Andhra Pradesh State,2018,5,24387,monthly
-India,Andhra Pradesh State,2020,6,28468,monthly
-India,Andhra Pradesh State,2021,6,67406,monthly
-India,Andhra Pradesh State,2019,6,30214,monthly
-India,Andhra Pradesh State,2018,6,27025,monthly
-India,Andhra Pradesh State,2020,7,34791,monthly
-India,Andhra Pradesh State,2021,7,36907,monthly
-India,Andhra Pradesh State,2019,7,28505,monthly
-India,Andhra Pradesh State,2018,7,26469,monthly
-India,Andhra Pradesh State,2020,8,55021,monthly
-India,Andhra Pradesh State,2019,8,28681,monthly
-India,Andhra Pradesh State,2018,8,27946,monthly
-India,Andhra Pradesh State,2020,9,55941,monthly
-India,Andhra Pradesh State,2019,9,30464,monthly
-India,Andhra Pradesh State,2018,9,26637,monthly
-India,Andhra Pradesh State,2020,10,42168,monthly
-India,Andhra Pradesh State,2019,10,33656,monthly
-India,Andhra Pradesh State,2018,10,28502,monthly
-India,Andhra Pradesh State,2020,11,38754,monthly
-India,Andhra Pradesh State,2019,11,33218,monthly
-India,Andhra Pradesh State,2018,11,26800,monthly
-India,Andhra Pradesh State,2020,12,39632,monthly
-India,Andhra Pradesh State,2019,12,31169,monthly
-India,Andhra Pradesh State,2018,12,29916,monthly
-India,Hyderabad,2020,1,5763,monthly
-India,Hyderabad,2021,1,5879,monthly
-India,Hyderabad,2019,1,5470,monthly
-India,Hyderabad,2018,1,4841,monthly
-India,Hyderabad,2017,1,4455,monthly
-India,Hyderabad,2016,1,4033,monthly
-India,Hyderabad,2020,2,5199,monthly
-India,Hyderabad,2021,2,4749,monthly
-India,Hyderabad,2019,2,4628,monthly
-India,Hyderabad,2018,2,4354,monthly
-India,Hyderabad,2017,2,3613,monthly
-India,Hyderabad,2016,2,3319,monthly
-India,Hyderabad,2020,3,4894,monthly
-India,Hyderabad,2021,3,5090,monthly
-India,Hyderabad,2019,3,4851,monthly
-India,Hyderabad,2018,3,4277,monthly
-India,Hyderabad,2017,3,4035,monthly
-India,Hyderabad,2016,3,3664,monthly
-India,Hyderabad,2020,4,3967,monthly
-India,Hyderabad,2021,4,9465,monthly
-India,Hyderabad,2019,4,4708,monthly
-India,Hyderabad,2018,4,4002,monthly
-India,Hyderabad,2017,4,4016,monthly
-India,Hyderabad,2016,4,3979,monthly
-India,Hyderabad,2020,5,5061,monthly
-India,Hyderabad,2021,5,10858,monthly
-India,Hyderabad,2019,5,6000,monthly
-India,Hyderabad,2018,5,4222,monthly
-India,Hyderabad,2017,5,4526,monthly
-India,Hyderabad,2016,5,3844,monthly
-India,Hyderabad,2020,6,7011,monthly
-India,Hyderabad,2019,6,4707,monthly
-India,Hyderabad,2018,6,3746,monthly
-India,Hyderabad,2017,6,3669,monthly
-India,Hyderabad,2016,6,3567,monthly
-India,Hyderabad,2020,7,10423,monthly
-India,Hyderabad,2019,7,4808,monthly
-India,Hyderabad,2018,7,4103,monthly
-India,Hyderabad,2017,7,3954,monthly
-India,Hyderabad,2016,7,4152,monthly
-India,Hyderabad,2020,8,7974,monthly
-India,Hyderabad,2019,8,5620,monthly
-India,Hyderabad,2018,8,4271,monthly
-India,Hyderabad,2017,8,4220,monthly
-India,Hyderabad,2016,8,4525,monthly
-India,Hyderabad,2020,9,7013,monthly
-India,Hyderabad,2019,9,6048,monthly
-India,Hyderabad,2018,9,4615,monthly
-India,Hyderabad,2017,9,4525,monthly
-India,Hyderabad,2016,9,3961,monthly
-India,Hyderabad,2020,10,6212,monthly
-India,Hyderabad,2019,10,6117,monthly
-India,Hyderabad,2018,10,4925,monthly
-India,Hyderabad,2017,10,4650,monthly
-India,Hyderabad,2016,10,4255,monthly
-India,Hyderabad,2020,11,5708,monthly
-India,Hyderabad,2019,11,5466,monthly
-India,Hyderabad,2018,11,4700,monthly
-India,Hyderabad,2017,11,4427,monthly
-India,Hyderabad,2016,11,4087,monthly
-India,Hyderabad,2020,12,5996,monthly
-India,Hyderabad,2019,12,5689,monthly
-India,Hyderabad,2018,12,4952,monthly
-India,Hyderabad,2017,12,4603,monthly
-India,Hyderabad,2016,12,4121,monthly
-India,Assam State,2020,1,18556,monthly
-India,Assam State,2019,1,15680,monthly
-India,Assam State,2018,1,12204,monthly
-India,Assam State,2020,2,17971,monthly
-India,Assam State,2019,2,14806,monthly
-India,Assam State,2018,2,12193,monthly
-India,Assam State,2020,3,16975,monthly
-India,Assam State,2019,3,14266,monthly
-India,Assam State,2018,3,12155,monthly
-India,Assam State,2020,4,9003,monthly
-India,Assam State,2019,4,13147,monthly
-India,Assam State,2018,4,11826,monthly
-India,Assam State,2020,5,8655,monthly
-India,Assam State,2019,5,12169,monthly
-India,Assam State,2018,5,11761,monthly
-India,Assam State,2020,6,8305,monthly
-India,Assam State,2019,6,11303,monthly
-India,Assam State,2018,6,11656,monthly
-India,Assam State,2020,7,9118,monthly
-India,Assam State,2019,7,11065,monthly
-India,Assam State,2018,7,11456,monthly
-India,Assam State,2020,8,16887,monthly
-India,Assam State,2019,8,10925,monthly
-India,Assam State,2018,8,11378,monthly
-India,Assam State,2020,9,18364,monthly
-India,Assam State,2019,9,13177,monthly
-India,Assam State,2018,9,11593,monthly
-India,Assam State,2020,10,20814,monthly
-India,Assam State,2019,10,14117,monthly
-India,Assam State,2018,10,11755,monthly
-India,Assam State,2020,11,21780,monthly
-India,Assam State,2019,11,15700,monthly
-India,Assam State,2018,11,11515,monthly
-India,Assam State,2020,12,20657,monthly
-India,Assam State,2019,12,16702,monthly
-India,Assam State,2018,12,13113,monthly
-India,Tamil Nadu State,2020,1,58132,monthly
-India,Tamil Nadu State,2021,1,62273,monthly
-India,Tamil Nadu State,2019,1,58405,monthly
+India,Madhya Pradesh State,2019,1,39528,monthly
+India,Madhya Pradesh State,2019,2,36005,monthly
+India,Madhya Pradesh State,2019,3,32911,monthly
+India,Madhya Pradesh State,2019,4,28599,monthly
+India,Madhya Pradesh State,2019,5,30506,monthly
+India,Madhya Pradesh State,2019,6,38978,monthly
+India,Madhya Pradesh State,2019,7,38922,monthly
+India,Madhya Pradesh State,2019,8,44151,monthly
+India,Madhya Pradesh State,2019,9,43517,monthly
+India,Madhya Pradesh State,2019,10,37953,monthly
+India,Madhya Pradesh State,2019,11,39124,monthly
+India,Madhya Pradesh State,2019,12,39625,monthly
+India,Madhya Pradesh State,2020,1,41281,monthly
+India,Madhya Pradesh State,2020,2,34645,monthly
+India,Madhya Pradesh State,2020,3,29747,monthly
+India,Madhya Pradesh State,2020,4,24198,monthly
+India,Madhya Pradesh State,2020,5,34320,monthly
+India,Madhya Pradesh State,2020,6,37399,monthly
+India,Madhya Pradesh State,2020,7,41303,monthly
+India,Madhya Pradesh State,2020,8,40213,monthly
+India,Madhya Pradesh State,2020,9,47315,monthly
+India,Madhya Pradesh State,2020,10,45208,monthly
+India,Madhya Pradesh State,2020,11,40283,monthly
+India,Madhya Pradesh State,2020,12,45145,monthly
+India,Madhya Pradesh State,2021,1,44133,monthly
+India,Madhya Pradesh State,2021,2,36535,monthly
+India,Madhya Pradesh State,2021,3,34667,monthly
+India,Madhya Pradesh State,2021,4,68535,monthly
+India,Madhya Pradesh State,2021,5,164838,monthly
+India,Mumbai City,2017,1,8004,monthly
+India,Mumbai City,2017,2,7158,monthly
+India,Mumbai City,2017,3,7810,monthly
+India,Mumbai City,2017,4,6234,monthly
+India,Mumbai City,2017,5,6960,monthly
+India,Mumbai City,2017,6,7068,monthly
+India,Mumbai City,2017,7,7675,monthly
+India,Mumbai City,2017,8,7247,monthly
+India,Mumbai City,2017,9,8250,monthly
+India,Mumbai City,2017,10,7700,monthly
+India,Mumbai City,2017,11,7943,monthly
+India,Mumbai City,2017,12,6988,monthly
+India,Mumbai City,2018,1,8306,monthly
+India,Mumbai City,2018,2,7305,monthly
+India,Mumbai City,2018,3,7436,monthly
+India,Mumbai City,2018,4,6719,monthly
+India,Mumbai City,2018,5,7407,monthly
+India,Mumbai City,2018,6,6874,monthly
+India,Mumbai City,2018,7,7336,monthly
+India,Mumbai City,2018,8,7372,monthly
+India,Mumbai City,2018,9,7231,monthly
+India,Mumbai City,2018,10,8755,monthly
+India,Mumbai City,2018,11,7235,monthly
+India,Mumbai City,2018,12,6876,monthly
+India,Mumbai City,2019,1,8324,monthly
+India,Mumbai City,2019,2,7797,monthly
+India,Mumbai City,2019,3,7155,monthly
+India,Mumbai City,2019,4,6752,monthly
+India,Mumbai City,2019,5,7335,monthly
+India,Mumbai City,2019,6,6732,monthly
+India,Mumbai City,2019,7,7931,monthly
+India,Mumbai City,2019,8,8164,monthly
+India,Mumbai City,2019,9,7953,monthly
+India,Mumbai City,2019,10,7390,monthly
+India,Mumbai City,2019,11,8320,monthly
+India,Mumbai City,2019,12,7370,monthly
+India,Mumbai City,2020,1,8387,monthly
+India,Mumbai City,2020,2,7109,monthly
+India,Mumbai City,2020,3,5701,monthly
+India,Mumbai City,2020,4,5537,monthly
+India,Mumbai City,2020,5,9161,monthly
+India,Mumbai City,2020,6,15756,monthly
+India,Mumbai City,2020,7,11770,monthly
+India,Mumbai City,2020,8,10215,monthly
+India,Mumbai City,2020,9,10405,monthly
+India,Mumbai City,2020,10,10457,monthly
+India,Mumbai City,2020,11,8454,monthly
+India,Mumbai City,2020,12,8990,monthly
+India,Mumbai City,2021,1,6958,monthly
+India,Mumbai City,2021,2,8602,monthly
+India,Mumbai City,2021,3,7554,monthly
+India,Mumbai City,2021,4,13796,monthly
+India,Mumbai City,2021,5,12685,monthly
+India,Mumbai City,2021,6,10265,monthly
+India,Mumbai City,2021,7,8881,monthly
+India,Mumbai City,2021,8,8274,monthly
+India,Mumbai City,2021,9,8624,monthly
+India,Mumbai City,2021,10,7562,monthly
+India,Mumbai City,2021,11,7450,monthly
+India,Mumbai City,2021,12,7462,monthly
+India,Nagpur City,2019,4,1583,monthly
+India,Nagpur City,2019,5,1900,monthly
+India,Nagpur City,2019,6,1678,monthly
+India,Nagpur City,2019,7,1590,monthly
+India,Nagpur City,2019,8,1787,monthly
+India,Nagpur City,2019,9,1958,monthly
+India,Nagpur City,2019,10,1801,monthly
+India,Nagpur City,2019,11,1775,monthly
+India,Nagpur City,2019,12,2166,monthly
+India,Nagpur City,2020,3,1415,monthly
+India,Nagpur City,2020,4,1311,monthly
+India,Nagpur City,2020,5,1624,monthly
+India,Nagpur City,2020,6,1512,monthly
+India,Nagpur City,2020,7,1808,monthly
+India,Nagpur City,2020,8,3385,monthly
+India,Nagpur City,2020,9,4096,monthly
+India,Nagpur City,2020,10,2387,monthly
+India,Nagpur City,2020,11,2325,monthly
+India,Nagpur City,2020,12,1934,monthly
+India,Nagpur City,2021,3,3168,monthly
 India,Tamil Nadu State,2018,1,55390,monthly
-India,Tamil Nadu State,2020,2,48893,monthly
-India,Tamil Nadu State,2021,2,52845,monthly
-India,Tamil Nadu State,2019,2,46560,monthly
 India,Tamil Nadu State,2018,2,47231,monthly
-India,Tamil Nadu State,2020,3,45987,monthly
-India,Tamil Nadu State,2021,3,50959,monthly
-India,Tamil Nadu State,2019,3,47772,monthly
 India,Tamil Nadu State,2018,3,46703,monthly
-India,Tamil Nadu State,2020,4,41482,monthly
-India,Tamil Nadu State,2021,4,58775,monthly
-India,Tamil Nadu State,2019,4,45913,monthly
 India,Tamil Nadu State,2018,4,43586,monthly
-India,Tamil Nadu State,2020,5,50834,monthly
-India,Tamil Nadu State,2021,5,93573,monthly
-India,Tamil Nadu State,2019,5,51639,monthly
 India,Tamil Nadu State,2018,5,43928,monthly
-India,Tamil Nadu State,2020,6,50687,monthly
-India,Tamil Nadu State,2019,6,48868,monthly
 India,Tamil Nadu State,2018,6,43222,monthly
-India,Tamil Nadu State,2020,7,60052,monthly
-India,Tamil Nadu State,2019,7,45762,monthly
 India,Tamil Nadu State,2018,7,42633,monthly
-India,Tamil Nadu State,2020,8,70033,monthly
-India,Tamil Nadu State,2019,8,47385,monthly
 India,Tamil Nadu State,2018,8,41051,monthly
-India,Tamil Nadu State,2020,9,65447,monthly
-India,Tamil Nadu State,2019,9,48621,monthly
 India,Tamil Nadu State,2018,9,40484,monthly
-India,Tamil Nadu State,2020,10,60096,monthly
-India,Tamil Nadu State,2019,10,53028,monthly
 India,Tamil Nadu State,2018,10,46337,monthly
-India,Tamil Nadu State,2020,11,52231,monthly
-India,Tamil Nadu State,2019,11,55658,monthly
 India,Tamil Nadu State,2018,11,51602,monthly
-India,Tamil Nadu State,2020,12,40417,monthly
-India,Tamil Nadu State,2019,12,38610,monthly
 India,Tamil Nadu State,2018,12,34025,monthly
-Indonesia,Jakarta Province,2020,1,6262,monthly
-Indonesia,Jakarta Province,2021,1,9005,monthly
-Indonesia,Jakarta Province,2019,1,4997,monthly
-Indonesia,Jakarta Province,2018,1,5030,monthly
-Indonesia,Jakarta Province,2017,1,4835,monthly
-Indonesia,Jakarta Province,2016,1,4605,monthly
+India,Tamil Nadu State,2019,1,58405,monthly
+India,Tamil Nadu State,2019,2,46560,monthly
+India,Tamil Nadu State,2019,3,47772,monthly
+India,Tamil Nadu State,2019,4,45913,monthly
+India,Tamil Nadu State,2019,5,51639,monthly
+India,Tamil Nadu State,2019,6,48868,monthly
+India,Tamil Nadu State,2019,7,45762,monthly
+India,Tamil Nadu State,2019,8,47385,monthly
+India,Tamil Nadu State,2019,9,48621,monthly
+India,Tamil Nadu State,2019,10,53028,monthly
+India,Tamil Nadu State,2019,11,55658,monthly
+India,Tamil Nadu State,2019,12,38610,monthly
+India,Tamil Nadu State,2020,1,58132,monthly
+India,Tamil Nadu State,2020,2,48893,monthly
+India,Tamil Nadu State,2020,3,45987,monthly
+India,Tamil Nadu State,2020,4,41482,monthly
+India,Tamil Nadu State,2020,5,50834,monthly
+India,Tamil Nadu State,2020,6,50687,monthly
+India,Tamil Nadu State,2020,7,60052,monthly
+India,Tamil Nadu State,2020,8,70033,monthly
+India,Tamil Nadu State,2020,9,65447,monthly
+India,Tamil Nadu State,2020,10,60096,monthly
+India,Tamil Nadu State,2020,11,52231,monthly
+India,Tamil Nadu State,2020,12,40417,monthly
+India,Tamil Nadu State,2021,1,62273,monthly
+India,Tamil Nadu State,2021,2,52845,monthly
+India,Tamil Nadu State,2021,3,50959,monthly
+India,Tamil Nadu State,2021,4,58775,monthly
+India,Tamil Nadu State,2021,5,93573,monthly
+India,Tamil Nadu State,2021,6,154828,monthly
+India,Tamil Nadu State,2021,7,88664,monthly
+India,Tamil Nadu State,2021,8,45390,monthly
+India,Tamil Nadu State,2021,9,57978,monthly
+India,Tamil Nadu State,2021,10,51989,monthly
+India,Tamil Nadu State,2021,11,67703,monthly
+India,Tamil Nadu State,2021,12,76391,monthly
 Indonesia,Jakarta Province,2015,1,4340,monthly
-Indonesia,Jakarta Province,2020,2,5792,monthly
-Indonesia,Jakarta Province,2021,2,9084,monthly
-Indonesia,Jakarta Province,2019,2,4881,monthly
-Indonesia,Jakarta Province,2018,2,4113,monthly
-Indonesia,Jakarta Province,2017,2,3927,monthly
-Indonesia,Jakarta Province,2016,2,4626,monthly
 Indonesia,Jakarta Province,2015,2,4189,monthly
-Indonesia,Jakarta Province,2020,3,3733,monthly
-Indonesia,Jakarta Province,2021,3,9224,monthly
-Indonesia,Jakarta Province,2019,3,5281,monthly
-Indonesia,Jakarta Province,2018,3,4779,monthly
-Indonesia,Jakarta Province,2017,3,4858,monthly
-Indonesia,Jakarta Province,2016,3,5516,monthly
 Indonesia,Jakarta Province,2015,3,4804,monthly
-Indonesia,Jakarta Province,2020,4,3812,monthly
-Indonesia,Jakarta Province,2021,4,7794,monthly
-Indonesia,Jakarta Province,2019,4,4865,monthly
-Indonesia,Jakarta Province,2018,4,5173,monthly
-Indonesia,Jakarta Province,2017,4,4008,monthly
-Indonesia,Jakarta Province,2016,4,5073,monthly
 Indonesia,Jakarta Province,2015,4,4411,monthly
-Indonesia,Jakarta Province,2020,5,4820,monthly
-Indonesia,Jakarta Province,2021,5,5781,monthly
-Indonesia,Jakarta Province,2019,5,4681,monthly
-Indonesia,Jakarta Province,2018,5,4846,monthly
-Indonesia,Jakarta Province,2017,5,4746,monthly
-Indonesia,Jakarta Province,2016,5,4895,monthly
 Indonesia,Jakarta Province,2015,5,4251,monthly
-Indonesia,Jakarta Province,2020,6,8496,monthly
-Indonesia,Jakarta Province,2021,6,8332,monthly
-Indonesia,Jakarta Province,2019,6,4383,monthly
-Indonesia,Jakarta Province,2018,6,3257,monthly
-Indonesia,Jakarta Province,2017,6,3062,monthly
-Indonesia,Jakarta Province,2016,6,4286,monthly
 Indonesia,Jakarta Province,2015,6,4491,monthly
-Indonesia,Jakarta Province,2020,7,7854,monthly
-Indonesia,Jakarta Province,2019,7,5756,monthly
-Indonesia,Jakarta Province,2018,7,5685,monthly
-Indonesia,Jakarta Province,2017,7,5072,monthly
-Indonesia,Jakarta Province,2016,7,3910,monthly
 Indonesia,Jakarta Province,2015,7,4181,monthly
-Indonesia,Jakarta Province,2020,8,6657,monthly
-Indonesia,Jakarta Province,2019,8,5176,monthly
-Indonesia,Jakarta Province,2018,8,5013,monthly
-Indonesia,Jakarta Province,2017,8,5027,monthly
-Indonesia,Jakarta Province,2016,8,4890,monthly
 Indonesia,Jakarta Province,2015,8,4434,monthly
-Indonesia,Jakarta Province,2020,9,6997,monthly
-Indonesia,Jakarta Province,2019,9,5170,monthly
-Indonesia,Jakarta Province,2018,9,4464,monthly
-Indonesia,Jakarta Province,2017,9,4445,monthly
-Indonesia,Jakarta Province,2016,9,4682,monthly
 Indonesia,Jakarta Province,2015,9,4548,monthly
-Indonesia,Jakarta Province,2020,10,6470,monthly
-Indonesia,Jakarta Province,2019,10,5660,monthly
-Indonesia,Jakarta Province,2018,10,5509,monthly
-Indonesia,Jakarta Province,2017,10,4829,monthly
-Indonesia,Jakarta Province,2016,10,4792,monthly
 Indonesia,Jakarta Province,2015,10,4956,monthly
-Indonesia,Jakarta Province,2020,11,8568,monthly
-Indonesia,Jakarta Province,2019,11,4636,monthly
-Indonesia,Jakarta Province,2018,11,5058,monthly
-Indonesia,Jakarta Province,2017,11,5009,monthly
-Indonesia,Jakarta Province,2016,11,4686,monthly
 Indonesia,Jakarta Province,2015,11,4644,monthly
-Indonesia,Jakarta Province,2020,12,7519,monthly
-Indonesia,Jakarta Province,2019,12,5469,monthly
-Indonesia,Jakarta Province,2018,12,4253,monthly
-Indonesia,Jakarta Province,2017,12,3943,monthly
-Indonesia,Jakarta Province,2016,12,4329,monthly
 Indonesia,Jakarta Province,2015,12,4573,monthly
+Indonesia,Jakarta Province,2016,1,4605,monthly
+Indonesia,Jakarta Province,2016,2,4626,monthly
+Indonesia,Jakarta Province,2016,3,5516,monthly
+Indonesia,Jakarta Province,2016,4,5073,monthly
+Indonesia,Jakarta Province,2016,5,4895,monthly
+Indonesia,Jakarta Province,2016,6,4286,monthly
+Indonesia,Jakarta Province,2016,7,3910,monthly
+Indonesia,Jakarta Province,2016,8,4890,monthly
+Indonesia,Jakarta Province,2016,9,4682,monthly
+Indonesia,Jakarta Province,2016,10,4792,monthly
+Indonesia,Jakarta Province,2016,11,4686,monthly
+Indonesia,Jakarta Province,2016,12,4329,monthly
+Indonesia,Jakarta Province,2017,1,4835,monthly
+Indonesia,Jakarta Province,2017,2,3927,monthly
+Indonesia,Jakarta Province,2017,3,4858,monthly
+Indonesia,Jakarta Province,2017,4,4008,monthly
+Indonesia,Jakarta Province,2017,5,4746,monthly
+Indonesia,Jakarta Province,2017,6,3062,monthly
+Indonesia,Jakarta Province,2017,7,5072,monthly
+Indonesia,Jakarta Province,2017,8,5027,monthly
+Indonesia,Jakarta Province,2017,9,4445,monthly
+Indonesia,Jakarta Province,2017,10,4829,monthly
+Indonesia,Jakarta Province,2017,11,5009,monthly
+Indonesia,Jakarta Province,2017,12,3943,monthly
+Indonesia,Jakarta Province,2018,1,5030,monthly
+Indonesia,Jakarta Province,2018,2,4113,monthly
+Indonesia,Jakarta Province,2018,3,4779,monthly
+Indonesia,Jakarta Province,2018,4,5173,monthly
+Indonesia,Jakarta Province,2018,5,4846,monthly
+Indonesia,Jakarta Province,2018,6,3257,monthly
+Indonesia,Jakarta Province,2018,7,5685,monthly
+Indonesia,Jakarta Province,2018,8,5013,monthly
+Indonesia,Jakarta Province,2018,9,4464,monthly
+Indonesia,Jakarta Province,2018,10,5509,monthly
+Indonesia,Jakarta Province,2018,11,5058,monthly
+Indonesia,Jakarta Province,2018,12,4253,monthly
+Indonesia,Jakarta Province,2019,1,4997,monthly
+Indonesia,Jakarta Province,2019,2,4881,monthly
+Indonesia,Jakarta Province,2019,3,5281,monthly
+Indonesia,Jakarta Province,2019,4,4865,monthly
+Indonesia,Jakarta Province,2019,5,4681,monthly
+Indonesia,Jakarta Province,2019,6,4383,monthly
+Indonesia,Jakarta Province,2019,7,5756,monthly
+Indonesia,Jakarta Province,2019,8,5176,monthly
+Indonesia,Jakarta Province,2019,9,5170,monthly
+Indonesia,Jakarta Province,2019,10,5660,monthly
+Indonesia,Jakarta Province,2019,11,4636,monthly
+Indonesia,Jakarta Province,2019,12,5469,monthly
+Indonesia,Jakarta Province,2020,1,6262,monthly
+Indonesia,Jakarta Province,2020,2,5792,monthly
+Indonesia,Jakarta Province,2020,3,3733,monthly
+Indonesia,Jakarta Province,2020,4,3812,monthly
+Indonesia,Jakarta Province,2020,5,4820,monthly
+Indonesia,Jakarta Province,2020,6,8496,monthly
+Indonesia,Jakarta Province,2020,7,7854,monthly
+Indonesia,Jakarta Province,2020,8,6657,monthly
+Indonesia,Jakarta Province,2020,9,6997,monthly
+Indonesia,Jakarta Province,2020,10,6470,monthly
+Indonesia,Jakarta Province,2020,11,8568,monthly
+Indonesia,Jakarta Province,2020,12,7519,monthly
+Indonesia,Jakarta Province,2021,1,9005,monthly
+Indonesia,Jakarta Province,2021,2,9084,monthly
+Indonesia,Jakarta Province,2021,3,9224,monthly
+Indonesia,Jakarta Province,2021,4,7794,monthly
+Indonesia,Jakarta Province,2021,5,5781,monthly
+Indonesia,Jakarta Province,2021,6,8332,monthly
+Pakistan,Karachi City,2019,6,2375,monthly
+Pakistan,Karachi City,2019,10,2013,monthly
+Pakistan,Karachi City,2019,11,1807,monthly
+Pakistan,Karachi City,2019,12,2302,monthly
 Pakistan,Karachi City,2020,1,2849,monthly
 Pakistan,Karachi City,2020,2,2278,monthly
 Pakistan,Karachi City,2020,3,1978,monthly
 Pakistan,Karachi City,2020,5,2250,monthly
 Pakistan,Karachi City,2020,6,3594,monthly
-Pakistan,Karachi City,2019,6,2375,monthly
-Pakistan,Karachi City,2019,10,2013,monthly
-Pakistan,Karachi City,2019,11,1807,monthly
-Pakistan,Karachi City,2019,12,2302,monthly
-Sudan,Khartoum State,2020,4,1433,monthly
 Sudan,Khartoum State,2019,4,497,monthly
-Sudan,Khartoum State,2020,5,2216,monthly
 Sudan,Khartoum State,2019,5,704,monthly
-Yemen,Aden Governorate,2020,1,268,monthly
-Yemen,Aden Governorate,2019,1,436,monthly
-Yemen,Aden Governorate,2018,1,323,monthly
-Yemen,Aden Governorate,2017,1,247,monthly
-Yemen,Aden Governorate,2020,2,261,monthly
-Yemen,Aden Governorate,2019,2,509,monthly
-Yemen,Aden Governorate,2018,2,295,monthly
-Yemen,Aden Governorate,2017,2,213,monthly
-Yemen,Aden Governorate,2020,3,251,monthly
-Yemen,Aden Governorate,2019,3,440,monthly
-Yemen,Aden Governorate,2018,3,327,monthly
-Yemen,Aden Governorate,2017,3,235,monthly
-Yemen,Aden Governorate,2020,4,314,monthly
-Yemen,Aden Governorate,2019,4,489,monthly
-Yemen,Aden Governorate,2018,4,291,monthly
-Yemen,Aden Governorate,2017,4,266,monthly
-Yemen,Aden Governorate,2020,5,1823,monthly
-Yemen,Aden Governorate,2019,5,306,monthly
-Yemen,Aden Governorate,2018,5,264,monthly
-Yemen,Aden Governorate,2017,5,303,monthly
-Yemen,Aden Governorate,2020,6,795,monthly
-Belarus,Minsk City,2020,1,1579,monthly
-Belarus,Minsk City,2019,1,1519,monthly
-Belarus,Minsk City,2020,2,1496,monthly
-Belarus,Minsk City,2019,2,1519,monthly
-Belarus,Minsk City,2020,3,1617,monthly
-Belarus,Minsk City,2019,3,1519,monthly
-Belarus,Minsk City,2020,4,1769,monthly
-Belarus,Minsk City,2019,4,1444,monthly
-Belarus,Minsk City,2020,5,2061,monthly
-Belarus,Minsk City,2019,5,1444,monthly
-Belarus,Minsk City,2020,6,1999,monthly
-Belarus,Minsk City,2019,6,1444,monthly
-Belarus,Minsk City,2020,7,1630,monthly
-Belarus,Minsk City,2019,7,1389,monthly
-Belarus,Minsk City,2020,8,1623,monthly
-Belarus,Minsk City,2019,8,1389,monthly
-Belarus,Minsk City,2020,9,1716,monthly
-Belarus,Minsk City,2019,9,1389,monthly
-Belarus,Minsk City,2020,10,1948,monthly
-Belarus,Minsk City,2019,10,1456,monthly
-Belarus,Minsk City,2020,11,2333,monthly
-Belarus,Minsk City,2019,11,1456,monthly
-Belarus,Minsk City,2020,12,2683,monthly
-Belarus,Minsk City,2019,12,1456,monthly
-Syria,Damascus City,2020,1,1252.6011560693642,monthly
-Syria,Damascus City,2019,1,994.2521676300578,monthly
-Syria,Damascus City,2018,1,754.1702793834296,monthly
+Sudan,Khartoum State,2020,4,1433,monthly
+Sudan,Khartoum State,2020,5,2216,monthly
 Syria,Damascus City,2017,1,968.156310211946,monthly
-Syria,Damascus City,2020,2,1189.971098265896,monthly
-Syria,Damascus City,2019,2,788.0948940269749,monthly
-Syria,Damascus City,2018,2,772.4373795761079,monthly
 Syria,Damascus City,2017,2,1090.8068400770712,monthly
-Syria,Damascus City,2020,3,931.6221098265895,monthly
-Syria,Damascus City,2019,3,803.752408477842,monthly
-Syria,Damascus City,2018,3,1082.9780828516377,monthly
 Syria,Damascus City,2017,3,874.2112235067436,monthly
-Syria,Damascus City,2020,4,589.7663776493256,monthly
-Syria,Damascus City,2019,4,955.1083815028901,monthly
-Syria,Damascus City,2018,4,845.5057803468208,monthly
 Syria,Damascus City,2017,4,853.3345375722542,monthly
-Syria,Damascus City,2020,5,767.2182080924855,monthly
-Syria,Damascus City,2019,5,868.9920520231213,monthly
-Syria,Damascus City,2018,5,801.1428227360308,monthly
-Syria,Damascus City,2017,5,861.1632947976879,monthly
-Syria,Damascus City,2020,6,905.5262524084778,monthly
-Syria,Damascus City,2019,6,947.2796242774566,monthly
-Syria,Damascus City,2018,6,822.0195086705202,monthly
+Syria,Damascus City,2017,5,861.163294797688,monthly
 Syria,Damascus City,2017,6,639.348506743738,monthly
-Syria,Damascus City,2020,7,2560.0036127167627,monthly
-Syria,Damascus City,2019,7,850.7249518304432,monthly
-Syria,Damascus City,2018,7,764.6086223506743,monthly
-Syria,Damascus City,2017,7,861.1632947976879,monthly
-Syria,Damascus City,2020,8,3478.5777938342967,monthly
-Syria,Damascus City,2019,8,921.1837668593448,monthly
-Syria,Damascus City,2018,8,720.2456647398843,monthly
+Syria,Damascus City,2017,7,861.163294797688,monthly
 Syria,Damascus City,2017,8,730.684007707129,monthly
-Syria,Damascus City,2020,9,1085.5876685934488,monthly
-Syria,Damascus City,2019,9,733.2935934489402,monthly
-Syria,Damascus City,2018,9,608.0334778420038,monthly
 Syria,Damascus City,2017,9,628.9101637764933,monthly
-Syria,Damascus City,2020,10,1049.0534682080925,monthly
-Syria,Damascus City,2019,10,861.1632947976879,monthly
-Syria,Damascus City,2018,10,808.9715799614643,monthly
 Syria,Damascus City,2017,10,761.9990366088632,monthly
-Syria,Damascus City,2020,11,1375.2516859344894,monthly
-Syria,Damascus City,2019,11,929.0125240847784,monthly
-Syria,Damascus City,2018,11,691.5402215799614,monthly
 Syria,Damascus City,2017,11,631.5197495183044,monthly
-Syria,Damascus City,2020,12,1654.4773603082851,monthly
-Syria,Damascus City,2019,12,1182.1423410404623,monthly
+Syria,Damascus City,2017,12,832.457851637765,monthly
+Syria,Damascus City,2018,1,754.1702793834296,monthly
+Syria,Damascus City,2018,2,772.4373795761079,monthly
+Syria,Damascus City,2018,3,1082.9780828516377,monthly
+Syria,Damascus City,2018,4,845.5057803468209,monthly
+Syria,Damascus City,2018,5,801.1428227360308,monthly
+Syria,Damascus City,2018,6,822.0195086705203,monthly
+Syria,Damascus City,2018,7,764.6086223506743,monthly
+Syria,Damascus City,2018,8,720.2456647398843,monthly
+Syria,Damascus City,2018,9,608.0334778420038,monthly
+Syria,Damascus City,2018,10,808.9715799614643,monthly
+Syria,Damascus City,2018,11,691.5402215799614,monthly
 Syria,Damascus City,2018,12,814.1907514450867,monthly
-Syria,Damascus City,2017,12,832.4578516377649,monthly
+Syria,Damascus City,2019,1,994.2521676300578,monthly
+Syria,Damascus City,2019,2,788.0948940269749,monthly
+Syria,Damascus City,2019,3,803.752408477842,monthly
+Syria,Damascus City,2019,4,955.10838150289,monthly
+Syria,Damascus City,2019,5,868.9920520231213,monthly
+Syria,Damascus City,2019,6,947.2796242774566,monthly
+Syria,Damascus City,2019,7,850.7249518304433,monthly
+Syria,Damascus City,2019,8,921.1837668593448,monthly
+Syria,Damascus City,2019,9,733.2935934489402,monthly
+Syria,Damascus City,2019,10,861.163294797688,monthly
+Syria,Damascus City,2019,11,929.0125240847784,monthly
+Syria,Damascus City,2019,12,1182.1423410404625,monthly
+Syria,Damascus City,2020,1,1252.6011560693642,monthly
+Syria,Damascus City,2020,2,1189.971098265896,monthly
+Syria,Damascus City,2020,3,931.6221098265896,monthly
+Syria,Damascus City,2020,4,589.7663776493256,monthly
+Syria,Damascus City,2020,5,767.2182080924855,monthly
+Syria,Damascus City,2020,6,905.5262524084778,monthly
+Syria,Damascus City,2020,7,2560.0036127167627,monthly
+Syria,Damascus City,2020,8,3478.5777938342967,monthly
+Syria,Damascus City,2020,9,1085.5876685934488,monthly
+Syria,Damascus City,2020,10,1049.0534682080925,monthly
+Syria,Damascus City,2020,11,1375.2516859344894,monthly
+Syria,Damascus City,2020,12,1654.4773603082851,monthly
+Turkey,Istanbul City,2015,1,1400,weekly
+Turkey,Istanbul City,2015,2,1489,weekly
+Turkey,Istanbul City,2015,3,1440,weekly
+Turkey,Istanbul City,2015,4,1408,weekly
+Turkey,Istanbul City,2015,5,1456,weekly
+Turkey,Istanbul City,2015,6,1391,weekly
+Turkey,Istanbul City,2015,7,1426,weekly
+Turkey,Istanbul City,2015,8,1554,weekly
+Turkey,Istanbul City,2015,9,1511,weekly
+Turkey,Istanbul City,2015,10,1522,weekly
+Turkey,Istanbul City,2015,11,1526,weekly
+Turkey,Istanbul City,2015,12,1586,weekly
+Turkey,Istanbul City,2015,13,1547,weekly
+Turkey,Istanbul City,2015,14,1529,weekly
+Turkey,Istanbul City,2015,15,1452,weekly
+Turkey,Istanbul City,2015,16,1378,weekly
+Turkey,Istanbul City,2015,17,1463,weekly
+Turkey,Istanbul City,2015,18,1392,weekly
+Turkey,Istanbul City,2015,19,1368,weekly
+Turkey,Istanbul City,2015,20,1279,weekly
+Turkey,Istanbul City,2015,21,1262,weekly
+Turkey,Istanbul City,2015,22,1265,weekly
+Turkey,Istanbul City,2015,23,1163,weekly
+Turkey,Istanbul City,2015,24,1235,weekly
+Turkey,Istanbul City,2015,25,1245,weekly
+Turkey,Istanbul City,2015,26,1157,weekly
+Turkey,Istanbul City,2015,27,1240,weekly
+Turkey,Istanbul City,2015,28,1249,weekly
+Turkey,Istanbul City,2015,29,1217,weekly
+Turkey,Istanbul City,2015,30,1236,weekly
+Turkey,Istanbul City,2015,31,1379,weekly
+Turkey,Istanbul City,2015,32,1308,weekly
+Turkey,Istanbul City,2015,33,1323,weekly
+Turkey,Istanbul City,2015,34,1302,weekly
+Turkey,Istanbul City,2015,35,1218,weekly
+Turkey,Istanbul City,2015,36,1253,weekly
+Turkey,Istanbul City,2015,37,1176,weekly
+Turkey,Istanbul City,2015,38,1192,weekly
+Turkey,Istanbul City,2015,39,1188,weekly
+Turkey,Istanbul City,2015,40,1179,weekly
+Turkey,Istanbul City,2015,41,1275,weekly
+Turkey,Istanbul City,2015,42,1205,weekly
+Turkey,Istanbul City,2015,43,1335,weekly
+Turkey,Istanbul City,2015,44,1377,weekly
+Turkey,Istanbul City,2015,45,1388,weekly
+Turkey,Istanbul City,2015,46,1319,weekly
+Turkey,Istanbul City,2015,47,1372,weekly
+Turkey,Istanbul City,2015,48,1327,weekly
+Turkey,Istanbul City,2015,49,1361,weekly
+Turkey,Istanbul City,2015,50,1410,weekly
+Turkey,Istanbul City,2015,51,1507,weekly
+Turkey,Istanbul City,2015,52,1407,weekly
+Turkey,Istanbul City,2015,53,1545,weekly
+Turkey,Istanbul City,2016,1,1637,weekly
+Turkey,Istanbul City,2016,2,1698,weekly
+Turkey,Istanbul City,2016,3,1682,weekly
+Turkey,Istanbul City,2016,4,1828,weekly
+Turkey,Istanbul City,2016,5,1727,weekly
+Turkey,Istanbul City,2016,6,1575,weekly
+Turkey,Istanbul City,2016,7,1531,weekly
+Turkey,Istanbul City,2016,8,1473,weekly
+Turkey,Istanbul City,2016,9,1359,weekly
+Turkey,Istanbul City,2016,10,1392,weekly
+Turkey,Istanbul City,2016,11,1424,weekly
+Turkey,Istanbul City,2016,12,1455,weekly
+Turkey,Istanbul City,2016,13,1419,weekly
+Turkey,Istanbul City,2016,14,1404,weekly
+Turkey,Istanbul City,2016,15,1359,weekly
+Turkey,Istanbul City,2016,16,1362,weekly
+Turkey,Istanbul City,2016,17,1240,weekly
+Turkey,Istanbul City,2016,18,1324,weekly
+Turkey,Istanbul City,2016,19,1411,weekly
+Turkey,Istanbul City,2016,20,1283,weekly
+Turkey,Istanbul City,2016,21,1360,weekly
+Turkey,Istanbul City,2016,22,1334,weekly
+Turkey,Istanbul City,2016,23,1242,weekly
+Turkey,Istanbul City,2016,24,1315,weekly
+Turkey,Istanbul City,2016,25,1364,weekly
+Turkey,Istanbul City,2016,26,1406,weekly
+Turkey,Istanbul City,2016,27,1174,weekly
+Turkey,Istanbul City,2016,28,1460,weekly
+Turkey,Istanbul City,2016,29,1309,weekly
+Turkey,Istanbul City,2016,30,1367,weekly
+Turkey,Istanbul City,2016,31,1321,weekly
+Turkey,Istanbul City,2016,32,1336,weekly
+Turkey,Istanbul City,2016,33,1342,weekly
+Turkey,Istanbul City,2016,34,1249,weekly
+Turkey,Istanbul City,2016,35,1164,weekly
+Turkey,Istanbul City,2016,36,1272,weekly
+Turkey,Istanbul City,2016,37,1280,weekly
+Turkey,Istanbul City,2016,38,1254,weekly
+Turkey,Istanbul City,2016,39,1306,weekly
+Turkey,Istanbul City,2016,40,1355,weekly
+Turkey,Istanbul City,2016,41,1357,weekly
+Turkey,Istanbul City,2016,42,1420,weekly
+Turkey,Istanbul City,2016,43,1353,weekly
+Turkey,Istanbul City,2016,44,1511,weekly
+Turkey,Istanbul City,2016,45,1436,weekly
+Turkey,Istanbul City,2016,46,1460,weekly
+Turkey,Istanbul City,2016,47,1474,weekly
+Turkey,Istanbul City,2016,48,1429,weekly
+Turkey,Istanbul City,2016,49,1501,weekly
+Turkey,Istanbul City,2016,50,1474,weekly
+Turkey,Istanbul City,2016,51,1631,weekly
+Turkey,Istanbul City,2016,52,1764,weekly
+Turkey,Istanbul City,2017,1,1940,weekly
+Turkey,Istanbul City,2017,2,1937,weekly
+Turkey,Istanbul City,2017,3,1827,weekly
+Turkey,Istanbul City,2017,4,1767,weekly
+Turkey,Istanbul City,2017,5,1594,weekly
+Turkey,Istanbul City,2017,6,1566,weekly
+Turkey,Istanbul City,2017,7,1552,weekly
+Turkey,Istanbul City,2017,8,1497,weekly
+Turkey,Istanbul City,2017,9,1473,weekly
+Turkey,Istanbul City,2017,10,1469,weekly
+Turkey,Istanbul City,2017,11,1460,weekly
+Turkey,Istanbul City,2017,12,1488,weekly
+Turkey,Istanbul City,2017,13,1431,weekly
+Turkey,Istanbul City,2017,14,1418,weekly
+Turkey,Istanbul City,2017,15,1489,weekly
+Turkey,Istanbul City,2017,16,1399,weekly
+Turkey,Istanbul City,2017,17,1429,weekly
+Turkey,Istanbul City,2017,18,1360,weekly
+Turkey,Istanbul City,2017,19,1341,weekly
+Turkey,Istanbul City,2017,20,1354,weekly
+Turkey,Istanbul City,2017,21,1403,weekly
+Turkey,Istanbul City,2017,22,1352,weekly
+Turkey,Istanbul City,2017,23,1266,weekly
+Turkey,Istanbul City,2017,24,1294,weekly
+Turkey,Istanbul City,2017,25,1324,weekly
+Turkey,Istanbul City,2017,26,1442,weekly
+Turkey,Istanbul City,2017,27,1436,weekly
+Turkey,Istanbul City,2017,28,1380,weekly
+Turkey,Istanbul City,2017,29,1219,weekly
+Turkey,Istanbul City,2017,30,1304,weekly
+Turkey,Istanbul City,2017,31,1267,weekly
+Turkey,Istanbul City,2017,32,1296,weekly
+Turkey,Istanbul City,2017,33,1266,weekly
+Turkey,Istanbul City,2017,34,1274,weekly
+Turkey,Istanbul City,2017,35,1204,weekly
+Turkey,Istanbul City,2017,36,1308,weekly
+Turkey,Istanbul City,2017,37,1367,weekly
+Turkey,Istanbul City,2017,38,1266,weekly
+Turkey,Istanbul City,2017,39,1292,weekly
+Turkey,Istanbul City,2017,40,1268,weekly
+Turkey,Istanbul City,2017,41,1360,weekly
+Turkey,Istanbul City,2017,42,1391,weekly
+Turkey,Istanbul City,2017,43,1419,weekly
+Turkey,Istanbul City,2017,44,1486,weekly
+Turkey,Istanbul City,2017,45,1434,weekly
+Turkey,Istanbul City,2017,46,1480,weekly
+Turkey,Istanbul City,2017,47,1493,weekly
+Turkey,Istanbul City,2017,48,1558,weekly
+Turkey,Istanbul City,2017,49,1470,weekly
+Turkey,Istanbul City,2017,50,1502,weekly
+Turkey,Istanbul City,2017,51,1545,weekly
+Turkey,Istanbul City,2017,52,1621,weekly
+Turkey,Istanbul City,2018,1,1552,weekly
+Turkey,Istanbul City,2018,2,1517,weekly
+Turkey,Istanbul City,2018,3,1643,weekly
+Turkey,Istanbul City,2018,4,1633,weekly
+Turkey,Istanbul City,2018,5,1618,weekly
+Turkey,Istanbul City,2018,6,1539,weekly
+Turkey,Istanbul City,2018,7,1458,weekly
+Turkey,Istanbul City,2018,8,1511,weekly
+Turkey,Istanbul City,2018,9,1610,weekly
+Turkey,Istanbul City,2018,10,1493,weekly
+Turkey,Istanbul City,2018,11,1454,weekly
+Turkey,Istanbul City,2018,12,1467,weekly
+Turkey,Istanbul City,2018,13,1404,weekly
+Turkey,Istanbul City,2018,14,1472,weekly
+Turkey,Istanbul City,2018,15,1442,weekly
+Turkey,Istanbul City,2018,16,1417,weekly
+Turkey,Istanbul City,2018,17,1462,weekly
+Turkey,Istanbul City,2018,18,1374,weekly
+Turkey,Istanbul City,2018,19,1403,weekly
+Turkey,Istanbul City,2018,20,1398,weekly
+Turkey,Istanbul City,2018,21,1401,weekly
+Turkey,Istanbul City,2018,22,1266,weekly
+Turkey,Istanbul City,2018,23,1412,weekly
+Turkey,Istanbul City,2018,24,1295,weekly
+Turkey,Istanbul City,2018,25,1416,weekly
+Turkey,Istanbul City,2018,26,1314,weekly
+Turkey,Istanbul City,2018,27,1390,weekly
+Turkey,Istanbul City,2018,28,1367,weekly
+Turkey,Istanbul City,2018,29,1395,weekly
+Turkey,Istanbul City,2018,30,1301,weekly
+Turkey,Istanbul City,2018,31,1347,weekly
+Turkey,Istanbul City,2018,32,1419,weekly
+Turkey,Istanbul City,2018,33,1374,weekly
+Turkey,Istanbul City,2018,34,1325,weekly
+Turkey,Istanbul City,2018,35,1291,weekly
+Turkey,Istanbul City,2018,36,1323,weekly
+Turkey,Istanbul City,2018,37,1266,weekly
+Turkey,Istanbul City,2018,38,1319,weekly
+Turkey,Istanbul City,2018,39,1323,weekly
+Turkey,Istanbul City,2018,40,1354,weekly
+Turkey,Istanbul City,2018,41,1353,weekly
+Turkey,Istanbul City,2018,42,1365,weekly
+Turkey,Istanbul City,2018,43,1385,weekly
+Turkey,Istanbul City,2018,44,1466,weekly
+Turkey,Istanbul City,2018,45,1403,weekly
+Turkey,Istanbul City,2018,46,1461,weekly
+Turkey,Istanbul City,2018,47,1469,weekly
+Turkey,Istanbul City,2018,48,1528,weekly
+Turkey,Istanbul City,2018,49,1459,weekly
+Turkey,Istanbul City,2018,50,1532,weekly
+Turkey,Istanbul City,2018,51,1554,weekly
+Turkey,Istanbul City,2018,52,1606,weekly
+Turkey,Istanbul City,2019,1,1764,weekly
+Turkey,Istanbul City,2019,2,1907,weekly
+Turkey,Istanbul City,2019,3,1981,weekly
+Turkey,Istanbul City,2019,4,1956,weekly
+Turkey,Istanbul City,2019,5,1867,weekly
+Turkey,Istanbul City,2019,6,1731,weekly
+Turkey,Istanbul City,2019,7,1569,weekly
+Turkey,Istanbul City,2019,8,1615,weekly
+Turkey,Istanbul City,2019,9,1576,weekly
+Turkey,Istanbul City,2019,10,1528,weekly
+Turkey,Istanbul City,2019,11,1454,weekly
+Turkey,Istanbul City,2019,12,1500,weekly
+Turkey,Istanbul City,2019,13,1501,weekly
+Turkey,Istanbul City,2019,14,1431,weekly
+Turkey,Istanbul City,2019,15,1416,weekly
+Turkey,Istanbul City,2019,16,1398,weekly
+Turkey,Istanbul City,2019,17,1411,weekly
+Turkey,Istanbul City,2019,18,1488,weekly
+Turkey,Istanbul City,2019,19,1416,weekly
+Turkey,Istanbul City,2019,20,1391,weekly
+Turkey,Istanbul City,2019,21,1377,weekly
+Turkey,Istanbul City,2019,22,1420,weekly
+Turkey,Istanbul City,2019,23,1351,weekly
+Turkey,Istanbul City,2019,24,1371,weekly
+Turkey,Istanbul City,2019,25,1389,weekly
+Turkey,Istanbul City,2019,26,1363,weekly
+Turkey,Istanbul City,2019,27,1348,weekly
+Turkey,Istanbul City,2019,28,1263,weekly
+Turkey,Istanbul City,2019,29,1298,weekly
+Turkey,Istanbul City,2019,30,1310,weekly
+Turkey,Istanbul City,2019,31,1390,weekly
+Turkey,Istanbul City,2019,32,1277,weekly
+Turkey,Istanbul City,2019,33,1279,weekly
+Turkey,Istanbul City,2019,34,1286,weekly
+Turkey,Istanbul City,2019,35,1334,weekly
+Turkey,Istanbul City,2019,36,1334,weekly
+Turkey,Istanbul City,2019,37,1293,weekly
+Turkey,Istanbul City,2019,38,1284,weekly
+Turkey,Istanbul City,2019,39,1390,weekly
+Turkey,Istanbul City,2019,40,1393,weekly
+Turkey,Istanbul City,2019,41,1336,weekly
+Turkey,Istanbul City,2019,42,1375,weekly
+Turkey,Istanbul City,2019,43,1385,weekly
+Turkey,Istanbul City,2019,44,1426,weekly
+Turkey,Istanbul City,2019,45,1460,weekly
+Turkey,Istanbul City,2019,46,1377,weekly
+Turkey,Istanbul City,2019,47,1407,weekly
+Turkey,Istanbul City,2019,48,1462,weekly
+Turkey,Istanbul City,2019,49,1407,weekly
+Turkey,Istanbul City,2019,50,1454,weekly
+Turkey,Istanbul City,2019,51,1581,weekly
+Turkey,Istanbul City,2019,52,1540,weekly
+Turkey,Istanbul City,2020,1,1696,weekly
+Turkey,Istanbul City,2020,2,1767,weekly
+Turkey,Istanbul City,2020,3,1815,weekly
+Turkey,Istanbul City,2020,4,1805,weekly
+Turkey,Istanbul City,2020,5,1741,weekly
+Turkey,Istanbul City,2020,6,1603,weekly
+Turkey,Istanbul City,2020,7,1595,weekly
+Turkey,Istanbul City,2020,8,1455,weekly
+Turkey,Istanbul City,2020,9,1507,weekly
+Turkey,Istanbul City,2020,10,1496,weekly
+Turkey,Istanbul City,2020,11,1489,weekly
+Turkey,Istanbul City,2020,12,1755,weekly
+Turkey,Istanbul City,2020,13,1792,weekly
+Turkey,Istanbul City,2020,14,2220,weekly
+Turkey,Istanbul City,2020,15,2258,weekly
+Turkey,Istanbul City,2020,16,2121,weekly
+Turkey,Istanbul City,2020,17,1962,weekly
+Turkey,Istanbul City,2020,18,1829,weekly
+Turkey,Istanbul City,2020,19,1694,weekly
+Turkey,Istanbul City,2020,20,1580,weekly
+Turkey,Istanbul City,2020,21,1474,weekly
+Turkey,Istanbul City,2020,22,1394,weekly
+Turkey,Istanbul City,2020,23,1433,weekly
+Turkey,Istanbul City,2020,24,1481,weekly
+Turkey,Istanbul City,2020,25,1432,weekly
+Turkey,Istanbul City,2020,26,1355,weekly
+Turkey,Istanbul City,2020,27,1401,weekly
+Turkey,Istanbul City,2020,28,1412,weekly
+Turkey,Istanbul City,2020,29,1323,weekly
+Turkey,Istanbul City,2020,30,1339,weekly
+Turkey,Istanbul City,2020,31,1380,weekly
+Turkey,Istanbul City,2020,32,1469,weekly
+Turkey,Istanbul City,2020,33,1457,weekly
+Turkey,Istanbul City,2020,34,1355,weekly
+Turkey,Istanbul City,2020,35,1455,weekly
+Turkey,Istanbul City,2020,36,1445,weekly
+Turkey,Istanbul City,2020,37,1442,weekly
+Turkey,Istanbul City,2020,38,1464,weekly
+Turkey,Istanbul City,2020,39,1495,weekly
+Turkey,Istanbul City,2020,40,1464,weekly
+Turkey,Istanbul City,2020,41,1457,weekly
+Turkey,Istanbul City,2020,42,1606,weekly
+Turkey,Istanbul City,2020,43,1783,weekly
+Turkey,Istanbul City,2020,44,2012,weekly
+Turkey,Istanbul City,2020,45,2251,weekly
+Turkey,Istanbul City,2020,46,2652,weekly
+Turkey,Istanbul City,2020,47,2899,weekly
+Turkey,Istanbul City,2020,48,2985,weekly
+Turkey,Istanbul City,2020,49,3012,weekly
+Turkey,Istanbul City,2020,50,2854,weekly
+Turkey,Istanbul City,2020,51,2574,weekly
+Turkey,Istanbul City,2020,52,2313,weekly
+Turkey,Istanbul City,2020,53,2021,weekly
+Turkey,Istanbul City,2021,1,1876,weekly
+Turkey,Istanbul City,2021,2,1770,weekly
+Turkey,Istanbul City,2021,3,1746,weekly
+Turkey,Istanbul City,2021,4,1645,weekly
+Turkey,Istanbul City,2021,5,1559,weekly
+Turkey,Istanbul City,2021,6,1533,weekly
+Turkey,Istanbul City,2021,7,1573,weekly
+Turkey,Istanbul City,2021,8,1617,weekly
+Turkey,Istanbul City,2021,9,1596,weekly
+Turkey,Istanbul City,2021,10,1672,weekly
+Yemen,Aden Governorate,2017,1,247,monthly
+Yemen,Aden Governorate,2017,2,213,monthly
+Yemen,Aden Governorate,2017,3,235,monthly
+Yemen,Aden Governorate,2017,4,266,monthly
+Yemen,Aden Governorate,2017,5,303,monthly
+Yemen,Aden Governorate,2018,1,323,monthly
+Yemen,Aden Governorate,2018,2,295,monthly
+Yemen,Aden Governorate,2018,3,327,monthly
+Yemen,Aden Governorate,2018,4,291,monthly
+Yemen,Aden Governorate,2018,5,264,monthly
+Yemen,Aden Governorate,2019,1,436,monthly
+Yemen,Aden Governorate,2019,2,509,monthly
+Yemen,Aden Governorate,2019,3,440,monthly
+Yemen,Aden Governorate,2019,4,489,monthly
+Yemen,Aden Governorate,2019,5,306,monthly
+Yemen,Aden Governorate,2020,1,268,monthly
+Yemen,Aden Governorate,2020,2,261,monthly
+Yemen,Aden Governorate,2020,3,251,monthly
+Yemen,Aden Governorate,2020,4,314,monthly
+Yemen,Aden Governorate,2020,5,1823,monthly
+Yemen,Aden Governorate,2020,6,795,monthly
