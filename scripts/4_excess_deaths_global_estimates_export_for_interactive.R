@@ -39,7 +39,7 @@ country_data <- unique(country_daily_data[, c('location', 'iso_code', 'aged_65_o
 unique_dates <- unique(country_daily_data$date)
 cat('\nAdding missing OWID country-dates: ')
 country_daily_data <- country_daily_data[order(country_daily_data$date), ]
-for(i in setdiff(unique(country_daily_data$location), c('Northern Cyprus', 'Wales', 'Scotland', 'Western Sahara', 'Taiwan', 'Macau', 'Macao'))){
+for(i in setdiff(unique(country_daily_data$location[country_daily_data$population >= 50000000]), c('Northern Cyprus', 'Wales', 'Scotland', 'Western Sahara', 'Taiwan', 'Macau', 'Macao', 'Northern Ireland))){
   for(j in (Sys.Date()-10):Sys.Date()){
     if(!any(country_daily_data$date == j & country_daily_data$location == i)){
       temp <- country_daily_data[country_daily_data$date == max(country_daily_data$date[country_daily_data$date < j]) & country_daily_data$location == i, ]
