@@ -106,7 +106,7 @@ if(length(recently_updated_models) < B+main_estimate_models){
 }
 
 # Revert to cached covariate matrix if it exists (this reduces the github push history)
-if(readRDS("output-data/country_daily_excess_deaths_with_covariates_cache.RDS") != "no up-to-date cache"){
+if(unlist(readRDS("output-data/country_daily_excess_deaths_with_covariates_cache.RDS"))[1] != "no up-to-date cache"){
   saveRDS(readRDS("output-data/country_daily_excess_deaths_with_covariates_cache.RDS"), 
           "output-data/country_daily_excess_deaths_with_covariates.RDS")
 }
