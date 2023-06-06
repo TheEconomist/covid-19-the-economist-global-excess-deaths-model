@@ -44,7 +44,7 @@ for(i in setdiff(unique(country_daily_data$location[country_daily_data$populatio
     if(!any(country_daily_data$date == j & country_daily_data$location == i)){
       temp <- country_daily_data[country_daily_data$date == max(country_daily_data$date[country_daily_data$date < j]) & country_daily_data$location == i, ]
       if(nrow(temp) == 0){
-        stop(paste0('Data missing for more than 10 days for ', i))
+        message(paste0('Data missing for more than 10 days for ', i))
       }
       temp[, c("new_deaths",
                "new_deaths_smoothed")] <- NA
