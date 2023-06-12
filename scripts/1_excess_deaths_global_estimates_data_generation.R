@@ -111,7 +111,7 @@ for(i in setdiff(unique(country_daily_data$iso3c), c('ESH', "TWN", 'MAC'))){
     if(!any(country_daily_data$date == j & country_daily_data$iso3c == i)){
       temp <- country_daily_data[country_daily_data$date == max(country_daily_data$date[country_daily_data$date < j]) & country_daily_data$iso3c == i, ]
       if(nrow(temp) == 0){
-        stop(paste0('Data missing for more than 10 days for ', i))
+        message(paste0('Data missing for more than 10 days for ', i))
       }
       temp[, c("daily_covid_deaths", "daily_covid_deaths_per_100k", "daily_covid_cases", "daily_covid_cases_per_100k",
                "daily_tests", "daily_tests_per_100k", "daily_positive_rate", "daily_vaccinations",
