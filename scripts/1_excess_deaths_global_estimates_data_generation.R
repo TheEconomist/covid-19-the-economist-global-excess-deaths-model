@@ -1155,9 +1155,10 @@ add.subnational <- T
 if(add.subnational){
 # if desire to regenerate: source("scripts/aux_subnational_data_generation.R")
 subnational <- readRDS("output-data/model-objects/auxilliary_subnational_data.RDS")
-
-subnational$lat_largest_city <- subnational$lat_capital
-subnational$lng_largest_city <- subnational$lng_capital
+# Note: values for c("mean_distance_to_coast", "life_expectancy", "wdi_life_expectancy_at_birth", 
+# "median_age", "aged_65_older", "wdi_pop_over_65", "wdi_pop_under_15", "wdi_gdppc_nominal",
+# "wdi_gdppc_ppp", "gdpppc_ppp_imf", "wdi_urban_population_pct", 
+# "wdi_urban_pop_1m_cities_pct") have been imputed from national data for some sub-national units.
 
 # Merge in missing columns from big dataset:
 subnational <- merge(subnational, country_daily_excess_deaths[, c("date", "iso3c", setdiff(colnames(country_daily_excess_deaths), colnames(subnational)))], by = c("iso3c", "date"))

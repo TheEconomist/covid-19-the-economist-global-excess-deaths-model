@@ -424,7 +424,7 @@ dat <- dat %>%
     daily_positive_rate = (daily_covid_cases / daily_tests) * 100,
     daily_covid_cases_raw = new_cases, 
     daily_covid_deaths_raw = new_deaths) %>%
-  rename(centroid_latitude = centroid_lat,
+  mutate(centroid_latitude = centroid_lat,
          centroid_longitude = centroid_long,
          lat_capital = lat_largest_city,
          lng_capital = lng_largest_city)
@@ -521,18 +521,210 @@ china$daily_tests <- china$daily_tests * (china$population / 1402000000)
 # Specify source country:
 china$iso3c <- 'CHN'
 china$name <- 'CDC_DCSD'
+china$local_unit_name <- 'China DCSD'
 
 # Remove dates for which data for entire country is available from separate source: 
 china <- china[china$date > full_china_data_ends, ]
 
 # Inspect the result
-ggplot(china, aes(x=as.Date(date), y=deaths))+geom_line()+geom_line(aes(y=expected_deaths,  col='expected'))+geom_line(aes(y=deaths-expected_deaths))
+if(inspect){
+  ggplot(china, aes(x=as.Date(date), y=deaths))+
+    geom_line()+
+    geom_line(aes(y=expected_deaths, col='expected'))+
+    geom_line(aes(y=deaths-expected_deaths))
+}
 
 # Merge into rest of subnational data
 china[, setdiff(colnames(dat), colnames(china))] <- NA
 china <- china[china$date >= as.Date('2020-01-01', origin = origin), colnames(dat)]
 dat <- rbind(dat, china) 
 dat_bc <- dat
+
+# Add Zhejiang data (Q1, 2020-2023)
+# Source: Leak from Zhejiang government
+# See: https://www.economist.com/china/2023/07/20/a-clue-to-chinas-true-covid-19-death-toll
+
+# First, get historic annual data data from government statistics (via WIND data service):
+zhejiang <- data.frame(year = 2009:2023,
+                       deaths = c(29.90, 31.60, 30.30, 31.40, 30.60, 30.70, 31.90, rep(NA, 8)))
+zhejiang$name <- 'Zhejiang'
+zhejiang$deaths <- zhejiang$deaths*10000
+lm_fit <- lm(deaths ~ year, data = zhejiang)
+zhejiang$pred <- predict(lm_fit, newdata=zhejiang)
+ggplot(zhejiang, aes(x=year))+geom_line(aes(y=deaths, col='recorded'))+geom_line(aes(y=pred, col='pred'))
+
+# Then, get mean percentage of deaths in Q1 using the China average: 
+china <- read_csv('source-data/China_CDC_Death_Cause_Surveillance_Dataset.csv')
+china$pop <- ave(china$`Population in the observation areas`, china$Year, FUN = function(x) na.omit(x)[1])
+china$year <- as.numeric(china$Year)
+china$month <- match(china$Month, month.name)
+china$deaths <- china$`Reported / Calculated Value`
+china$percent <- china$`Percentage (%)`
+china <- china[, c('year', 'month', 'pop', 'deaths', 'percent')]
+china$Q1 <- china$month %in% 1:3
+china <- data.frame(china)
+q1_deaths <- mean(china$percent[china$Q1 & china$year < 2020])*3/100
+china$Q1_deaths <- ave(china$deaths, paste0(china$Q1, '_', china$year), FUN = sum)
+china$Q1_deaths[!china$Q1] <- NA
+
+# Use this to calculate Q1 deaths and predicted deaths:
+zhejiang$deaths_q1 <- zhejiang$deaths * q1_deaths
+zhejiang$pred_q1 <- zhejiang$pred * q1_deaths
+
+zhejiang$cremations <- NA
+zhejiang$cremations[zhejiang$year %in% 2020:2023] <- c(88.3, 93.0, 99.0, 171.0)
+zhejiang$cremations <- zhejiang$cremations*1000
+
+# Deaths in Zhejiang v rest of China
+percent_deaths <- zhejiang$deaths[zhejiang$year == 2015]/china$deaths[china$percent == 100 & china$year == 2015][1]
+
+# Check that this extrapolation makes sense. Note: Zhejiang is older, so should grow slower than national population (its share of deaths was 19.1% in 2015, while share of population in 2018 was 4%, both are most recent figures). The below suggests it is advisable to use the implied death rate from the annual province-level data, which tended to grow much slower.
+if(inspect){
+  ggplot(zhejiang, aes(x=year))+
+    geom_smooth(data=china[china$Q1 & china$year %in% 2013:2020, ], 
+                aes(x=year, y=Q1_deaths*percent_deaths, 
+                    col='national trend and share in 2015'), method='lm', se = F)+
+    geom_point(data=china[china$Q1 & china$year %in% 2013:2020, ], 
+               aes(x=year, y=Q1_deaths*percent_deaths, 
+                   col='national trend and share in 2015'))+
+    geom_line(aes(y=pred_q1, col='pred q1'))+
+    geom_line(aes(y=deaths_q1, col='deaths q1 (approx)'))+
+    geom_line(aes(y=cremations, col='cremations q1'))+
+    ylim(c(50000, 200000))
+}
+
+# Calculate expected and excess deaths:
+temp <- data.frame(date = anydate(as.Date('2020-01-01'):Sys.Date()))
+temp$Q <- ifelse(month(temp$date) %in% 1:3, 1, 'other')
+temp$year <- year(temp$date)
+zhejiang$Q <- 1
+zhejiang <- merge(zhejiang, temp, all = T, by = c('year', 'Q'))
+zhejiang <- zhejiang[zhejiang$year >= 2020 & zhejiang$Q == 1, ]
+zhejiang$days <- as.numeric(ave(zhejiang$date, zhejiang$year, FUN = function(x) length(x)))
+zhejiang$expected_deaths <- zhejiang$pred_q1 / zhejiang$days
+zhejiang$deaths <- zhejiang$cremations / zhejiang$days
+zhejiang$excess_deaths <- zhejiang$deaths - zhejiang$expected_deaths
+
+# Get coordinates of subnational unit: 
+zhejiang[, c("lat_largest_city",
+             "lng_largest_city",
+             "centroid_latitude",
+             "centroid_longitude")]<- c(30.291787, 120.162093,
+                                   29.16585672734334, 120.29860381030761)
+zhejiang$lat_capital <- zhejiang$lat_largest_city
+zhejiang$lng_capital <- zhejiang$lng_largest_city
+
+zhejiang$mean_distance_to_coast <- 97.38 # in km
+
+# Now I need to get covid data + population data + other data
+
+# Get life expectancy. Sources: https://data.stats.gov.cn/english/easyquery.htm?cn=E0103 - using Zhejiang numbers from 2010 and upward adjustment since using china trend from 2010 to 2020. 
+zhejiang$life_expectancy <- 77.73 + (78-76)
+zhejiang$wdi_life_expectancy_at_birth <- 77.73 + (78-76)
+
+# Get median age. I here us Hangzhou data as Zhejiang not available: https://www.ehangzhou.gov.cn/2022-02/24/c_279666.htm
+zhejiang$median_age <- 38.77
+
+# Get demographic data. Source: https://data.stats.gov.cn/english/easyquery.htm?cn=E0103
+zhejiang$aged_65_older <- 6374/45420
+zhejiang$wdi_pop_over_65 <- 6374/45420
+zhejiang$wdi_pop_under_15 <- 5930/45420
+zhejiang$population <- 63750000 # 2019
+
+# GDP figures (note IMF should be as of 2019)
+# Sources: https://www.statista.com/statistics/1093669/china-per-capita-gross-domestic-product-gdp-of-zhejiang-province/ & https://data.stats.gov.cn/english/easyquery.htm?cn=E0103
+# See also here: https://en.wikipedia.org/wiki/List_of_Chinese_administrative_divisions_by_GDP_per_capita 
+zhejiang_gdp <- data.frame(
+           wdi_gdppc_nominal = 14605,
+           wdi_gdppc_ppp = 23766,
+           gdpppc_ppp_imf= 23766,
+           china_gdppc_ppp = 16945,
+           china_gdppc = 10413)
+
+# Get country-level China data and ensure they are on the same scale (and account for any shifts from 2019 to 2020 in the data:
+china_gdp_covars <- readRDS("output-data/country_daily_excess_deaths_with_covariates.RDS")
+china_gdp_covars <- china_gdp_covars[china_gdp_covars$iso3c == 'CHN', ]
+china_gdp_covars <- china_gdp_covars[china_gdp_covars$date == min(china_gdp_covars$date), c("date", "gdpppc_ppp_imf", "wdi_obs_lag", "wdi_prop_NA", "wdi_prop_less_2_usd_day", "wdi_gini_index", "wdi_life_expectancy_at_birth", "wdi_gdppc_nominal", "wdi_gdppc_ppp", "wdi_urban_population_pct", "wdi_pop_over_65", 'wdi_urban_population_pct', 'wdi_urban_pop_1m_cities_pct')]
+
+zhejiang_gdp <- unique(zhejiang_gdp)
+
+zhejiang$wdi_gdppc_nominal <- zhejiang_gdp$wdi_gdppc_nominal * (china_gdp_covars$wdi_gdppc_nominal/zhejiang_gdp$china_gdppc)
+zhejiang$wdi_gdppc_ppp <- zhejiang_gdp$wdi_gdppc_ppp * (china_gdp_covars$wdi_gdppc_ppp/zhejiang_gdp$china_gdppc_ppp)
+zhejiang$gdpppc_ppp_imf <- zhejiang_gdp$gdpppc_ppp_imf * (china_gdp_covars$wdi_gdppc_ppp/zhejiang_gdp$china_gdppc_ppp)
+
+# Urban population:
+zhejiang$wdi_urban_population_pct     <- 72.7 # Source: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC10002360/#:~:text=In%202021%2C%20the%20urbanization%20rate,development%20period%20of%20overall%20urbanization.
+zhejiang$wdi_urban_pop_1m_cities_pct  <- 100*(7969372+4087523+3604446+2521964)/57370000 # Hangzhou, Ningbo, Wenzhou, Shaoxing, see e.g. https://en.wikipedia.org/wiki/List_of_cities_in_China_by_population
+zhejiang$population_density <- 630
+
+# Covid data (from JHU):
+confirmed <- fread('https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv')
+deaths <- fread('https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv')
+
+confirmed <- confirmed[confirmed$`Province/State` == 'Zhejiang', 5:ncol(confirmed)]
+deaths <- deaths[deaths$`Province/State` == 'Zhejiang', 5:ncol(deaths)]
+
+zhejiang_covid <- cbind.data.frame(date = colnames(confirmed),
+                                   cumulative_covid_cases = unlist(confirmed), 
+                                   cumulative_covid_deaths = unlist(deaths))
+rownames(zhejiang_covid) <- 1:nrow(zhejiang_covid)
+zhejiang_covid$date <- as.Date(zhejiang_covid$date, format = "%m/%d/%y")
+zhejiang_covid <- zhejiang_covid[order(zhejiang_covid$date), ]
+
+zhejiang_covid$new_deaths <- zhejiang_covid$cumulative_covid_deaths - c(0, zhejiang_covid$cumulative_covid_deaths)[1:nrow(zhejiang_covid)]
+zhejiang_covid$new_cases<- zhejiang_covid$cumulative_covid_cases - c(0, zhejiang_covid$cumulative_covid_cases)[1:nrow(zhejiang_covid)]
+
+# Generate smoothed averages
+zhejiang_covid$new_cases_smoothed <- smooth(zhejiang_covid$new_cases)
+zhejiang_covid$new_deaths_smoothed <- smooth(zhejiang_covid$new_deaths)
+zhejiang_covid$total_cases <- zhejiang_covid$cumulative_covid_cases
+zhejiang_covid$total_deaths <- zhejiang_covid$cumulative_covid_deaths
+
+# Merge into main Zhejiang dataset
+zhejiang <- merge(zhejiang, zhejiang_covid, by='date', all.x= T)
+
+# Generate columns corresponding to the main dataset
+zhejiang <- zhejiang %>%
+  mutate(
+    daily_total_deaths = deaths,
+    daily_total_deaths_per_100k = deaths*100000/population,
+    daily_expected_deaths = expected_deaths,
+    daily_expected_deaths_per_100k = expected_deaths*100000/population,
+    daily_excess_deaths = excess_deaths,
+    daily_excess_deaths_per_100k = excess_deaths*100000/population,
+    cumulative_daily_covid_cases_per_100k = total_cases*1e5/population,
+    cumulative_daily_covid_deaths_per_100k = total_deaths*1e5/population,
+    daily_covid_deaths = new_deaths_smoothed,
+    daily_covid_deaths_per_100k = (daily_covid_deaths / population) * 100000,
+    daily_covid_cases = new_cases_smoothed,
+    daily_covid_cases_per_100k = (daily_covid_cases / population) * 100000,
+    daily_covid_cases_raw = new_cases, 
+    daily_covid_deaths_raw = new_deaths) %>%
+  select(-Q, -pred, -deaths_q1, -pred_q1, -cremations, -days, -cumulative_covid_cases, -cumulative_covid_deaths) %>%
+  mutate(iso3c = "CHN",
+         weekly_mean_temperature_in_major_cities_2015_2019 = NA,
+         country_name = "China",
+         time_unit = 'quarter', 
+         years_of_observations = NA,
+         n_obs = NA,
+         first_year_of_observations = NA,
+         local_unit_name = 'Zhejiang')
+
+# Finally, we impute values for a few variables if they are missing for a particular sub-national unit using the national value.
+covars <- unique(readRDS("output-data/country_daily_excess_deaths_with_covariates.RDS")[, c('iso3c', "mean_distance_to_coast", "life_expectancy", "wdi_life_expectancy_at_birth", 
+           "median_age", "aged_65_older", "wdi_pop_over_65", "wdi_pop_under_15", "wdi_gdppc_nominal",
+           "wdi_gdppc_ppp", "gdpppc_ppp_imf", "wdi_urban_population_pct", 
+           "wdi_urban_pop_1m_cities_pct")])
+dat <- merge(dat, covars, by='iso3c', all.x= T)
+
+setdiff(colnames(dat), colnames(zhejiang))
+setdiff(colnames(zhejiang), colnames(dat))
+
+# And set the values which are missing for Zhejiang to missing:
+zhejiang[, setdiff(colnames(dat), colnames(zhejiang))] <- NA
+
+# And merge Zhejiang into the main data:
+dat <- rbind(dat, zhejiang[, colnames(dat)])
 
 # Step 8: Impute leading zeroes and vaccination data if applicable------------------------------------------------------------------------------
 
