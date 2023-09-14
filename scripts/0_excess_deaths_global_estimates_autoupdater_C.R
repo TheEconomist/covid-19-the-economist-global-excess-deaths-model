@@ -85,6 +85,8 @@ if(readRDS('output-data/model-objects/start.RDS') != 0){
 
 # We then use this to generate one new bootstrap model, overwriting a random prior model:
 cat('\n\n Re-training and replacing 1 model based on latest data.\n\n')
+cat(paste0('\n\n Re-training model ', update, '\n\n'))
+  
 generate_model_loop(
   X_full = X[!is.na(Y), ], # Defines training set
   Y_full = Y[!is.na(Y)],   # Defines outcome variable
