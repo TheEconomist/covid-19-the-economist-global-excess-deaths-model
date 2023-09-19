@@ -523,8 +523,8 @@ china$iso3c <- 'CHN'
 china$name <- 'CDC_DCSD'
 china$local_unit_name <- 'China DCSD'
 
-# Remove dates for which data for entire country is available from separate source: 
-china <- china[china$date > full_china_data_ends, ]
+# Remove dates for which data for entire country is available from separate source (allowing small overlap to account for averaging): 
+china <- china[china$date > full_china_data_ends-4, ]
 
 # Inspect the result
 if(inspect){
@@ -671,6 +671,14 @@ rownames(zhejiang_covid) <- 1:nrow(zhejiang_covid)
 zhejiang_covid$date <- as.Date(zhejiang_covid$date, format = "%m/%d/%y")
 zhejiang_covid <- zhejiang_covid[order(zhejiang_covid$date), ]
 
+# Expand to appropriate dates:
+zhejiang_covid <- zhejiang_covid %>% complete(date= seq(as.Date('2020-01-01'), as.Date('2023-06-01'), by='1 day')) %>% data.frame()
+zhejiang_covid$cumulative_covid_cases[zhejiang_covid$date < as.Date('2020-01-22')] <- 0
+zhejiang_covid$cumulative_covid_deaths[zhejiang_covid$date < as.Date('2020-01-22')] <- 0
+zhejiang_covid$cumulative_covid_cases[zhejiang_covid$date > as.Date('2023-03-09')] <- zhejiang_covid$cumulative_covid_cases[zhejiang_covid$date == as.Date('2023-03-09')]
+zhejiang_covid$cumulative_covid_deaths[zhejiang_covid$date > as.Date('2023-03-09')] <- zhejiang_covid$cumulative_covid_deaths[zhejiang_covid$date == as.Date('2023-03-09')]
+
+# Generate new deaths/cases columns:
 zhejiang_covid$new_deaths <- zhejiang_covid$cumulative_covid_deaths - c(0, zhejiang_covid$cumulative_covid_deaths)[1:nrow(zhejiang_covid)]
 zhejiang_covid$new_cases<- zhejiang_covid$cumulative_covid_cases - c(0, zhejiang_covid$cumulative_covid_cases)[1:nrow(zhejiang_covid)]
 
@@ -787,5 +795,5 @@ for(i in vaccination_variables){
 saveRDS(dat, "output-data/model-objects/auxilliary_subnational_data.RDS")
 
 if(inspect){
-  ggplot(dat, aes(x=date))+geom_line(aes(y=daily_expected_deaths_per_100k, col = 'expected'))+geom_line(aes(y=daily_total_deaths_per_100k, col = 'observed'))+geom_line(aes(y=daily_excess_deaths_per_100k, col = 'excess'))+facet_wrap(.~local_unit_name)
+  ggplot(dat, aes(x=date))+geom_line(aes(y=daily_expected_deaths_per_100k, col = 'expected'))+geom_line(aes(y=daily_total_deaths_per_100k, col = 'observed'))+geom_line(aes(y=daily_excess_deaths_per_100k, col = 'excess'))+facet_wrap(.~local_unit_name)+geom_point(aes(y=daily_excess_deaths_per_100k, col = 'excess'))
 }

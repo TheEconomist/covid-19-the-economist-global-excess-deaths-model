@@ -1114,7 +1114,7 @@ china$expected_deaths <- china$expected_deaths*(china$population/china$mean_popu
 #   geom_hline(aes(yintercept = 0), col = "black")+ylim(c(-10, 100))+
 # theme_minimal()+facet_grid(.~type)+xlab("Week in 2020")+ylab("Deaths per 100k population")
 
-# The final week appears anamolous compared to the figures in the paper. Upon inspection, it appears the table reports a drop in expected deaths that seems anamolously large compared to the figures in the paper. We therefore conservatively drop the final week:
+# The final week appears anamolous compared to the figures in the paper. Upon inspection, it appears the table reports a drop in expected deaths that does not match the figures in the paper. We therefore conservatively drop the final week:
 china <- china[china$Week != 13, ]
 
 # Specify excess deaths
