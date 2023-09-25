@@ -107,11 +107,14 @@ X_latest <- X[X$date %in% max(X$date):(max(X$date)-7), ]
 # 2. Loop columns to compute country-week averages (by country-week):
 ids <- paste0(X$iso3c, "_", round(X$date/7, 0))
 saveRDS(ids, 'output-data/model-objects/ids.RDS')
-for(i in setdiff(colnames(X), c("iso3c"))){
+for(i in setdiff(colnames(X), c("iso3c", "date"))){
   X[, i] <- ave(X[, i], ids, FUN = function(x){mean(x, na.rm = T)})
   X_latest[, i] <- ave(X_latest[, i], X_latest$iso3c, 
                        FUN = function(x){mean(x, na.rm = T)})
 }
+
+# Round date values to nearest week
+X$date <- round(X$date/7)*7
 
 # 3. Combine the latest day with the rest of the data:
 X <- rbind(X[!duplicated(ids), ],

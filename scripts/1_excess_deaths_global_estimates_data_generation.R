@@ -1160,6 +1160,15 @@ subnational <- readRDS("output-data/model-objects/auxilliary_subnational_data.RD
 # "wdi_gdppc_ppp", "gdpppc_ppp_imf", "wdi_urban_population_pct", 
 # "wdi_urban_pop_1m_cities_pct") have been imputed from national data for some sub-national units.
 
+# Ensure that Chinese subnational data does not double-count:
+
+# Remove those in national data already (rounded to nearest week)
+subnational <- subnational[!(subnational$iso3c == 'CHN' & round(as.numeric(subnational$date)/7) %in% round(as.numeric(country_daily_excess_deaths$date[!is.na(country_daily_excess_deaths$daily_excess_deaths_per_100k) & country_daily_excess_deaths$iso3c == 'CHN'])/7)), ]
+# Remove Zhejiang data if in national data (rounded to nearest week)
+subnational <- subnational[!(subnational$name == 'Zhejiang' & round(as.numeric(subnational$date)/7) %in% round(as.numeric(subnational$date[!is.na(subnational$daily_excess_deaths_per_100k) & subnational$name %in% subnational$name[subnational$iso3c == 'CHN' & subnational$name != 'Zhejiang']])/7)), ]
+subnational <- subnational[subnational$date >= as.Date('2020-01-01'), ]
+subnational <- subnational[subnational$date <= Sys.Date(), ]
+
 # Merge in missing columns from big dataset:
 subnational <- merge(subnational, country_daily_excess_deaths[, c("date", "iso3c", setdiff(colnames(country_daily_excess_deaths), colnames(subnational)))], by = c("iso3c", "date"))
 
@@ -1179,6 +1188,8 @@ subnational$is_subregion <- "YES"
 country_daily_excess_deaths$is_subregion <- "NO"
 country_daily_excess_deaths <- rbind(country_daily_excess_deaths, subnational)
 }
+
+
 
 # Set baseline excess deaths due to the pandemic to 0 for all countries except China for the first 3 weeks of January. Countries did not have mass excess deaths before this time, but some had lower than expected deaths in this time period, perhaps due to random variation. This helps the model and estimates only pick up pandemic-related excess deaths:  
 country_daily_excess_deaths$daily_excess_deaths[country_daily_excess_deaths$date <= as.Date("2020-01-21") & country_daily_excess_deaths$iso3c != "CHN" & !is.na(country_daily_excess_deaths$daily_excess_deaths)] <- 0
