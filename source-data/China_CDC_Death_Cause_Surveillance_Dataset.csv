@@ -1,4 +1,17 @@
 Year,Month,Percentage (%),Reported / Calculated Value,Population in the observation areas 
+2021,Total,100,1901390,267892769
+2021,January,10.54,200406.506,
+2021,February,8.12,154392.868,
+2021,March,8.71,165611.069,
+2021,April,7.9,150209.81,
+2021,May,7.99,151921.061,
+2021,June,7.57,143935.223,
+2021,July,7.69,146216.891,
+2021,August,7.67,145836.613,
+2021,September,7.59,144315.501,
+2021,October,8.64,164280.096,
+2021,November,8.77,166751.903,
+2021,December,8.8,167322.32,
 2020,Total,100,1886356,278517860
 2020,January,10.01,188824.2356,
 2020,February,8.84,166753.8704,
@@ -95,7 +108,7 @@ Year,Month,Percentage (%),Reported / Calculated Value,Population in the observat
 ,,,,
 ,,,,
 "Source: the annual Death Cause Surveillance Dataset published by China CDC
-https://docs.google.com/spreadsheets/d/1HIU0-XACRgpZkMN1VSBoPdxE1SBM732W6SHqfpsG1a0/edit?usp=sharing 
+https://drive.google.com/drive/u/0/folders/1DLokxM4GpFM_3dn0sap0JUvbTTc38yun 
 
 The original website: 
 https://ncncd.chinacdc.cn/xzzq_1/202101/t20210111_223706.htm
