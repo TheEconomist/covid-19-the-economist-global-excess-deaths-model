@@ -6,7 +6,7 @@ on:
     - cron: "0 18,00 * * *"
 jobs:
   build:
-    runs-on: ubuntu-20.04-16core
+    runs-on: ubuntu-20.04
     env:
       S3_FOLDER: covid-19-excess-deaths-global-estimates-tracker
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
