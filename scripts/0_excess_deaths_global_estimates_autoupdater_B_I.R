@@ -30,9 +30,9 @@ if(readRDS('output-data/model-objects/latest_update.RDS') < Sys.Date()){
 }
 
 if(current_update_run == "A"){
-  load_predictions_model_set <- 1:(floor(B/2)+main_estimate_models)
+  load_predictions_model_set <- 1:(floor(B/2)+main_estimate_models-20)
 } else {
-  load_predictions_model_set <- c(main_estimate_models+(floor(B/2)+1):B)
+  load_predictions_model_set <- c(main_estimate_models+(floor(B/2)+1-20):B)
 }
 
 # Loop over bootstrap iterations
