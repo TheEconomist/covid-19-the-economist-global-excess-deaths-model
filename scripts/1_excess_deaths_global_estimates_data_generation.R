@@ -55,11 +55,9 @@ daily_excess_deaths <- daily_excess_deaths[!(daily_excess_deaths$iso3c == "TUR" 
 daily_excess_deaths <- daily_excess_deaths[!(daily_excess_deaths$iso3c == "SYR" & daily_excess_deaths$date >= as.Date("2023-02-01") & daily_excess_deaths$date >= as.Date("2023-04-01")), ]
 daily_excess_deaths <- daily_excess_deaths[!(daily_excess_deaths$iso3c == "AFG" & daily_excess_deaths$date >= as.Date("2023-10-01") & daily_excess_deaths$date >= as.Date("2023-12-01")), ]
 
-
 # Removing data from Israel and Palestine during the war:
-daily_excess_deaths <- daily_excess_deaths[!(daily_excess_deaths$iso3c == "ISR" & daily_excess_deaths$date >= as.Date("2023-10-01"), ]
-daily_excess_deaths <- daily_excess_deaths[!(daily_excess_deaths$iso3c == "PSE" & daily_excess_deaths$date >= as.Date("2023-10-01"), ]
-
+daily_excess_deaths <- daily_excess_deaths[!(daily_excess_deaths$iso3c == "ISR" & daily_excess_deaths$date >= as.Date("2023-10-01")), ]
+daily_excess_deaths <- daily_excess_deaths[!(daily_excess_deaths$iso3c == "PSE" & daily_excess_deaths$date >= as.Date("2023-10-01")), ]
 
 # Check to ensure and remove any duplicated country-dates
 daily_excess_deaths <- daily_excess_deaths[!duplicated(paste0(daily_excess_deaths$iso3c, "_", daily_excess_deaths$date)), ]
