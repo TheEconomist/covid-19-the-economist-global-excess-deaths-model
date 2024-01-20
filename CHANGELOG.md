@@ -1,7 +1,7 @@
 ## Sep 14th 2023
 - Over the past year, various fixes have made this system more memory and computation efficient.
 - Changes by various data sources, such as by OWID due to the switch from JHU to WHO data, have been successfully integrated.
-- Death counts from the Zhejiang provincial government has been incorporated as in the subnational data used to train models. This data should gradually enter model estimates over the coming days as all models are re-trained. 
+- Death counts from the Zhejiang provincial government has been incorporated as in the subnational data used to train models. This data should gradually enter model estimates over the coming days as all models are re-trained.
 
 ## Feb 7th 2022
 - Retrained all models based on greatly expanded data: now 107 countries and 6 subnational regions (from 82 countries and 6 subnational units). Note that added countries tend to be small in population, giving them a smaller impact than their raw number would imply.
