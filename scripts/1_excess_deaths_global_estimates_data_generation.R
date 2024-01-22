@@ -104,37 +104,54 @@ country_daily_data <- fread("https://raw.githubusercontent.com/owid/covid-19-dat
                 vaccinated_pct,
                 fully_vaccinated_pct,
                 daily_covid_cases_raw,
-                daily_covid_deaths_raw)
+                daily_covid_deaths_raw,
+                total_cases,
+                total_deaths)
 
 # After the switch from JHU to WHO data, OWID sometimes misses country-days. We ensure all country-days are present here:
-unique_dates <- unique(country_daily_data$date)
 cat('\nAdding missing OWID country-dates: ')
 country_daily_data <- country_daily_data[order(country_daily_data$date), ]
-for(i in setdiff(unique(country_daily_data$iso3c), c('ESH', "TWN", 'MAC'))){
-  for(j in (Sys.Date()-10):Sys.Date()){
-    if(!any(country_daily_data$date == j & country_daily_data$iso3c == i)){
-      temp <- country_daily_data[country_daily_data$date == max(country_daily_data$date[country_daily_data$date < j]) & country_daily_data$iso3c == i, ]
-      if(nrow(temp) == 0){
-        message(paste0('Data missing for more than 10 days for ', i))
-      }
-      temp[, c("daily_covid_deaths", "daily_covid_deaths_per_100k", "daily_covid_cases", "daily_covid_cases_per_100k",
-               "daily_tests", "daily_tests_per_100k", "daily_positive_rate", "daily_vaccinations",
-               "daily_vaccinations_per_100k")] <- NA
-      temp$date <- as.Date(j, origin = '1970-01-01')
-      
-      country_daily_data <- rbind(country_daily_data, temp)
-      cat(paste0(j, '-', i, '..'))
-    }
-  }
-}
+
+unique_dates <- as.Date(as.Date('2020-01-01'):Sys.Date())
+unique_iso3c <- unique(country_daily_data$iso3c)
+
+country_daily_data <- merge(country_daily_data, expand.grid(date = unique_dates,
+                                                            iso3c = unique_iso3c),
+                            by = c('iso3c', 'date'), all = T)
+
+country_daily_data <- country_daily_data[order(country_daily_data$date, country_daily_data$iso3c), ]
+
+columns_to_fill <- setdiff(colnames(country_daily_data), c("daily_covid_deaths", "daily_covid_deaths_per_100k", 
+                                                           "daily_covid_cases", "daily_covid_cases_per_100k",
+                                                           "daily_tests", "daily_tests_per_100k", "daily_positive_rate", "daily_vaccinations",
+                                                           "daily_vaccinations_per_100k", 
+                                                           "daily_covid_cases_raw",
+                                                           "daily_covid_deaths_raw",
+                                                           "total_cases",
+                                                           "total_deaths"))
+
+# Using tidyverse to fill the values in specified columns
+country_daily_data <- country_daily_data %>%
+  group_by(iso3c) %>%
+  arrange(date, .by_group = TRUE) %>%
+  fill(!!!syms(columns_to_fill), .direction = "down")
 cat('\nAdding missing OWID country-dates - completed.')
+
+# OWID has totals but not daily (or weekly) deaths for recent dates from the United States. This fixes this, by letting new deaths equal those added between totals (the result matched CDC reporting as of Jan 2024).
+for(i in which(!is.na(country_daily_data$total_deaths) & is.na(country_daily_data$daily_covid_deaths) & country_daily_data$iso3c == 'USA')){
+  country_daily_data$daily_covid_deaths[i] <- 
+    country_daily_data$daily_covid_deaths_raw[i] <- max(c(0, country_daily_data$total_deaths[i] - na.omit(c( country_daily_data$total_deaths[country_daily_data$iso3c == country_daily_data$iso3c[i] & country_daily_data$date == max(country_daily_data$date[!is.na(country_daily_data$total_deaths) & country_daily_data$iso3c == country_daily_data$iso3c[i] & country_daily_data$date < country_daily_data$date[i]])], 0))[1]))
+}
+
+country_daily_data$total_cases <- NULL
+country_daily_data$total_deaths <- NULL
 
 # OWID data sometimes lacks the 7-day rolling average, which we here calculate and add manually when missing:
 country_daily_data <- data.frame(country_daily_data[order(country_daily_data$date), ])
 seven_day_average <- function(x){
   temp <- x
   for(i in 1:length(x)){
-    x[i] <- mean(temp[max(c(1, i-6)):min(c(length(x), i))], na.rm = T)
+    x[i] <- sum(temp[max(c(1, i-6)):min(c(length(x), i))], na.rm = T)/length(temp[max(c(1, i-6)):min(c(length(x), i))])
   }
   x
 }
@@ -154,7 +171,7 @@ vars <- c('daily_covid_cases',
 
 for(i in vars){
   # print(length(country_daily_data[!is.na(country_daily_data[, i]), i]) - length(country_daily_data[!is.na(country_daily_data[, paste0(i, '_recalculated')]), paste0(i, '_recalculated')])) # Uncomment this to see how many were re-calculated.
-  country_daily_data[is.na(country_daily_data[, i]), i] <-   country_daily_data[is.na(country_daily_data[, i]), paste0(i, '_recalculated')]
+  country_daily_data[, i] <- country_daily_data[, paste0(i, '_recalculated')]
 }
 
 # Removing extra columns:
@@ -165,11 +182,10 @@ country_daily_data$region[country_daily_data$iso3c == "TWN"] <- "Asia"
 country_daily_data$subregion[country_daily_data$iso3c == "TWN"] <- "Eastern Asia"
 
 
-# Fix for Chinese testing data, which erroneously provides tests per day per 100k for a small interval in 2020 (see source notes here https://ourworldindata.org/coronavirus-testing#china). No testing data for China is at the moment available. 
+# Fix for Chinese testing data, which erroneously provides tests per day per 100k for a small interval in 2020 (see source notes here https://ourworldindata.org/coronavirus-testing#china). No daily testing data for China is at the moment available. 
 country_daily_data$daily_tests[country_daily_data$iso3c == "CHN"] <- NA
 country_daily_data$daily_tests_per_100k[country_daily_data$iso3c == "CHN"] <- NA
 country_daily_data$daily_positive_rate[country_daily_data$iso3c == "CHN"] <- NA
-
 
 # Join excess deaths onto dataframe
 country_daily_excess_deaths <- country_daily_data %>%
@@ -249,6 +265,9 @@ for(i in c("daily_tests", "daily_covid_cases", "daily_covid_deaths", "daily_vacc
 
 # Generate day of week
 country_daily_excess_deaths$weekday <- as.POSIXlt(country_daily_excess_deaths$date)$wday
+
+# Remove duplicate entries
+country_daily_excess_deaths <- country_daily_excess_deaths[!duplicated(paste0(country_daily_excess_deaths$date, '_', country_daily_excess_deaths$iso3c)), ] 
 
 # Step 4: import other data sources (country-level, static) ---------------------------------------
 
@@ -400,7 +419,10 @@ static_data[[length(static_data) + 1]] <- islands
 if(Sys.Date() %in% c(as.Date("2021-05-31"),
                      as.Date("2022-01-01"),
                      as.Date("2022-05-31"),
-                     as.Date("2023-01-01"))){
+                     as.Date("2023-01-01"),
+                     as.Date("2023-05-31"),
+                     as.Date("2024-01-01"),
+                     as.Date("2024-05-31"))){
 library(WDI)
 wdi <- WDI(country = 'all',
            indicator = c('wdi_prop_less_2_usd_day' = 'SI.POV.DDAY',
