@@ -1,9 +1,9 @@
 name: update
 on:
-  # push:
+  push:
   workflow_dispatch:
   schedule:
-  # - cron: "0 6,12 * * *"
+  - cron: "0 6,12 * * *"
 jobs:
   build:
     runs-on: ubuntu-20.04
