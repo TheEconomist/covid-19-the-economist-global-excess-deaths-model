@@ -45,8 +45,6 @@ country_daily_data <- merge(data.frame(country_daily_data), expand.grid(iso_code
                                                                         date = unique_dates),
                             all = T)
 
-
-
 country_daily_data <- country_daily_data[order(country_daily_data$date, country_daily_data$iso_code), ]
 
 columns_to_fill <- c("location", "continent", "population", "aged_65_older", "aged_70_older")
@@ -67,7 +65,7 @@ country_daily_data <- data.frame(country_daily_data[order(country_daily_data$dat
 seven_day_average <- function(x){
   temp <- x
   for(i in 1:length(x)){
-    x[i] <- sum(temp[max(c(1, i-6)):min(c(length(x), i))], na.rm = T)/length(temp[max(c(1, i-6)):min(c(length(x), i))])
+    x[i] <- ifelse(any(!is.na(temp[max(c(1, i-6)):min(c(length(x), i))])), sum(temp[max(c(1, i-6)):min(c(length(x), i))], na.rm = T)/length(temp[max(c(1, i-6)):min(c(length(x), i))]), NA)
   }
   x
 }
@@ -89,19 +87,19 @@ fill_if_known_in_last_90 <- function(x){
 country_daily_data$total_deaths <- as.numeric(ave(country_daily_data$total_deaths, country_daily_data$location, FUN = fill_if_known_in_last_90))
 country_daily_data$total_vaccinations <- as.numeric(ave(country_daily_data$total_vaccinations, country_daily_data$location, FUN = fill_if_known_in_last_90))
 
-## Use last known value for new deaths (if known within the last 30 days):
+## Use last known value for new deaths (if known within the last 14 days):
 country_daily_data <- country_daily_data[order(country_daily_data$date), ]
 
-fill_if_known_in_last_30 <- function(x){
+fill_if_known_in_last_14 <- function(x){
   temp <- x
   for(i in 1:length(x)){
     if(is.na(x[i])){
-      x[i] <- rev(c(NA, na.omit(temp[max(c(1, i-30)):(i-1)])))[1]
+      x[i] <- rev(c(NA, na.omit(temp[max(c(1, i-14)):(i-1)])))[1]
     }
   }
   x
 }
-country_daily_data$new_deaths <- as.numeric(ave(country_daily_data$new_deaths, country_daily_data$location, FUN = fill_if_known_in_last_30))
+country_daily_data$new_deaths <- as.numeric(ave(country_daily_data$new_deaths, country_daily_data$location, FUN = fill_if_known_in_last_14))
 
 # Ensure stable covariates are not missing:
 for(i in c("location", "continent", 'aged_65_older', "aged_70_older")){

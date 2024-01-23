@@ -151,7 +151,7 @@ country_daily_data <- data.frame(country_daily_data[order(country_daily_data$dat
 seven_day_average <- function(x){
   temp <- x
   for(i in 1:length(x)){
-    x[i] <- sum(temp[max(c(1, i-6)):min(c(length(x), i))], na.rm = T)/length(temp[max(c(1, i-6)):min(c(length(x), i))])
+    x[i] <- ifelse(any(!is.na(temp[max(c(1, i-6)):min(c(length(x), i))])), sum(temp[max(c(1, i-6)):min(c(length(x), i))], na.rm = T)/length(temp[max(c(1, i-6)):min(c(length(x), i))]), NA)
   }
   x
 }
