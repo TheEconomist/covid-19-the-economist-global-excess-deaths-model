@@ -32,32 +32,64 @@ country_daily_data <- country_daily_data[order(country_daily_data$date),
                                            "new_vaccinations_smoothed",
                                            "total_vaccinations",
                                            "aged_65_older",
-                                           "aged_70_older")]
+                                           "aged_70_older")] %>% data.frame()
 country_data <- unique(country_daily_data[, c('location', 'iso_code', 'aged_65_older', 'aged_70_older')]) 
 
 # After the switch from JHU to WHO data, OWID sometimes misses country-days. We ensure all country-days are present here:
-unique_dates <- unique(country_daily_data$date)
 cat('\nAdding missing OWID country-dates: ')
+unique_dates <- unique(country_daily_data$date)
+unique_iso <- unique(country_daily_data$iso_code)
 country_daily_data <- country_daily_data[order(country_daily_data$date), ]
-for(i in setdiff(unique(country_daily_data$location[country_daily_data$population >= 50000000]), c('Northern Cyprus', 'Wales', 'Scotland', 'Western Sahara', 'Taiwan', 'Macau', 'Macao', 'Northern Ireland'))){
-  for(j in (Sys.Date()-10):Sys.Date()){
-    if(!any(country_daily_data$date == j & country_daily_data$location == i)){
-      temp <- country_daily_data[country_daily_data$date == max(country_daily_data$date[country_daily_data$date < j]) & country_daily_data$location == i, ]
-      if(nrow(temp) == 0){
-        message(paste0('Data missing for more than 10 days for ', i))
-      }
-      temp[, c("new_deaths",
-               "new_deaths_smoothed")] <- NA
-      temp$date <- as.IDate(j, origin = '1970-01-01')
-      
-      country_daily_data <- rbind(country_daily_data, temp)
-      cat(paste0(j, '-', i, '..'))
+
+country_daily_data <- merge(data.frame(country_daily_data), expand.grid(iso_code = unique_iso,
+                                                                        date = unique_dates),
+                            all = T)
+
+
+
+country_daily_data <- country_daily_data[order(country_daily_data$date, country_daily_data$iso_code), ]
+
+columns_to_fill <- c("location", "continent", "population", "aged_65_older", "aged_70_older")
+
+# Using tidyverse to fill the values in specified columns
+country_daily_data <- country_daily_data %>%
+  group_by(iso_code) %>%
+  arrange(date, .by_group = TRUE) %>%
+  fill(!!!syms(columns_to_fill), .direction = "down")
+
+# OWID has totals but not daily (or weekly) deaths for recent dates from the United States. This fixes this, by letting new deaths equal those added between totals (the result matched CDC reporting as of Jan 2024).
+for(i in which(!is.na(country_daily_data$total_deaths) & is.na(country_daily_data$new_deaths) & country_daily_data$iso_code == 'USA')){
+  country_daily_data$new_deaths[i] <- max(c(0, country_daily_data$total_deaths[i] - na.omit(c( country_daily_data$total_deaths[country_daily_data$iso_code == country_daily_data$iso_code[i] & country_daily_data$date == max(country_daily_data$date[!is.na(country_daily_data$total_deaths) & country_daily_data$iso_code == country_daily_data$iso_code[i] & country_daily_data$date < country_daily_data$date[i]])], 0))[1]))
+}
+
+# OWID data sometimes lacks the 7-day rolling average, which we here calculate and add manually when missing:
+country_daily_data <- data.frame(country_daily_data[order(country_daily_data$date), ])
+seven_day_average <- function(x){
+  temp <- x
+  for(i in 1:length(x)){
+    x[i] <- sum(temp[max(c(1, i-6)):min(c(length(x), i))], na.rm = T)/length(temp[max(c(1, i-6)):min(c(length(x), i))])
+  }
+  x
+}
+
+country_daily_data$new_deaths <- country_daily_data$new_deaths_smoothed <- ave(country_daily_data$new_deaths, country_daily_data$iso_code, FUN = seven_day_average)
+
+## Use last known value for total deaths and vaccinations (if known within the last 3 months):
+country_daily_data <- country_daily_data[order(country_daily_data$date), ]
+
+fill_if_known_in_last_90 <- function(x){
+  temp <- x
+  for(i in 1:length(x)){
+    if(is.na(x[i])){
+      x[i] <- rev(c(NA, na.omit(temp[max(c(1, i-90)):(i-1)])))[1]
     }
   }
+  x
 }
-cat('\nAdding missing OWID country-dates - completed.')
+country_daily_data$total_deaths <- as.numeric(ave(country_daily_data$total_deaths, country_daily_data$location, FUN = fill_if_known_in_last_90))
+country_daily_data$total_vaccinations <- as.numeric(ave(country_daily_data$total_vaccinations, country_daily_data$location, FUN = fill_if_known_in_last_90))
 
-## Use last known value for total deaths and vaccinations (if known within the last month):
+## Use last known value for new deaths (if known within the last 30 days):
 country_daily_data <- country_daily_data[order(country_daily_data$date), ]
 
 fill_if_known_in_last_30 <- function(x){
@@ -69,30 +101,13 @@ fill_if_known_in_last_30 <- function(x){
   }
   x
 }
-country_daily_data$total_deaths <- as.numeric(ave(country_daily_data$total_deaths, country_daily_data$location, FUN = fill_if_known_in_last_30))
-country_daily_data$total_vaccinations <- as.numeric(ave(country_daily_data$total_vaccinations, country_daily_data$location, FUN = fill_if_known_in_last_30))
-
-## Use last known value for new deaths (if known within the last 15 days):
-country_daily_data <- country_daily_data[order(country_daily_data$date), ]
-
-fill_if_known_in_last_10 <- function(x){
-  temp <- x
-  for(i in 1:length(x)){
-    if(is.na(x[i])){
-      x[i] <- rev(c(NA, na.omit(temp[max(c(1, i-15)):(i-1)])))[1]
-    }
-  }
-  x
-}
 country_daily_data$new_deaths <- as.numeric(ave(country_daily_data$new_deaths, country_daily_data$location, FUN = fill_if_known_in_last_30))
 
-
-# Create 7-day average of deaths for use in graphics (replacing the OWD version)
-country_daily_data$new_deaths_smoothed <- ave(country_daily_data$new_deaths, country_daily_data$location, FUN = function(x){
-  unlist(lapply(1:length(x), FUN = function(i){
-    mean(x[max(c(1,i-7)):i], na.rm = T)
-  }))
-})
+# Ensure stable covariates are not missing:
+for(i in c("location", "continent", 'aged_65_older', "aged_70_older")){
+  country_daily_data[, i] <- ifelse(is.na(country_daily_data[, i]), ave(country_daily_data[, i], country_daily_data[, 'iso_code'], FUN = function(x) na.omit(x)[1]), country_daily_data[, i])
+}
+country_daily_data$date <- as.Date(country_daily_data$date)
 
 # Step 3: Generate data for main map ------------------------------------------------------------------------------
 cat('\n Step 3: Generate data for main map')
@@ -953,5 +968,3 @@ cat('\n Final step: Add timestamp')
 # Add timestamp:
 tibble(timestamp = now(tzone = "UTC")) %>% 
   write_csv('output-data/output-for-interactive/timestamp.csv')
-
-
