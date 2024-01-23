@@ -15,7 +15,7 @@ generate_model_loop <- function(X_full = X[!is.na(Y), ],
   X_full <- X_full[!X_full$iso3c %in% c("PER", "ECU"), ]
   
   # Define weights, using half-values for subnational units to reflect greater uncertainty in their covariates and estimates. That value was selected based on correlations between covid-deaths and excess deaths in these units (which was much weaker - these also had fewer non-NA observations):
-  X_full$weights <- log(X_full$population)
+  X_full$weights <- log(X_full$population/1000)
   X_full$weights[nchar(X_full$iso3c) > 3] <- X_full$weights[nchar(X_full$iso3c) > 3]/2
   
   #  Dividing weights if multiple subunits for one country (this matters because observations are weighted by log population rather than absolute population):
