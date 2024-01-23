@@ -112,7 +112,7 @@ country_daily_data <- fread("https://raw.githubusercontent.com/owid/covid-19-dat
 cat('\nAdding missing OWID country-dates: ')
 country_daily_data <- country_daily_data[order(country_daily_data$date), ]
 
-unique_dates <- as.Date(as.Date('2020-01-01'):Sys.Date())
+unique_dates <- as.Date(as.Date('2020-01-01'):Sys.Date(), origin = '1970-01-01')
 unique_iso3c <- unique(country_daily_data$iso3c)
 
 country_daily_data <- merge(country_daily_data, expand.grid(date = unique_dates,

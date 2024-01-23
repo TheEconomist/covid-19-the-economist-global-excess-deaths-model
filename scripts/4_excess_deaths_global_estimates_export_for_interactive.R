@@ -37,7 +37,7 @@ country_data <- unique(country_daily_data[, c('location', 'iso_code', 'aged_65_o
 
 # After the switch from JHU to WHO data, OWID sometimes misses country-days. We ensure all country-days are present here:
 cat('\nAdding missing OWID country-dates: ')
-unique_dates <- unique(country_daily_data$date)
+unique_dates <- as.Date(as.Date('2020-01-01'):Sys.Date(), origin = '1970-01-01')
 unique_iso <- unique(country_daily_data$iso_code)
 country_daily_data <- country_daily_data[order(country_daily_data$date), ]
 
