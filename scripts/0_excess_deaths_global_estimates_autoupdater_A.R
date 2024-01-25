@@ -103,6 +103,7 @@ X <- df
 # Collapse to weekly data through means
 # 1. Ensure current date will be included as prediction target:
 X_latest <- X[X$date %in% max(X$date):(max(X$date)-7), ]
+X_latest <- X_latest[rev(order(X_latest$date)), ]
 
 # 2. Loop columns to compute country-week averages (by country-week):
 ids <- paste0(X$iso3c, "_", round(X$date/7, 0))
@@ -116,10 +117,15 @@ for(i in setdiff(colnames(X), c("iso3c", "date"))){
 # Round date values to nearest week
 X$date <- round(X$date/7)*7
 
-# 3. Combine the latest day with the rest of the data:
-X <- rbind(X[!duplicated(ids), ],
-           X_latest[!duplicated(X_latest$iso3c), ])
+# 3. Combine the latest day with the rest of the data if needed:
+if(max(X$date[!duplicated(ids)]) < max(X_latest$date)){
+  X <- rbind(X[!duplicated(ids), ],
+             X_latest[!duplicated(X_latest$iso3c), ])
+} else {
+  X <- X[!duplicated(ids), ]
+}
 rm(X_latest)
+
 
 # Impute missing data (using min-impute coupled with one-hot encoding of NA locations) 
 
@@ -140,7 +146,6 @@ for(i in c('daily_covid_cases_per_100k_sub_region_average',
   }
 }
 
-                                 
 source("scripts/shared-functions/impute_missing.R")
 X <- impute_missing(X[order(X$date), c(predictors, "iso3c")], cached_NA_cols = T)
 
