@@ -136,7 +136,7 @@ for(i in c('daily_covid_cases_per_100k_sub_region_average',
            'daily_covid_cases_per_100k_econ_region_average')){
   if(any(is.na(X[, i]))){
     temp <- X[X$date == max(X$date[X$date != max(X$date)]), c('iso3c', 'date', i)]
-    if(temp$date[1] - max(X$date) < 14){
+    if(temp$date[1] - max(X$date) < 90){
       for(j in unique(X$iso3c[X$date == max(X$date)])){
         if(is.na(X[X$iso3c == j & X$date == max(X$date), i])){
           X[X$iso3c == j & X$date == max(X$date), i] <- temp[temp$iso3c == j, i]
