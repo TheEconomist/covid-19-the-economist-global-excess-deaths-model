@@ -132,17 +132,26 @@ rm(X_latest)
 # 1. Impute missing:
 
 # As the pandemic progresses, some data which was previously always reported regularly for at least one country in a region has started missing for very recent dates. This imputes those values based on the last known values:
+X <- X[order(X$date), ]
 for(i in c('daily_covid_cases_per_100k_sub_region_average',
            'daily_covid_cases_per_100k_econ_region_average')){
   if(any(is.na(X[, i]))){
-    temp <- X[X$date == max(X$date[X$date != max(X$date)]), c('iso3c', 'date', i)]
-    if(temp$date[1] - max(X$date) < 90){
-      for(j in unique(X$iso3c[X$date == max(X$date)])){
-        if(is.na(X[X$iso3c == j & X$date == max(X$date), i])){
-          X[X$iso3c == j & X$date == max(X$date), i] <- temp[temp$iso3c == j, i]
-        }
+    temp <- X[X$date + 90 >= max(X$date), c('iso3c', 'date', i)]
+    for(j in unique(X$iso3c[is.na(X[, i])])){
+      for(t in unique(X$date[is.na(X[, i] & X$iso3c == j)])){
+        X[X$date == t & X$iso3c == j, i] <- c(temp[temp$iso3c == j & temp$date == max(temp$date[temp$date < t & !is.na(temp[, i])]), i], NA)[1]
       }
     }
+
+    # 
+    # temp <- X[X$date == max(X$date[X$date != max(X$date)]), c('iso3c', 'date', i)]
+    # if(temp$date[1] - max(X$date) < 90){
+    #   for(j in unique(X$iso3c[X$date == max(X$date)])){
+    #     if(is.na(X[X$iso3c == j & X$date == max(X$date), i])){
+    #       X[X$iso3c == j & X$date == max(X$date), i] <- temp[temp$iso3c == j, i]
+    #     }
+    #   }
+    # }
   }
 }
 
