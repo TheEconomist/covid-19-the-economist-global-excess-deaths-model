@@ -17,14 +17,6 @@ generate_model_loop <- function(X_full = X[!is.na(Y), ],
   # Define weights, using half-values for subnational units to reflect greater uncertainty in their covariates and estimates. That value was selected based on correlations between covid-deaths and excess deaths in these units (which was much weaker - these also had fewer non-NA observations):
   X_full$weights <- log(X_full$population/1000)
   X_full$weights[nchar(X_full$iso3c) > 3] <- X_full$weights[nchar(X_full$iso3c) > 3]/2
-  
-  #  Dividing weights if multiple subunits for one country (this matters because observations are weighted by log population rather than absolute population):
-  for(i in unique(substr(X_full$iso3c, 1, 3))){
-    n_units <- length(unique(X_full$iso3c[substr(X_full$iso3c, 1, 3) == i & !is.na(X_full$daily_excess_deaths_per_100k)]))
-    if(n_units > 1){
-      X_full$weights[substr(X_full$iso3c, 1, 3) == i] <-     X_full$weights[substr(X_full$iso3c, 1, 3) == i]/n_units
-    }
-  }
 
   # Create container matrix for predictions
   pred_matrix <- data.frame()
