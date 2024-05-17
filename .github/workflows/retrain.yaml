@@ -2,7 +2,7 @@ name: retrain
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 18,00 * * *"
+    - cron: "0 00 * * *"
 jobs:
   build:
     runs-on: ubuntu-20.04
