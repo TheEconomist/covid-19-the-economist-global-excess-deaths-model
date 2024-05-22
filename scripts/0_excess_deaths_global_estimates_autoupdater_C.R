@@ -12,10 +12,7 @@ covars_for_export_cols <- c("iso3c", "country", "date", "region", "subregion", "
                             "daily_excess_deaths",
                             "daily_excess_deaths_per_100k")
 covars_for_export <- dat[!duplicated(ids), covars_for_export_cols]
-covars_for_export_latest <- dat[dat$date == max(dat$date), covars_for_export_cols]
-covars_for_export_latest <- covars_for_export_latest[!duplicated(covars_for_export_latest$iso3c), ]
-
-saveRDS(rbind(covars_for_export, covars_for_export_latest), "output-data/export_covariates.RDS")
+saveRDS(covars_for_export, "output-data/export_covariates.RDS")
 
 # Get pre-update cumulative world total:
 pre_updated_world_total <- read.csv('output-data/export_world_cumulative.csv')
