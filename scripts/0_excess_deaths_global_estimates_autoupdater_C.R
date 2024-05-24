@@ -75,11 +75,6 @@ if(prioritize_main){
   recently_updated_models <- c(recently_updated_models, update)
 }
 
-# Check if in main update runs. If so, skip re-training of models to avoid reaching github update limits:
-if(readRDS('output-data/model-objects/start.RDS') != 0){
-  cat('\n\n Model update skipped to avoid Github time-out limits.')
-} else {
-
 # We then use this to generate one new bootstrap model, overwriting a random prior model:
 cat('\n\n Re-training and replacing 1 model based on latest data.\n\n')
 cat(paste0('\n\n Re-training model ', update, '\n\n'))
@@ -101,7 +96,6 @@ if(length(recently_updated_models) < B+main_estimate_models){
   saveRDS(recently_updated_models, 'output-data/model-objects/recently_updated_models.RDS')
 } else {
   saveRDS(c(), 'output-data/model-objects/recently_updated_models.RDS')
-}
 }
 
 # Revert to cached covariate matrix if it exists (this reduces the github push history)
