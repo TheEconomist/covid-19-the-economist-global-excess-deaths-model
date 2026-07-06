@@ -51,9 +51,9 @@ daily_excess_deaths <- daily_excess_deaths[!(daily_excess_deaths$iso3c == "RUS" 
 daily_excess_deaths <- daily_excess_deaths[!(daily_excess_deaths$iso3c == "UKR" & daily_excess_deaths$date >= as.Date("2022-02-24")), ]
 
 # Removing data from Syria, Turkey and Afghanistan during the earthquake:
-daily_excess_deaths <- daily_excess_deaths[!(daily_excess_deaths$iso3c == "TUR" & daily_excess_deaths$date >= as.Date("2023-02-01") & daily_excess_deaths$date >= as.Date("2023-04-01")), ]
-daily_excess_deaths <- daily_excess_deaths[!(daily_excess_deaths$iso3c == "SYR" & daily_excess_deaths$date >= as.Date("2023-02-01") & daily_excess_deaths$date >= as.Date("2023-04-01")), ]
-daily_excess_deaths <- daily_excess_deaths[!(daily_excess_deaths$iso3c == "AFG" & daily_excess_deaths$date >= as.Date("2023-10-01") & daily_excess_deaths$date >= as.Date("2023-12-01")), ]
+daily_excess_deaths <- daily_excess_deaths[!(daily_excess_deaths$iso3c == "TUR" & daily_excess_deaths$date >= as.Date("2023-02-01") & daily_excess_deaths$date <= as.Date("2023-04-01")), ]
+daily_excess_deaths <- daily_excess_deaths[!(daily_excess_deaths$iso3c == "SYR" & daily_excess_deaths$date >= as.Date("2023-02-01") & daily_excess_deaths$date <= as.Date("2023-04-01")), ]
+daily_excess_deaths <- daily_excess_deaths[!(daily_excess_deaths$iso3c == "AFG" & daily_excess_deaths$date >= as.Date("2023-10-01") & daily_excess_deaths$date <= as.Date("2023-12-01")), ]
 
 # Removing data from Israel and Palestine during the war:
 daily_excess_deaths <- daily_excess_deaths[!(daily_excess_deaths$iso3c == "ISR" & daily_excess_deaths$date >= as.Date("2023-10-01")), ]
